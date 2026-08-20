@@ -19,7 +19,7 @@ export class LinkedInConnector implements SourceConnector {
       client_id: process.env.LINKEDIN_CLIENT_ID!,
       redirect_uri: redirectUri,
       state,
-      scope: "r_liteprofile r_emailaddress",
+      scope: "openid profile email",
     });
     return `https://www.linkedin.com/oauth/v2/authorization?${params.toString()}`;
   }
@@ -55,7 +55,7 @@ export class LinkedInConnector implements SourceConnector {
   }
 
   async fetchProfile(accessToken: string): Promise<IntegrationData> {
-    const res = await fetch("https://api.linkedin.com/v2/me", {
+    const res = await fetch("https://api.linkedin.com/v2/userinfo", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -72,7 +72,7 @@ export class LinkedInConnector implements SourceConnector {
     const data = await res.json();
     
     return {
-      externalId: data.id,
+      externalId: data.sub,
       rawData: data,
     };
   }

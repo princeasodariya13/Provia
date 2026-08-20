@@ -18,8 +18,16 @@ function CallbackHandler() {
     const provider = searchParams.get("provider")?.toUpperCase();
     
     async function processImport() {
-      if (!code || !provider) {
-        setError("Missing code or provider");
+      const state = searchParams.get("state");
+      const storedState = sessionStorage.getItem("oauth_state");
+      
+      if (!code || !provider || !state) {
+        setError("Missing code, provider, or state");
+        return;
+      }
+
+      if (state !== storedState) {
+        setError("Invalid OAuth state (CSRF verification failed)");
         return;
       }
 
@@ -28,7 +36,8 @@ function CallbackHandler() {
       
       const res = await apiClient.post(`/api/v1/integrations/${provider}/import`, {
         code,
-        redirectUri
+        redirectUri,
+        state,
       });
 
       if (res.success) {

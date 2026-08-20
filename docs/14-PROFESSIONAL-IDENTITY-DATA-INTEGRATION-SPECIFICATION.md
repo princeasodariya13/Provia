@@ -40,7 +40,8 @@ A generic interface `SourceConnector` enforces consistent methods:
 
 ## 7. LinkedIn Integration Strategy
 - Reads `LINKEDIN_CLIENT_ID` and `LINKEDIN_CLIENT_SECRET`.
-- Strictly utilizes official LinkedIn v2 APIs (`/me`, `/emailAddress`).
+- Strictly utilizes official LinkedIn OIDC APIs (`/v2/userinfo`).
+- Uses scopes `openid profile email`.
 - Explicitly rejects undocumented scraping endpoints, browser cookies, or Puppeteer.
 - If credentials are null, returns `PROVIDER_NOT_CONFIGURED`.
 
@@ -80,13 +81,15 @@ A generic interface `SourceConnector` enforces consistent methods:
 - Strictly validated via `requireAuth()`. All DB queries scope where `userId = currentUser.id`. Client-provided `userId` parameters are completely rejected.
 
 ## 16. Security
-- Tokens are encrypted or stored securely in the database.
+- Tokens are symmetrically encrypted using AES-256-GCM before saving to the database.
+- Uses `INTEGRATION_TOKEN_ENCRYPTION_KEY`.
 - Tokens NEVER leave the backend via JSON responses.
 - API endpoints strictly require authentication.
 
 ## 17. Token/Credential Handling
-- Stored on the `Connection` record (access token, refresh token).
+- Stored on the `Connection` record (encrypted access token, encrypted refresh token).
 - Will not persist in logs or be visible to the frontend.
+- OAuth flow uses a secure frontend CSRF state validation.
 
 ## 18. Rate Limiting & Error Handling
 - Respects 403 / 429 status codes from GitHub/LinkedIn.
@@ -97,6 +100,7 @@ A generic interface `SourceConnector` enforces consistent methods:
 Requires:
 - `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` (optional).
 - `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET` (optional).
+- `INTEGRATION_TOKEN_ENCRYPTION_KEY` (required 32-byte key).
 
 ## 20. Deferred Features
 - Full async background worker queue for huge repo histories.

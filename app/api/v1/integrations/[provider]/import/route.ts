@@ -7,12 +7,14 @@ import { githubConnector } from "@/lib/integrations/github";
 import { linkedinConnector } from "@/lib/integrations/linkedin";
 import { normalizeProfileData } from "@/lib/integrations/normalize";
 import { SourceConnector } from "@/lib/integrations/connector";
+import { encryptToken } from "@/lib/integrations/crypto";
 import { Provider } from "@prisma/client";
 import { z } from "zod";
 
 const importSchema = z.object({
   code: z.string(),
   redirectUri: z.string(),
+  state: z.string(),
 });
 
 export const POST = withAPIHandler(async (req, args: unknown) => {
@@ -37,13 +39,16 @@ export const POST = withAPIHandler(async (req, args: unknown) => {
   // 1. Get tokens
   const tokens = await connector.exchangeToken(data.code, data.redirectUri);
 
+  const encAccess = tokens.accessToken ? encryptToken(tokens.accessToken) : null;
+  const encRefresh = tokens.refreshToken ? encryptToken(tokens.refreshToken) : null;
+
   // 2. Upsert connection to IMPORTING
   const connection = await prisma.connection.upsert({
     where: { userId_provider: { userId: user.id, provider: providerEnum } },
     update: { 
       state: "IMPORTING", 
-      accessToken: tokens.accessToken, 
-      refreshToken: tokens.refreshToken || null,
+      accessToken: encAccess, 
+      refreshToken: encRefresh,
       scopes: tokens.scopes || null,
       errorMessage: null 
     },
@@ -51,8 +56,8 @@ export const POST = withAPIHandler(async (req, args: unknown) => {
       userId: user.id, 
       provider: providerEnum, 
       state: "IMPORTING",
-      accessToken: tokens.accessToken, 
-      refreshToken: tokens.refreshToken || null,
+      accessToken: encAccess, 
+      refreshToken: encRefresh,
       scopes: tokens.scopes || null,
     }
   });

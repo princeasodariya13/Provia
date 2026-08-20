@@ -13,12 +13,9 @@ export function normalizeGitHubData(rawData: Record<string, unknown>) {
 }
 
 export function normalizeLinkedInData(rawData: Record<string, unknown>) {
-  // Assuming standard v2/me response structure
-  const firstName = (rawData.localizedFirstName as string) || "";
-  const lastName = (rawData.localizedLastName as string) || "";
-  
   return {
-    fullName: `${firstName} ${lastName}`.trim() || null,
+    fullName: (rawData.name as string) || null,
+    avatarUrl: (rawData.picture as string) || null,
     // Other fields depend on expanded scopes, this is the minimal foundation
   };
 }
