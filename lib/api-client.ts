@@ -47,4 +47,16 @@ export const apiClient = {
       body: JSON.stringify(body),
     });
   },
+  
+  put<T>(url: string, body: unknown, options?: RequestInit) {
+    return this.fetch<T>(url, {
+      ...options,
+      method: "PUT",
+      body: JSON.stringify(body),
+    });
+  },
+  
+  delete<T>(url: string, options?: RequestInit) {
+    return this.fetch<T>(url, { ...options, method: "DELETE" });
+  },
 };

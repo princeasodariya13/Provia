@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Trash2, Github, Linkedin } from "lucide-react";
+import { Plus, Trash2, Globe } from "lucide-react";
 
 export function ProfileForm() {
   const { user, isLoading: authLoading } = useAuth();
@@ -357,9 +357,8 @@ function SourceIndicator({ source }: { source: string }) {
   if (!source || source === "MANUAL") return null;
   return (
     <div className="absolute top-2 right-2 flex items-center gap-1 text-[10px] uppercase font-bold text-text-secondary bg-surface px-2 py-1 border border-border-strong">
-      {source === "GITHUB" && <Github className="w-3 h-3" />}
-      {source === "LINKEDIN" && <Linkedin className="w-3 h-3" />}
-      Imported
+      <Globe className="w-3 h-3" />
+      {source}
     </div>
   );
 }
