@@ -53,16 +53,24 @@ export default function PortfolioPage() {
     setGenerating(false);
   };
 
-  const handlePublish = async (action: 'publish' | 'unpublish') => {
+  const handlePublish = async (action: 'publish' | 'unpublish', targetId: string = data.id, targetVersion?: number) => {
+    if (action === 'publish') {
+      const confirmPublish = window.confirm(`Are you sure you want to publish Version ${targetVersion || data.version}? This will overwrite your live portfolio.`);
+      if (!confirmPublish) return;
+    }
+
     setError(null);
     setPublishing(true);
     
-    const res = await apiClient.post<any>(`/api/v1/portfolio/${data.id}/${action}`, {});
+    const res = await apiClient.post<any>(`/api/v1/portfolio/${targetId}/${action}`, {});
     
     if (res.success) {
       // Reload portfolio data to get updated publication
       const reloadRes = await apiClient.get<any>("/api/v1/portfolio");
       if (reloadRes.success) setData(reloadRes.data);
+      
+      const vRes = await apiClient.get<any>("/api/v1/portfolio/versions");
+      if (vRes.success) setVersions(vRes.data);
     } else {
       setError(res.error || `Failed to ${action} portfolio.`);
     }
@@ -146,7 +154,7 @@ export default function PortfolioPage() {
                 {publishing ? "Processing..." : "Unpublish Portfolio"}
               </Button>
             ) : (
-              <Button onClick={() => handlePublish('publish')} disabled={publishing} className="rounded-none font-bold flex items-center gap-2">
+              <Button onClick={() => handlePublish('publish', data.id, data.version)} disabled={publishing} className="rounded-none font-bold flex items-center gap-2">
                 <Globe className="w-4 h-4" />
                 {publishing ? "Processing..." : "Publish to Web"}
               </Button>
@@ -182,6 +190,11 @@ export default function PortfolioPage() {
                     </div>
                   </div>
                   <div className="flex gap-2">
+                    {!(v.publications && v.publications.length > 0) && (
+                      <Button onClick={() => handlePublish('publish', v.id, v.version)} disabled={publishing} variant="default" size="sm" className="rounded-none font-bold">
+                        Publish This Version
+                      </Button>
+                    )}
                     {v.id !== data.id && (
                       <Link href={`/portfolio/${v.id}/edit`}>
                         <Button variant="outline" size="sm" className="rounded-none font-bold">

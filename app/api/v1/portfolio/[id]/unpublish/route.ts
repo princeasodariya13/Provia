@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { withAPIHandler } from "@/lib/api-handler";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -33,6 +34,8 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
     where: { userId: user.id },
     data: { isActive: false }
   });
+
+  revalidatePath(`/p/${updatedPub.publicSlug}`);
 
   return NextResponse.json({
     success: true,

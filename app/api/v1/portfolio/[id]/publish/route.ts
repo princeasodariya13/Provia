@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { withAPIHandler } from "@/lib/api-handler";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -50,6 +51,8 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
       }
     });
 
+    revalidatePath(`/p/${pub.publicSlug}`);
+
     return NextResponse.json({
       success: true,
       data: {
@@ -80,6 +83,8 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
       isActive: true,
     }
   });
+
+  revalidatePath(`/p/${pub.publicSlug}`);
 
   return NextResponse.json({
     success: true,
