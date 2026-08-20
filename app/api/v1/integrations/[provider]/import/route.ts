@@ -78,16 +78,35 @@ export const POST = withAPIHandler(async (req, args: unknown) => {
     const normalized = normalizeProfileData(providerEnum, profile.rawData as Record<string, unknown>);
 
     // 6. Save Canonical Profile
-    await prisma.professionalProfile.upsert({
-      where: { userId: user.id },
-      update: {
-        ...normalized,
-      },
-      create: {
-        userId: user.id,
-        ...normalized,
-      }
+    const existingProfile = await prisma.professionalProfile.findUnique({
+      where: { userId: user.id }
     });
+
+    let userEdits: Record<string, boolean> = {};
+    if (existingProfile?.userEdits) {
+      try { userEdits = JSON.parse(existingProfile.userEdits); } catch (e) {}
+    }
+
+    const safeUpdateData: Record<string, any> = {};
+    for (const [key, val] of Object.entries(normalized)) {
+      if (!userEdits[key]) {
+        safeUpdateData[key] = val;
+      }
+    }
+
+    if (existingProfile) {
+      await prisma.professionalProfile.update({
+        where: { id: existingProfile.id },
+        data: safeUpdateData,
+      });
+    } else {
+      await prisma.professionalProfile.create({
+        data: {
+          userId: user.id,
+          ...normalized,
+        }
+      });
+    }
 
     // 7. Update connection to SYNCED
     await prisma.connection.update({

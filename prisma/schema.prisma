@@ -33,6 +33,12 @@ enum Provider {
   LINKEDIN
 }
 
+enum SourceType {
+  GITHUB
+  LINKEDIN
+  MANUAL
+}
+
 enum ConnectionState {
   NOT_CONNECTED
   CONNECTED
@@ -87,8 +93,113 @@ model ProfessionalProfile {
   githubUsername String?
   languages      String?   
   
+  userEdits      String?   @default("{}")
+  
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  experiences    ProfessionalExperience[]
+  education      ProfessionalEducation[]
+  skills         ProfessionalSkill[]
+  projects       ProfessionalProject[]
+  certifications ProfessionalCertification[]
+  links          ProfessionalLink[]
+}
+
+model ProfessionalExperience {
+  id               String     @id @default(cuid())
+  profileId        String
+  title            String
+  company          String
+  location         String?
+  startDate        DateTime?
+  endDate          DateTime?
+  isCurrent        Boolean    @default(false)
+  description      String?
+  
+  source           SourceType @default(MANUAL)
+  externalId       String?
+  isManuallyEdited Boolean    @default(false)
+
+  profile          ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model ProfessionalEducation {
+  id               String     @id @default(cuid())
+  profileId        String
+  institution      String
+  degree           String?
+  fieldOfStudy     String?
+  location         String?
+  startDate        DateTime?
+  endDate          DateTime?
+  description      String?
+  
+  source           SourceType @default(MANUAL)
+  externalId       String?
+  isManuallyEdited Boolean    @default(false)
+
+  profile          ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model ProfessionalSkill {
+  id               String     @id @default(cuid())
+  profileId        String
+  name             String
+  
+  source           SourceType @default(MANUAL)
+  externalId       String?
+
+  profile          ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, name])
+}
+
+model ProfessionalProject {
+  id               String     @id @default(cuid())
+  profileId        String
+  name             String
+  description      String?
+  url              String?
+  repositoryUrl    String?
+  technologies     String?
+  startDate        DateTime?
+  endDate          DateTime?
+  
+  source           SourceType @default(MANUAL)
+  externalId       String?
+  isManuallyEdited Boolean    @default(false)
+
+  profile          ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model ProfessionalCertification {
+  id               String     @id @default(cuid())
+  profileId        String
+  name             String
+  organization     String
+  issueDate        DateTime?
+  expirationDate   DateTime?
+  credentialId     String?
+  credentialUrl    String?
+  
+  source           SourceType @default(MANUAL)
+  externalId       String?
+  isManuallyEdited Boolean    @default(false)
+
+  profile          ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model ProfessionalLink {
+  id               String     @id @default(cuid())
+  profileId        String
+  title            String
+  url              String
+  
+  source           SourceType @default(MANUAL)
+  externalId       String?
+  isManuallyEdited Boolean    @default(false)
+
+  profile          ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
