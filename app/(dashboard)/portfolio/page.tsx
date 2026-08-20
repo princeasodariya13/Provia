@@ -6,7 +6,7 @@ import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, FileText, CheckCircle2, Eye } from "lucide-react";
+import { AlertCircle, FileText, CheckCircle2, Eye, Globe, ExternalLink, XCircle } from "lucide-react";
 import Link from "next/link";
 
 export default function PortfolioPage() {
@@ -14,6 +14,7 @@ export default function PortfolioPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -40,6 +41,22 @@ export default function PortfolioPage() {
       setError(res.error || "Failed to generate portfolio document.");
     }
     setGenerating(false);
+  };
+
+  const handlePublish = async (action: 'publish' | 'unpublish') => {
+    setError(null);
+    setPublishing(true);
+    
+    const res = await apiClient.post<any>(`/api/v1/portfolio/${data.id}/${action}`, {});
+    
+    if (res.success) {
+      // Reload portfolio data to get updated publication
+      const reloadRes = await apiClient.get<any>("/api/v1/portfolio");
+      if (reloadRes.success) setData(reloadRes.data);
+    } else {
+      setError(res.error || `Failed to ${action} portfolio.`);
+    }
+    setPublishing(false);
   };
 
   if (authLoading || loading) return <div className="animate-pulse h-40 bg-surface"></div>;
@@ -85,13 +102,38 @@ export default function PortfolioPage() {
             </span>
           </div>
           
-          <div className="flex gap-4">
+          {data.publication?.isActive && (
+            <div className="bg-success/10 border border-success p-4 flex items-center justify-between text-success mb-4">
+              <div className="flex items-center gap-2">
+                <Globe className="w-5 h-5" />
+                <span className="font-medium">Your portfolio is LIVE at:</span>
+                <a href={data.publication.publicUrl} target="_blank" rel="noopener noreferrer" className="font-bold underline flex items-center gap-1 hover:text-success/80">
+                  {data.publication.publicUrl}
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-wrap gap-4">
             <Link href={`/portfolio/${data.id}/preview`}>
-              <Button className="rounded-none font-bold flex items-center gap-2">
+              <Button variant="outline" className="rounded-none font-bold flex items-center gap-2">
                 <Eye className="w-4 h-4" />
-                Preview Portfolio
+                Preview Private Version
               </Button>
             </Link>
+            
+            {data.publication?.isActive ? (
+              <Button onClick={() => handlePublish('unpublish')} disabled={publishing} variant="destructive" className="rounded-none font-bold flex items-center gap-2">
+                <XCircle className="w-4 h-4" />
+                {publishing ? "Processing..." : "Unpublish Portfolio"}
+              </Button>
+            ) : (
+              <Button onClick={() => handlePublish('publish')} disabled={publishing} className="rounded-none font-bold flex items-center gap-2">
+                <Globe className="w-4 h-4" />
+                {publishing ? "Processing..." : "Publish to Web"}
+              </Button>
+            )}
           </div>
           
           {/* Debug View of Content */}
