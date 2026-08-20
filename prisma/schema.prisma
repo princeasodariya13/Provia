@@ -21,6 +21,7 @@ model User {
 
   connections   Connection[]
   profile       ProfessionalProfile?
+  generations   AIGeneration[]
 }
 
 enum Role {
@@ -202,4 +203,30 @@ model ProfessionalLink {
   isManuallyEdited Boolean    @default(false)
 
   profile          ProfessionalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+enum AIGenerationStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model AIGeneration {
+  id              String   @id @default(cuid())
+  userId          String
+  generationType  String
+  provider        String
+  model           String
+  promptVersion   String
+  status          AIGenerationStatus @default(PENDING)
+  
+  failureReason   String?
+  result          String?  
+  usage           String?  
+  
+  createdAt       DateTime @default(now())
+  completedAt     DateTime?
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

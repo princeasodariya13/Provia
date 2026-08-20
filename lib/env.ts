@@ -7,10 +7,14 @@ const envSchema = z.object({
   // Future integrations:
   // GITHUB_CLIENT_ID: z.string().min(1),
   // GITHUB_CLIENT_SECRET: z.string().min(1),
+  GEMINI_API_KEY: z.string().optional(),
+  AI_MODEL: z.string().optional(),
 });
 
 export const env = envSchema.parse({
   NODE_ENV: process.env.NODE_ENV,
   DATABASE_URL: process.env.DATABASE_URL,
   SESSION_SECRET: process.env.SESSION_SECRET || "default_development_secret_that_is_long_enough_32",
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+  AI_MODEL: process.env.AI_MODEL || "gemini-2.5-flash",
 });
