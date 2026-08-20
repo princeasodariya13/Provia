@@ -4,6 +4,7 @@ import { geminiProvider } from "./providers/gemini";
 import { professionalAnalysisSchema } from "@/lib/schemas/ai";
 import { PROFILE_ANALYSIS_PROMPT_V1 } from "./prompts/profile-analysis-v1";
 import { logger } from "@/lib/logger";
+import { AnalyticsService } from "@/lib/analytics/service";
 
 const activeGenerations = new Set<string>();
 
@@ -88,6 +89,12 @@ export const AIService = {
         }
       });
 
+      AnalyticsService.record({
+        eventName: "ai.analysis_started",
+        userId,
+        metadata: { provider: provider.name, promptVersion: "profile-analysis-v1" }
+      });
+
       // 5. Invoke Provider with timeout
       const timeoutPromise = new Promise((_, reject) => 
         setTimeout(() => reject(new APIError("AI Provider timeout", 504)), 30000)
@@ -112,6 +119,12 @@ export const AIService = {
 
       logger.info({ generationId: completedRecord.id, usage: response.usage }, "AI profile analysis completed successfully");
 
+      AnalyticsService.record({
+        eventName: "ai.analysis_completed",
+        userId,
+        metadata: { provider: provider.name, model: response.model, usage: response.usage }
+      });
+
       return completedRecord;
 
     } catch (error) {
@@ -123,6 +136,12 @@ export const AIService = {
             failureReason: error instanceof Error ? error.message : "Unknown",
             completedAt: new Date()
           }
+        });
+
+        AnalyticsService.record({
+          eventName: "ai.analysis_failed",
+          userId,
+          metadata: { reason: error instanceof Error ? error.message : "Unknown" }
         });
       }
       throw error;

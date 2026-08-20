@@ -10,6 +10,7 @@ import { SourceConnector } from "@/lib/integrations/connector";
 import { encryptToken } from "@/lib/integrations/crypto";
 import { Provider } from "@prisma/client";
 import { z } from "zod";
+import { AnalyticsService } from "@/lib/analytics/service";
 
 const importSchema = z.object({
   code: z.string(),
@@ -116,6 +117,12 @@ export const POST = withAPIHandler(async (req, args: unknown) => {
       data: { state: "SYNCED", lastSyncAt: new Date(), externalId: profile.externalId }
     });
 
+    AnalyticsService.record({
+      eventName: "integration.import_succeeded",
+      userId: user.id,
+      metadata: { provider: providerEnum }
+    });
+
     return NextResponse.json({
       success: true,
       data: { status: "SYNCED" }
@@ -127,6 +134,13 @@ export const POST = withAPIHandler(async (req, args: unknown) => {
       where: { id: connection.id },
       data: { state: "FAILED", errorMessage: error instanceof Error ? error.message : "Unknown error" }
     });
+
+    AnalyticsService.record({
+      eventName: "integration.import_failed",
+      userId: user.id,
+      metadata: { provider: providerEnum, error: error instanceof Error ? error.message : "Unknown error" }
+    });
+
     throw error;
   }
 });

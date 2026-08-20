@@ -5,6 +5,7 @@ import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
 import { Metadata } from "next";
 import { env } from "@/lib/env";
 import { ShareButton } from "@/components/ShareButton";
+import { AnalyticsService } from "@/lib/analytics/service";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
@@ -64,6 +65,15 @@ export default async function PublicPortfolioPage({ params }: { params: Promise<
   }
 
   const TemplateComponent = templateDef.component;
+
+  // Fire-and-forget analytics event
+  AnalyticsService.record({
+    eventName: "portfolio.public_viewed",
+    metadata: {
+      slug: resolvedParams.slug,
+      templateId,
+    }
+  });
 
   return (
     <div className="w-full min-h-screen bg-background">

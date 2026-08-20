@@ -277,3 +277,19 @@ model PortfolioPublication {
   user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   portfolioDocument   PortfolioDocument @relation(fields: [portfolioDocumentId], references: [id])
 }
+
+model AnalyticsEvent {
+  id          String   @id @default(cuid())
+  eventName   String
+  userId      String?
+  requestId   String?
+  entityType  String?
+  entityId    String?
+  metadata    String?  // JSON string of sanitized metadata
+  
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([eventName, createdAt])
+  @@index([userId, createdAt])
+}

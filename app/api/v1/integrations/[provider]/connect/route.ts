@@ -5,13 +5,14 @@ import { APIError } from "@/lib/errors";
 import { githubConnector } from "@/lib/integrations/github";
 import { linkedinConnector } from "@/lib/integrations/linkedin";
 import { SourceConnector } from "@/lib/integrations/connector";
+import { AnalyticsService } from "@/lib/analytics/service";
 
 export const GET = withAPIHandler(async (req, args: unknown) => {
-  await requireAuth();
+  const user = await requireAuth();
 
   const context = args as { params: Promise<{ provider: string }> };
   const { provider: paramProvider } = await context.params;
-  const provider = paramProvider.toUpperCase();
+  const providerEnum = paramProvider.toUpperCase();
   
   const searchParams = new URL(req.url).searchParams;
   const redirectUri = searchParams.get("redirectUri");
@@ -22,9 +23,9 @@ export const GET = withAPIHandler(async (req, args: unknown) => {
   }
 
   let connector: SourceConnector;
-  if (provider === "GITHUB") {
+  if (providerEnum === "GITHUB") {
     connector = githubConnector;
-  } else if (provider === "LINKEDIN") {
+  } else if (providerEnum === "LINKEDIN") {
     connector = linkedinConnector;
   } else {
     throw new APIError("Invalid provider", 400);
@@ -35,6 +36,12 @@ export const GET = withAPIHandler(async (req, args: unknown) => {
   }
 
   const authUrl = connector.getAuthUrl(redirectUri, state);
+
+  AnalyticsService.record({
+    eventName: "integration.connect_started",
+    userId: user.id,
+    metadata: { provider: providerEnum }
+  });
 
   return NextResponse.json({
     success: true,

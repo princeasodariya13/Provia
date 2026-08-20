@@ -3,11 +3,19 @@ import { withAPIHandler } from "@/lib/api-handler";
 import { requireAuth } from "@/lib/auth";
 import { PortfolioContentService } from "@/lib/portfolio/service";
 import { prisma } from "@/lib/db";
+import { AnalyticsService } from "@/lib/analytics/service";
 
 export const POST = withAPIHandler(async () => {
   const user = await requireAuth();
   
   const record = await PortfolioContentService.generatePortfolio(user.id);
+
+  AnalyticsService.record({
+    eventName: "portfolio.generated",
+    userId: user.id,
+    entityId: record.id,
+    metadata: { version: record.version }
+  });
 
   return NextResponse.json({
     success: true,

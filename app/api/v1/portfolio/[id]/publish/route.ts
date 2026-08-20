@@ -4,6 +4,7 @@ import { withAPIHandler } from "@/lib/api-handler";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { APIError } from "@/lib/errors";
+import { AnalyticsService } from "@/lib/analytics/service";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const POST = withAPIHandler(async (request: Request, { params }: any) => {
@@ -53,6 +54,13 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
 
     revalidatePath(`/p/${pub.publicSlug}`);
 
+    AnalyticsService.record({
+      eventName: "portfolio.published",
+      userId: user.id,
+      entityId: portfolioDocumentId,
+      metadata: { slug: pub.publicSlug }
+    });
+
     return NextResponse.json({
       success: true,
       data: {
@@ -85,6 +93,13 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
   });
 
   revalidatePath(`/p/${pub.publicSlug}`);
+
+  AnalyticsService.record({
+    eventName: "portfolio.published",
+    userId: user.id,
+    entityId: portfolioDocumentId,
+    metadata: { slug: pub.publicSlug }
+  });
 
   return NextResponse.json({
     success: true,

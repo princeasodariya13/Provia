@@ -4,6 +4,7 @@ import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { APIError } from "@/lib/errors";
 import { portfolioDocumentSchema } from "@/lib/schemas/portfolio";
+import { AnalyticsService } from "@/lib/analytics/service";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const POST = withAPIHandler(async (request: Request, { params }: any) => {
@@ -48,6 +49,13 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
       templateId: baseDocument.templateId,
       templateConfig: baseDocument.templateConfig,
     }
+  });
+
+  AnalyticsService.record({
+    eventName: "portfolio.version_created",
+    userId: user.id,
+    entityId: newRecord.id,
+    metadata: { version: newRecord.version, sourceVersion: baseDocument.version }
   });
 
   return NextResponse.json({

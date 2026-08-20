@@ -5,6 +5,7 @@ import { registerSchema } from "@/lib/validations/auth";
 import { createSession } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 import { APIError } from "@/lib/errors";
+import { AnalyticsService } from "@/lib/analytics/service";
 
 export const POST = withAPIHandler(async (req) => {
   const body = await req.json();
@@ -34,6 +35,11 @@ export const POST = withAPIHandler(async (req) => {
     id: user.id,
     role: user.role,
     email: user.email!,
+  });
+
+  AnalyticsService.record({
+    eventName: "auth.registered",
+    userId: user.id,
   });
 
   return NextResponse.json({
