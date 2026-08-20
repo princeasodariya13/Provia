@@ -4,6 +4,7 @@ import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { APIError } from "@/lib/errors";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const POST = withAPIHandler(async (request: Request, { params }: any) => {
   const user = await requireAuth();
   const { id: portfolioDocumentId } = await params;
