@@ -84,9 +84,11 @@ export const POST = withAPIHandler(async (req, args: unknown) => {
 
     let userEdits: Record<string, boolean> = {};
     if (existingProfile?.userEdits) {
-      try { userEdits = JSON.parse(existingProfile.userEdits); } catch (e) {}
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      try { userEdits = JSON.parse(existingProfile.userEdits); } catch (err) {}
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const safeUpdateData: Record<string, any> = {};
     for (const [key, val] of Object.entries(normalized)) {
       if (!userEdits[key]) {

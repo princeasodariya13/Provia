@@ -3,7 +3,6 @@ import { withAPIHandler } from "@/lib/api-handler";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { profileUpdateSchema } from "@/lib/schemas/profile";
-import { APIError } from "@/lib/errors";
 
 export const GET = withAPIHandler(async () => {
   const user = await requireAuth();
@@ -62,7 +61,8 @@ export const PUT = withAPIHandler(async (req: Request) => {
     if (existingProfile.userEdits) {
       userEdits = JSON.parse(existingProfile.userEdits);
     }
-  } catch (e) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (err) {
     // Ignore invalid JSON
   }
 

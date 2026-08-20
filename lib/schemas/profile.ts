@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-const emptyStringToNull = (val: string | null | undefined) => val === '' ? null : val;
-
 export const experienceSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(1, "Job title is required"),
