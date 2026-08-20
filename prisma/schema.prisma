@@ -249,6 +249,8 @@ model PortfolioDocument {
   content            String   // JSON string of structured portfolio
   sourceProfileId    String
   sourceAiGenerationId String?
+  templateId         String   @default("editorial-v1")
+  templateConfig     String?  // JSON string
   
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt

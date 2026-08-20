@@ -6,7 +6,8 @@ import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, FileText, CheckCircle2 } from "lucide-react";
+import { AlertCircle, FileText, CheckCircle2, Eye } from "lucide-react";
+import Link from "next/link";
 
 export default function PortfolioPage() {
   const { user, isLoading: authLoading } = useAuth();
@@ -82,6 +83,15 @@ export default function PortfolioPage() {
             <span className="text-sm text-text-secondary uppercase tracking-wider font-bold">
               {data.status}
             </span>
+          </div>
+          
+          <div className="flex gap-4">
+            <Link href={`/portfolio/${data.id}/preview`}>
+              <Button className="rounded-none font-bold flex items-center gap-2">
+                <Eye className="w-4 h-4" />
+                Preview Portfolio
+              </Button>
+            </Link>
           </div>
           
           {/* Debug View of Content */}
