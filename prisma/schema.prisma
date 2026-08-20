@@ -22,6 +22,7 @@ model User {
   connections   Connection[]
   profile       ProfessionalProfile?
   generations   AIGeneration[]
+  portfolios    PortfolioDocument[]
 }
 
 enum Role {
@@ -106,6 +107,7 @@ model ProfessionalProfile {
   projects       ProfessionalProject[]
   certifications ProfessionalCertification[]
   links          ProfessionalLink[]
+  portfolios     PortfolioDocument[]
 }
 
 model ProfessionalExperience {
@@ -229,4 +231,29 @@ model AIGeneration {
   completedAt     DateTime?
 
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  portfolios      PortfolioDocument[]
+}
+
+enum PortfolioStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model PortfolioDocument {
+  id                 String   @id @default(cuid())
+  userId             String
+  version            Int
+  status             PortfolioStatus @default(DRAFT)
+  
+  content            String   // JSON string of structured portfolio
+  sourceProfileId    String
+  sourceAiGenerationId String?
+  
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sourceProfile      ProfessionalProfile @relation(fields: [sourceProfileId], references: [id])
+  sourceAiGeneration AIGeneration?       @relation(fields: [sourceAiGenerationId], references: [id])
 }
