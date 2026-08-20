@@ -1,26 +1,87 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Core Colors */
+  --background: #FFFFFF; /* White background */
+  --surface: #FFFFFF; /* White */
+  --surface-muted: #F5EFE8; /* Neutral */
+
+  /* Typography */
+  --text-primary: #000000; /* Dark text */
+  --text-secondary: #4D4D4D; /* Dark text secondary */
+  --text-muted: #937962;
+
+  /* Editorial Borders */
+  --border: #4D4D4D; /* Thin dark borders */
+  --border-strong: #000000;
+  --border-light: #C9BEB9;
+
+  /* Accents & Shapes */
+  --brand: #CC2936; /* Brand/action red */
+  --brand-hover: #A61F2A;
+  
+  --taupe: #937962; /* Warm taupe */
+  --beige: #BFAE9F; /* Soft beige */
+  --accent: #C9BEB9; /* Soft accent (lavender/beige feel) */
+  --warm-accent: #F1BF98; /* Secondary warm accent */
+
+  /* Status */
+  --success: #285943;
+  --warning: #D9822B;
+  --error: #CC2936;
+  --info: #2B6CB0;
+  
+  --focus: #CC2936;
 }
+
+
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-border-light: var(--border-light);
+  
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  
+  --color-taupe: var(--taupe);
+  --color-beige: var(--beige);
+  --color-accent: var(--accent);
+  --color-warm-accent: var(--warm-accent);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Fallbacks */
+  --color-foreground: var(--text-primary);
+  --color-muted-foreground: var(--text-secondary);
+  --color-ring: var(--focus);
+
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-geist-mono);
+
+  /* Controlled Radius */
+  --radius-sm: 0; /* Sharp for editorial */
+  --radius-md: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
 }
