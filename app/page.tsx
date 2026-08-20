@@ -115,7 +115,7 @@ export default function Home() {
                 </div>
                 <CardTitle className="text-2xl mb-4">Career Optimized</CardTitle>
                 <CardDescription className="text-base leading-relaxed">
-                  Engineered to highlight the depth of your work. Designed to communicate competence within the recruiter's strict 6-second review window.
+                  Engineered to highlight the depth of your work. Designed to communicate competence within the recruiter&apos;s strict 6-second review window.
                 </CardDescription>
               </CardHeader>
             </Card>
