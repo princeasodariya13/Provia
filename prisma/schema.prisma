@@ -260,6 +260,8 @@ model PortfolioDocument {
   sourceProfile      ProfessionalProfile @relation(fields: [sourceProfileId], references: [id])
   sourceAiGeneration AIGeneration?       @relation(fields: [sourceAiGenerationId], references: [id])
   publications       PortfolioPublication[]
+
+  @@unique([userId, version])
 }
 
 model PortfolioPublication {

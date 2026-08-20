@@ -5,13 +5,14 @@ import { useState, useEffect } from "react";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, FileText, CheckCircle2, Eye, Globe, ExternalLink, XCircle } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { AlertCircle, FileText, CheckCircle2, Eye, Globe, ExternalLink, XCircle, Edit, History } from "lucide-react";
 import Link from "next/link";
 
 export default function PortfolioPage() {
   const { user, isLoading: authLoading } = useAuth();
   const [data, setData] = useState<any>(null);
+  const [versions, setVersions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [publishing, setPublishing] = useState(false);
@@ -24,6 +25,12 @@ export default function PortfolioPage() {
       if (res.success) {
         setData(res.data);
       }
+      
+      const vRes = await apiClient.get<any>("/api/v1/portfolio/versions");
+      if (vRes.success) {
+        setVersions(vRes.data);
+      }
+
       setLoading(false);
     }
     if (!authLoading) fetchLatest();
@@ -37,6 +44,9 @@ export default function PortfolioPage() {
     
     if (res.success) {
       setData(res.data);
+      // Reload versions
+      const vRes = await apiClient.get<any>("/api/v1/portfolio/versions");
+      if (vRes.success) setVersions(vRes.data);
     } else {
       setError(res.error || "Failed to generate portfolio document.");
     }
@@ -116,6 +126,13 @@ export default function PortfolioPage() {
           )}
 
           <div className="flex flex-wrap gap-4">
+            <Link href={`/portfolio/${data.id}/edit`}>
+              <Button className="rounded-none font-bold flex items-center gap-2">
+                <Edit className="w-4 h-4" />
+                Edit Portfolio
+              </Button>
+            </Link>
+            
             <Link href={`/portfolio/${data.id}/preview`}>
               <Button variant="outline" className="rounded-none font-bold flex items-center gap-2">
                 <Eye className="w-4 h-4" />
@@ -136,55 +153,54 @@ export default function PortfolioPage() {
             )}
           </div>
           
-          {/* Debug View of Content */}
-          <Card className="rounded-none border-border-strong">
-            <CardHeader className="border-b border-border-strong">
-              <CardTitle>Hero Section</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4 text-text-secondary">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <strong>Name:</strong> {data.content.hero.name}
+          <div className="pt-8 border-t border-border-strong mt-8">
+            <div className="flex items-center gap-2 mb-6 text-text-secondary">
+              <History className="w-5 h-5" />
+              <h3 className="text-xl font-bold uppercase tracking-widest text-primary">Version History</h3>
+            </div>
+            <div className="space-y-4">
+              {versions.map((v) => (
+                <div key={v.id} className="border border-border-strong p-4 bg-background flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-3 mb-1">
+                      <span className="font-mono bg-surface border border-border-strong px-2 py-0.5 text-sm font-bold">
+                        Version {v.version}
+                      </span>
+                      {v.id === data.id && (
+                        <span className="text-xs bg-accent text-white px-2 py-0.5 font-bold uppercase tracking-widest">
+                          Latest
+                        </span>
+                      )}
+                      {v.publications && v.publications.length > 0 && (
+                        <span className="text-xs bg-success text-white px-2 py-0.5 font-bold uppercase tracking-widest">
+                          Published
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-sm text-text-secondary">
+                      Created: {new Date(v.createdAt).toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    {v.id !== data.id && (
+                      <Link href={`/portfolio/${v.id}/edit`}>
+                        <Button variant="outline" size="sm" className="rounded-none font-bold">
+                          Restore / Edit
+                        </Button>
+                      </Link>
+                    )}
+                    <Link href={`/portfolio/${v.id}/preview`}>
+                      <Button variant="outline" size="sm" className="rounded-none font-bold">
+                        Preview
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-                <div>
-                  <strong>Headline:</strong> {data.content.hero.headline}
-                </div>
-                <div className="col-span-2">
-                  <strong>Intro:</strong> {data.content.hero.shortIntroduction}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-none border-border-strong">
-            <CardHeader className="border-b border-border-strong">
-              <CardTitle>About Section</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4 text-text-secondary">
-              <p>{data.content.about.summary}</p>
-              {data.content.about.careerThemes?.length > 0 && (
-                <div className="mt-4">
-                  <strong>Themes:</strong> {data.content.about.careerThemes.join(", ")}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-none border-border-strong">
-            <CardHeader className="border-b border-border-strong">
-              <CardTitle>Content Stats</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4 text-text-secondary">
-              <ul className="list-disc list-inside space-y-1">
-                <li>{data.content.experience?.length || 0} Experience items mapped</li>
-                <li>{data.content.education?.length || 0} Education items mapped</li>
-                <li>{data.content.projects?.length || 0} Projects mapped</li>
-                <li>{data.content.skills?.[0]?.skills?.length || 0} Technical skills mapped</li>
-              </ul>
-            </CardContent>
-          </Card>
+              ))}
+            </div>
+          </div>
           
-          <div className="text-xs text-text-secondary bg-surface p-4 border border-border-strong overflow-x-auto">
+          <div className="text-xs text-text-secondary bg-surface p-4 border border-border-strong overflow-x-auto mt-8 hidden">
             <pre>{JSON.stringify(data.content, null, 2)}</pre>
           </div>
         </div>
