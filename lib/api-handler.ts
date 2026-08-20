@@ -30,7 +30,7 @@ export function withAPIHandler(handler: HandlerFunc) {
           {
             success: false,
             error: apiErr.message,
-            ...(apiErr.errors && { details: apiErr.errors }),
+            ...(apiErr.errors ? { details: apiErr.errors } : {}),
           },
           { status: apiErr.statusCode }
         );
