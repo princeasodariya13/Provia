@@ -1,5 +1,18 @@
 import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
 
+function getSafeUrl(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  try {
+    const parsed = new URL(url, "http://localhost"); // fallback base for relative
+    if (['http:', 'https:', 'mailto:', 'tel:'].includes(parsed.protocol)) {
+      return parsed.href;
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function Hero({ data }: { data: PortfolioDocumentDTO["hero"] }) {
   return (
     <header className="pt-32 pb-16 border-b-2 border-[#000000] relative">
@@ -19,7 +32,7 @@ export function Hero({ data }: { data: PortfolioDocumentDTO["hero"] }) {
           {data.primaryLinks.map((link, i) => (
             <a 
               key={i} 
-              href={link.url} 
+              href={getSafeUrl(link.url) || "#"} 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-sm font-bold tracking-widest uppercase pb-1 border-b-2 border-transparent hover:border-[#CC2936] transition-colors"

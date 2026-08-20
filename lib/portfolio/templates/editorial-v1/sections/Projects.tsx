@@ -1,5 +1,18 @@
 import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
 
+function getSafeUrl(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  try {
+    const parsed = new URL(url, "http://localhost");
+    if (['http:', 'https:', 'mailto:', 'tel:'].includes(parsed.protocol)) {
+      return parsed.href;
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function Projects({ data }: { data: PortfolioDocumentDTO["projects"] }) {
   if (!data || data.length === 0) return null;
 
@@ -28,7 +41,7 @@ export function Projects({ data }: { data: PortfolioDocumentDTO["projects"] }) {
             )}
             {(project.url || project.repositoryUrl) && (
               <a 
-                href={project.url || project.repositoryUrl || "#"} 
+                href={getSafeUrl(project.url) || getSafeUrl(project.repositoryUrl) || "#"} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-sm font-bold tracking-widest uppercase pb-1 border-b-2 border-[#000000] group-hover:border-[#C9BEB9] group-hover:text-[#F5EFE8] transition-colors inline-block"
