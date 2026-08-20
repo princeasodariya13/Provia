@@ -20,6 +20,10 @@ Establish a secure, scalable, and production-grade authentication and identity f
 
 ## 4. Authentication Architecture
 - **Stateless JWT via Cookies**: User identity is serialized into a signed JWT (JWS) and stored in a `Secure`, `HttpOnly`, `SameSite=Lax` cookie.
+  - The JWT is cryptographically signed.
+  - The JWT payload itself is not encrypted.
+  - The authentication cookie is HttpOnly.
+  - Browser JavaScript cannot directly read the cookie.
 - **Library**: `jose` (edge-compatible, fast, secure).
 - **Session Expiration**: 7 days.
 
