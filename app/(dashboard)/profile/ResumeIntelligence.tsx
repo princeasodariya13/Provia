@@ -1,21 +1,23 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
 import { apiClient } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UploadCloud, CheckCircle, AlertCircle, RefreshCw, ChevronDown, ChevronUp } from "lucide-react";
+import { CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { UploadCloud, CheckCircle, AlertCircle, RefreshCw, FileText, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
 
 export function ResumeIntelligence() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [resumeData, setResumeData] = useState<any>(null);
   const [status, setStatus] = useState<string>("NONE");
   const [expanded, setExpanded] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selections, setSelections] = useState<any>({
     personalInfo: false,
     summary: false,
@@ -31,6 +33,7 @@ export function ResumeIntelligence() {
   const [applySuccess, setApplySuccess] = useState(false);
 
   const fetchResumeStatus = async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = await apiClient.get<any>("/api/v1/profile/resume");
     if (res.success && res.data) {
       setResumeData(res.data);
@@ -42,6 +45,7 @@ export function ResumeIntelligence() {
 
   useEffect(() => {
     let isMounted = true;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     apiClient.get<any>("/api/v1/profile/resume").then((res) => {
       if (!isMounted) return;
       if (res.success && res.data) {
@@ -89,6 +93,7 @@ export function ResumeIntelligence() {
       setStatus(data.data.status);
       setFile(null);
       await fetchResumeStatus();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message || "Something went wrong");
     } finally {
@@ -97,16 +102,17 @@ export function ResumeIntelligence() {
   };
 
   const toggleSelection = (category: string, idx?: number) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setSelections((prev: any) => {
       const newSel = { ...prev };
-      if (idx !== undefined) {
+      if (idx === undefined) {
+        newSel[category] = !newSel[category];
+      } else {
         if (newSel[category].includes(idx)) {
           newSel[category] = newSel[category].filter((i: number) => i !== idx);
         } else {
-          newSel[category] = [...newSel[category], idx];
+          newSel[category].push(idx);
         }
-      } else {
-        newSel[category] = !newSel[category];
       }
       return newSel;
     });
@@ -115,155 +121,176 @@ export function ResumeIntelligence() {
   const handleApply = async () => {
     setApplying(true);
     setApplySuccess(false);
-    setError(null);
-
-    const res = await apiClient.post("/api/v1/profile/resume/apply", {
-      resumeId: resumeData.resumeId,
-      selections,
-    });
-
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res = await apiClient.post<any>("/api/v1/profile/resume/apply", { selections });
+    
     if (res.success) {
       setApplySuccess(true);
       setTimeout(() => {
+        setExpanded(false);
         setApplySuccess(false);
-        window.location.reload(); // Quick refresh to load imported profile data into ProfileForm
-      }, 1500);
+        window.location.reload();
+      }, 2000);
     } else {
-      setError(res.error || "Failed to apply resume data");
+      alert("Failed to apply data.");
     }
     setApplying(false);
   };
 
   return (
-    <Card className="border-border-strong rounded-none">
-      <CardHeader className="border-b border-border-strong bg-surface">
-        <CardTitle>Resume Intelligence</CardTitle>
-        <p className="text-text-secondary text-sm">Upload your PDF resume to automatically populate your professional profile.</p>
-      </CardHeader>
-      <CardContent className="pt-6 space-y-6">
-        
-        <div className="flex items-center gap-4">
-          <Input type="file" accept="application/pdf" onChange={handleFileChange} className="rounded-none cursor-pointer max-w-sm" />
-          <Button onClick={handleUpload} disabled={!file || uploading} className="rounded-none">
-            {uploading ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <UploadCloud className="w-4 h-4 mr-2" />}
-            Upload Resume
-          </Button>
-        </div>
-
-        {error && <div className="text-error border border-error p-4 bg-error/10 text-sm flex items-center gap-2"><AlertCircle className="w-4 h-4" /> {error}</div>}
-
-        {status === "QUEUED" || status === "PROCESSING" ? (
-          <div className="p-6 bg-surface border border-border-strong text-center space-y-4">
-            <RefreshCw className="w-8 h-8 animate-spin mx-auto text-accent" />
-            <p className="font-semibold text-lg animate-pulse">Analyzing Resume...</p>
-          </div>
-        ) : status === "FAILED" ? (
-          <div className="p-4 bg-error/10 border border-error text-error text-sm">
-            <p className="font-bold mb-1">Extraction Failed</p>
-            <p>{resumeData?.extractionError || "Could not extract data from the provided PDF."}</p>
-          </div>
-        ) : status === "COMPLETED" && resumeData?.structuredData ? (
-          <div className="border border-border-strong">
-            <div className="p-4 flex justify-between items-center bg-surface border-b border-border-strong cursor-pointer" onClick={() => setExpanded(!expanded)}>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="text-success w-5 h-5" />
-                <div>
-                  <p className="font-bold">Ready for Review</p>
-                  <p className="text-xs text-text-secondary">Your existing profile will not be overwritten automatically.</p>
-                </div>
-              </div>
-              <Button variant="ghost" size="sm">{expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}</Button>
+    <section className="bg-surface border border-border-light rounded-2xl overflow-hidden shadow-sm">
+      <div className="border-b border-border-light p-5 bg-surface-muted/30 flex items-center justify-between">
+        <h2 className="text-base font-bold text-text-primary flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-brand" /> Resume Intelligence
+        </h2>
+        {status !== "NONE" && (
+          <Badge variant={status === "COMPLETED" ? "success" : "warning"} className="text-[10px] px-2 py-0 uppercase">
+            {status}
+          </Badge>
+        )}
+      </div>
+      
+      <CardContent className="p-6">
+        {status === "NONE" || status === "FAILED" ? (
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-surface-muted flex items-center justify-center">
+              <FileText className="w-8 h-8 text-text-muted" />
+            </div>
+            <div className="text-center space-y-1">
+              <h3 className="text-sm font-bold text-text-primary">Upload PDF Resume</h3>
+              <p className="text-xs text-text-secondary max-w-[200px] mx-auto">Extract experiences and skills automatically.</p>
             </div>
             
-            {expanded && (
-              <div className="p-4 space-y-6">
-                
-                {/* Review Categories */}
-                <div className="space-y-4">
-                  {resumeData.structuredData.personalInfo && (
-                    <div className="flex items-start gap-3">
-                      <input type="checkbox" checked={selections.personalInfo} onChange={() => toggleSelection("personalInfo")} className="mt-1" />
-                      <div>
-                        <p className="font-semibold">Personal Info</p>
-                        <p className="text-sm text-text-secondary">{resumeData.structuredData.personalInfo.fullName} • {resumeData.structuredData.personalInfo.location}</p>
-                      </div>
-                    </div>
-                  )}
+            <div className="w-full space-y-3 mt-2">
+              <Input type="file" accept="application/pdf" onChange={handleFileChange} className="cursor-pointer text-xs h-9 rounded-lg" />
+              <Button onClick={handleUpload} disabled={!file || uploading} size="sm" className="w-full rounded-full shadow-sm font-bold bg-brand hover:bg-brand-hover">
+                {uploading ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <UploadCloud className="w-4 h-4 mr-2" />}
+                Process Resume
+              </Button>
+              {error && <div className="text-error text-xs font-semibold text-center">{error}</div>}
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-5">
+            <div className="flex items-center gap-4 p-4 border border-border-light bg-surface-muted/30 rounded-xl">
+              <FileText className="w-8 h-8 text-brand shrink-0" />
+              <div className="min-w-0">
+                <p className="font-bold text-sm text-text-primary truncate">{resumeData?.filename}</p>
+                <p className="text-[11px] text-text-secondary mt-0.5">
+                  {(resumeData?.size / 1024).toFixed(1)} KB • Uploaded {new Date(resumeData?.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
 
-                  {resumeData.structuredData.summary && (
-                    <div className="flex items-start gap-3">
-                      <input type="checkbox" checked={selections.summary} onChange={() => toggleSelection("summary")} className="mt-1" />
-                      <div>
-                        <p className="font-semibold">Summary</p>
-                        <p className="text-sm text-text-secondary line-clamp-2">{resumeData.structuredData.summary}</p>
-                      </div>
-                    </div>
-                  )}
+            {status === "QUEUED" || status === "PROCESSING" ? (
+              <div className="p-5 text-center bg-brand-muted/20 border border-brand/20 rounded-xl space-y-3">
+                <RefreshCw className="w-6 h-6 text-brand animate-spin mx-auto" />
+                <div>
+                  <p className="font-bold text-sm text-brand">AI Processing</p>
+                  <p className="text-xs text-brand/70 mt-1">Extracting structured data from your PDF...</p>
+                </div>
+              </div>
+            ) : status === "COMPLETED" ? (
+              <div className="space-y-3">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setExpanded(!expanded)} 
+                  className="w-full rounded-xl flex justify-between shadow-sm"
+                >
+                  <span className="font-bold">Review Extracted Data</span>
+                  {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </Button>
 
-                  {resumeData.structuredData.experience?.length > 0 && (
-                    <div className="space-y-2">
-                      <p className="font-semibold">Experience</p>
-                      {resumeData.structuredData.experience.map((exp: any, idx: number) => (
-                        <div key={idx} className="flex items-start gap-3 ml-4">
-                          <input type="checkbox" checked={selections.experience.includes(idx)} onChange={() => toggleSelection("experience", idx)} className="mt-1" />
-                          <p className="text-sm text-text-secondary"><span className="font-medium text-text">{exp.title}</span> at {exp.company}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {resumeData.structuredData.education?.length > 0 && (
-                    <div className="space-y-2">
-                      <p className="font-semibold">Education</p>
-                      {resumeData.structuredData.education.map((edu: any, idx: number) => (
-                        <div key={idx} className="flex items-start gap-3 ml-4">
-                          <input type="checkbox" checked={selections.education.includes(idx)} onChange={() => toggleSelection("education", idx)} className="mt-1" />
-                          <p className="text-sm text-text-secondary"><span className="font-medium text-text">{edu.degree}</span> at {edu.institution}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {resumeData.structuredData.skills?.length > 0 && (
-                    <div className="space-y-2">
-                      <p className="font-semibold">Skills</p>
-                      <div className="ml-4 flex flex-wrap gap-2">
-                        {resumeData.structuredData.skills.map((skill: any, idx: number) => (
-                          <label key={idx} className="flex items-center gap-1 bg-surface px-2 py-1 text-xs border border-border-strong cursor-pointer hover:bg-border-strong/50">
-                            <input type="checkbox" checked={selections.skills.includes(idx)} onChange={() => toggleSelection("skills", idx)} />
-                            {skill.name}
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* (Truncated detailed projects/certs for brevity, but similar pattern) */}
-                  {resumeData.structuredData.projects?.length > 0 && (
-                    <div className="space-y-2">
-                      <p className="font-semibold">Projects</p>
-                      {resumeData.structuredData.projects.map((proj: any, idx: number) => (
-                        <div key={idx} className="flex items-start gap-3 ml-4">
-                          <input type="checkbox" checked={selections.projects.includes(idx)} onChange={() => toggleSelection("projects", idx)} className="mt-1" />
-                          <p className="text-sm text-text-secondary"><span className="font-medium text-text">{proj.name}</span></p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                <div className="text-center">
+                  <span className="text-[10px] text-text-secondary">Or</span>
                 </div>
 
-                <div className="pt-4 border-t border-border-strong flex items-center justify-end gap-4">
-                  {applySuccess && <span className="text-success text-sm font-medium">Profile Imported Successfully!</span>}
-                  <Button onClick={handleApply} disabled={applying} className="rounded-none font-bold">
-                    {applying ? "Importing..." : "Import Selected to Profile"}
-                  </Button>
+                <div className="relative">
+                  <Input type="file" accept="application/pdf" onChange={handleFileChange} className="cursor-pointer text-xs h-9 rounded-lg" />
+                  {file && (
+                    <Button onClick={handleUpload} disabled={uploading} size="sm" className="w-full rounded-full shadow-sm font-bold bg-text-primary text-background hover:bg-text-primary/90 mt-2">
+                      {uploading ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <UploadCloud className="w-4 h-4 mr-2" />}
+                      Process New Resume
+                    </Button>
+                  )}
                 </div>
+              </div>
+            ) : null}
+          </div>
+        )}
+      </CardContent>
+
+      {/* Expanded Review Section */}
+      {expanded && resumeData?.extractedData && (
+        <div className="border-t border-border-light bg-surface-muted/10 p-5 space-y-6">
+          <div className="bg-warning-muted/30 border border-warning/30 p-3 rounded-lg flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-warning shrink-0 mt-0.5" />
+            <p className="text-xs font-medium text-warning-strong">Select the items below that you want to import into your Provia profile. Existing data will not be overwritten automatically.</p>
+          </div>
+
+          <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+            
+            {resumeData.extractedData.personalInfo && (
+              <div className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={selections.personalInfo} onChange={() => toggleSelection("personalInfo")} className="w-4 h-4 accent-brand rounded border-border" />
+                  <span className="font-bold text-sm text-text-primary">Personal Info</span>
+                </label>
+                {selections.personalInfo && (
+                  <div className="pl-7 text-xs text-text-secondary space-y-1">
+                    <p>Name: {resumeData.extractedData.personalInfo.fullName}</p>
+                    <p>Email: {resumeData.extractedData.personalInfo.email}</p>
+                    <p>Location: {resumeData.extractedData.personalInfo.location}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {resumeData.extractedData.experiences?.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="font-bold text-xs uppercase tracking-widest text-text-muted pl-1">Experience ({resumeData.extractedData.experiences.length})</h4>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {resumeData.extractedData.experiences.map((exp: any, i: number) => (
+                  <div key={i} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input type="checkbox" checked={selections.experience.includes(i)} onChange={() => toggleSelection("experience", i)} className="w-4 h-4 accent-brand rounded border-border mt-0.5" />
+                      <div>
+                        <span className="font-bold text-sm text-text-primary">{exp.title}</span>
+                        <p className="text-xs font-semibold text-text-secondary">{exp.company}</p>
+                      </div>
+                    </label>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {resumeData.extractedData.skills?.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="font-bold text-xs uppercase tracking-widest text-text-muted pl-1">Skills ({resumeData.extractedData.skills.length})</h4>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {resumeData.extractedData.skills.map((skill: any, i: number) => (
+                  <div key={i} className="flex items-center gap-3 border border-border-light p-3 rounded-lg bg-surface shadow-sm hover:border-brand-hover transition-colors">
+                    <input type="checkbox" checked={selections.skills.includes(i)} onChange={() => toggleSelection("skills", i)} className="w-4 h-4 accent-brand rounded border-border" />
+                    <span className="text-xs font-bold text-text-primary">{skill.name}</span>
+                  </div>
+                ))}
               </div>
             )}
           </div>
-        ) : null}
 
-      </CardContent>
-    </Card>
+          <div className="pt-4 border-t border-border-light">
+            <Button onClick={handleApply} disabled={applying} className="w-full rounded-full font-bold shadow-sm" size="lg">
+              {applying ? "Importing Data..." : "Import Selected Data"}
+            </Button>
+            {applySuccess && (
+              <p className="text-success text-xs font-bold text-center mt-3 flex items-center justify-center gap-1">
+                <CheckCircle className="w-4 h-4" /> Successfully imported to profile
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+    </section>
   );
 }

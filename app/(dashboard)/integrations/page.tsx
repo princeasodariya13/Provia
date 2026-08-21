@@ -4,12 +4,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { apiClient } from "@/lib/api-client";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/ui/page-header";
 import { CardSkeleton } from "@/components/ui/skeleton";
-import { GitBranch, RefreshCw, CheckCircle2, AlertCircle, ExternalLink, Globe, Share2 } from "lucide-react";
+import { GitBranch, RefreshCw, CheckCircle2, AlertCircle, Briefcase, Plus, Link as LinkIcon, Unlink } from "lucide-react";
 
 interface Connection {
   provider: "GITHUB" | "LINKEDIN";
@@ -72,12 +71,12 @@ export default function IntegrationsPage() {
 
   if (isAuthLoading || isLoading) {
     return (
-      <div className="space-y-8 max-w-5xl mx-auto">
-        <div className="space-y-2">
-          <div className="h-8 w-64 bg-surface animate-pulse" />
-          <div className="h-4 w-96 bg-surface animate-pulse" />
+      <div className="space-y-12 max-w-7xl mx-auto">
+        <div className="space-y-4">
+          <div className="h-10 w-1/3 bg-surface-muted animate-pulse" />
+          <div className="h-5 w-1/2 bg-surface-muted animate-pulse" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <CardSkeleton />
           <CardSkeleton />
         </div>
@@ -85,11 +84,14 @@ export default function IntegrationsPage() {
     );
   }
 
+  const githubState = getProviderState("GITHUB");
+  const linkedinState = getProviderState("LINKEDIN");
+
   return (
-    <div className="space-y-8 max-w-5xl mx-auto pb-16">
+    <div className="space-y-12 max-w-7xl mx-auto pb-16">
       <PageHeader
         title="External Integrations"
-        description="Connect your verified GitHub and LinkedIn profiles to import public repositories, work history, and identity signals."
+        description="Connect your verified accounts to automatically import public repositories, work history, and identity signals."
         breadcrumbs={[
           { label: "Workspace", href: "/dashboard" },
           { label: "Integrations", href: "/integrations" },
@@ -97,110 +99,132 @@ export default function IntegrationsPage() {
       />
 
       {error && (
-        <div className="p-4 border border-error bg-error/10 text-error text-sm font-semibold flex items-center gap-2">
+        <div className="p-5 border border-error bg-error-muted text-error text-sm font-semibold flex items-center gap-3 rounded-xl shadow-sm">
           <AlertCircle className="w-5 h-5 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <ProviderCard
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        {/* GitHub Integration */}
+        <IntegrationCard
           name="GitHub"
-          icon={<GitBranch className="w-6 h-6 text-brand" />}
-          description="Import public repositories, commit activity, primary languages, and contributions."
-          state={getProviderState("GITHUB")}
+          icon={<GitBranch className="w-6 h-6" />}
+          description="Import your top public repositories, languages, and contribution statistics directly into your portfolio projects."
+          state={githubState}
           onConnect={() => handleConnect("GITHUB")}
+          connectedIcon={<GitBranch className="w-4 h-4 mr-2" />}
+          connectedLabel="Synced Repositories"
         />
 
-        <ProviderCard
+        {/* LinkedIn Integration */}
+        <IntegrationCard
           name="LinkedIn"
-          icon={<Share2 className="w-6 h-6 text-brand" />}
-          description="Sync verified positions, company details, professional headline, and education history."
-          state={getProviderState("LINKEDIN")}
+          icon={<Briefcase className="w-6 h-6 text-[#0A66C2]" />}
+          description="Sync your professional timeline, validated experience, and skills directly into your profile data."
+          state={linkedinState}
           onConnect={() => handleConnect("LINKEDIN")}
+          connectedIcon={<Briefcase className="w-4 h-4 mr-2" />}
+          connectedLabel="Synced Experience"
         />
+
       </div>
     </div>
   );
 }
 
-function ProviderCard({
-  name,
-  icon,
-  description,
-  state,
+function IntegrationCard({ 
+  name, 
+  icon, 
+  description, 
+  state, 
   onConnect,
-}: {
-  name: string;
-  icon: React.ReactNode;
-  description: string;
-  state: { state: string; lastSyncAt: string | null; errorMessage: string | null };
-  onConnect: () => void;
+  connectedIcon,
+  connectedLabel
+}: { 
+  name: string, 
+  icon: React.ReactNode, 
+  description: string, 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  state: any,
+  onConnect: () => void,
+  connectedIcon: React.ReactNode,
+  connectedLabel: string
 }) {
-  const isConnected = state.state === "SYNCED" || state.state === "CONNECTED";
+  
+  const isConnected = state.state === "CONNECTED" || state.state === "SYNCED";
   const isProcessing = state.state === "IMPORTING";
+  const hasError = state.state === "FAILED";
 
   return (
-    <Card className="border-border-strong bg-background rounded-none hover:border-brand/50 transition-colors">
-      <CardHeader className="border-b border-border-light pb-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 border border-border-strong bg-surface">{icon}</div>
+    <div className="bg-surface border border-border-light rounded-2xl overflow-hidden shadow-sm flex flex-col h-full card-hover-depth">
+      <div className="p-8 flex-1 flex flex-col">
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <div className={`p-4 rounded-2xl flex items-center justify-center ${isConnected ? 'bg-success-muted' : 'bg-surface-muted border border-border-light'}`}>
+              {icon}
+            </div>
             <div>
-              <CardTitle className="text-xl font-bold">{name}</CardTitle>
-              <CardDescription className="text-xs text-text-secondary mt-0.5">
-                OAuth 2.0 Identity Provider
-              </CardDescription>
+              <h2 className="text-xl font-bold text-text-primary">{name}</h2>
+              <div className="flex items-center gap-2 mt-1">
+                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-success' : isProcessing ? 'bg-brand animate-pulse' : hasError ? 'bg-error' : 'bg-border-strong'}`} />
+                <span className="text-xs font-bold uppercase tracking-widest text-text-secondary">
+                  {state.state.replace("_", " ")}
+                </span>
+              </div>
             </div>
           </div>
-          <Badge
-            variant={
-              isConnected ? "success" : isProcessing ? "warning" : state.state === "FAILED" ? "error" : "secondary"
-            }
-          >
-            {state.state}
-          </Badge>
         </div>
-      </CardHeader>
-      <CardContent className="pt-6 space-y-6">
-        <p className="text-sm text-text-secondary leading-relaxed">{description}</p>
 
-        {state.errorMessage && (
-          <div className="p-3 border border-error bg-error/10 text-error text-xs font-semibold">
-            {state.errorMessage}
-          </div>
-        )}
+        <p className="text-sm text-text-secondary mb-8 flex-1 leading-relaxed">
+          {description}
+        </p>
 
-        {state.lastSyncAt && (
-          <p className="text-xs text-text-secondary font-mono">
-            Last synced: {new Date(state.lastSyncAt).toLocaleString()}
-          </p>
-        )}
-
-        <div>
-          {!isConnected && !isProcessing ? (
-            <Button onClick={onConnect} variant="default" className="w-full flex items-center justify-center gap-2">
-              <ExternalLink className="w-4 h-4" />
-              Connect {name}
-            </Button>
-          ) : isProcessing ? (
-            <Button disabled variant="outline" className="w-full flex items-center justify-center gap-2">
-              <RefreshCw className="w-4 h-4 animate-spin text-brand" />
-              Syncing Data...
-            </Button>
-          ) : (
-            <div className="space-y-2">
-              <div className="p-3 border border-success bg-success/10 text-success text-xs font-bold flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4" />
-                {name} account connected successfully
+        {isConnected ? (
+          <div className="space-y-6">
+            <div className="p-4 bg-surface-muted/50 border border-border-light rounded-xl space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-text-secondary flex items-center">
+                  {connectedIcon} {connectedLabel}
+                </span>
+                <Badge variant="success">Active</Badge>
               </div>
-              <Button onClick={onConnect} variant="outline" size="sm" className="w-full">
-                Re-sync Account
+              {state.lastSyncAt && (
+                <div className="text-xs text-text-muted">
+                  Last synced: {new Date(state.lastSyncAt).toLocaleString()}
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-3">
+              <Button variant="outline" className="w-full rounded-full bg-white shadow-sm font-bold" onClick={onConnect}>
+                <RefreshCw className="w-4 h-4 mr-2" /> Force Sync
+              </Button>
+              <Button variant="outline" className="w-full rounded-full text-error hover:bg-error-muted hover:border-error transition-colors font-bold hover:text-error">
+                <Unlink className="w-4 h-4 mr-2" /> Disconnect
               </Button>
             </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+          </div>
+        ) : isProcessing ? (
+          <div className="p-4 bg-brand-muted/30 border border-brand/20 rounded-xl flex items-center justify-center gap-3 h-[104px]">
+            <RefreshCw className="w-5 h-5 text-brand animate-spin" />
+            <span className="text-sm font-bold text-brand">Importing Data...</span>
+          </div>
+        ) : (
+          <div className="mt-auto">
+            {hasError && (
+              <div className="mb-4 p-3 bg-error-muted border border-error text-error text-xs font-semibold rounded-lg flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{state.errorMessage || "Connection failed. Please try again."}</span>
+              </div>
+            )}
+            <Button variant="default" className="w-full rounded-full shadow-sm font-bold py-6 text-sm" onClick={onConnect}>
+              <LinkIcon className="w-4 h-4 mr-2" /> Connect {name}
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

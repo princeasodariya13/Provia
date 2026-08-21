@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/ui/page-header";
 
 export default function ProfilePage() {
   return (
-    <div className="space-y-8 max-w-6xl mx-auto pb-16">
+    <div className="space-y-12 max-w-7xl mx-auto pb-16">
       <PageHeader
         title="Profile Workspace"
         description="Manage your canonical professional identity. The verified data here seeds your portfolio and AI analysis."
@@ -15,12 +15,12 @@ export default function ProfilePage() {
         ]}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-1 space-y-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-10 items-start">
+        <div className="xl:col-span-1 space-y-10 sticky top-24">
           <AvatarUploader />
           <ResumeIntelligence />
         </div>
-        <div className="lg:col-span-2">
+        <div className="xl:col-span-2">
           <ProfileForm />
         </div>
       </div>

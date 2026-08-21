@@ -5,12 +5,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { apiClient } from "@/lib/api-client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { StatCard } from "@/components/ui/stat-card";
 import { PageHeader } from "@/components/ui/page-header";
-import { EmptyState } from "@/components/ui/empty-state";
 import { StatCardSkeleton, CardSkeleton } from "@/components/ui/skeleton";
 import {
   User,
@@ -18,22 +16,24 @@ import {
   Globe,
   BarChart3,
   GitBranch,
-  Upload,
   ArrowRight,
   CheckCircle2,
-  AlertCircle,
   Sparkles,
   ExternalLink,
-  Plus,
   Zap,
 } from "lucide-react";
 
 export default function DashboardPage() {
   const { user, isLoading: authLoading } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [profile, setProfile] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [resumeData, setResumeData] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [portfolioData, setPortfolioData] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [analyticsData, setAnalyticsData] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [connections, setConnections] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -66,7 +66,6 @@ export default function DashboardPage() {
     }
   }, [user, authLoading]);
 
-  // Real Profile Completeness Calculation
   const calcCompleteness = () => {
     if (!profile) return 0;
     let score = 0;
@@ -107,19 +106,24 @@ export default function DashboardPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="space-y-8">
-        <div className="space-y-2">
-          <div className="h-8 w-64 bg-surface animate-pulse" />
-          <div className="h-4 w-96 bg-surface animate-pulse" />
+      <div className="space-y-12">
+        <div className="space-y-4">
+          <div className="h-10 w-1/3 bg-surface-muted animate-pulse" />
+          <div className="h-5 w-1/2 bg-surface-muted animate-pulse" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <StatCardSkeleton />
           <StatCardSkeleton />
           <StatCardSkeleton />
           <StatCardSkeleton />
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <CardSkeleton />
-          <CardSkeleton />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-8">
+            <CardSkeleton />
+          </div>
+          <div className="space-y-8">
+            <CardSkeleton />
+          </div>
         </div>
       </div>
     );
@@ -130,274 +134,251 @@ export default function DashboardPage() {
   const publicUrl = portfolioData?.publication?.publicUrl;
 
   return (
-    <div className="space-y-10">
-      {/* Page Header */}
-      <PageHeader
-        title={`${getGreeting()}, ${user?.fullName?.split(" ")[0] || "Professional"}`}
-        description="Your professional identity operating system. Build, refine, and publish your career story."
-        breadcrumbs={[{ label: "Overview", href: "/dashboard" }]}
-        actions={
-          <div className="flex gap-3">
-            <Button variant="outline" asChild>
-              <Link href="/profile">Edit Profile</Link>
+    <div className="space-y-12 max-w-7xl mx-auto">
+      {/* ── HERO / WELCOME SECTION ── */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border-light pb-8">
+        <div>
+          <h1 className="text-4xl font-bold tracking-tight text-text-primary mb-3">
+            {getGreeting()}, {user?.fullName?.split(" ")[0] || "Professional"}
+          </h1>
+          <p className="text-text-secondary text-lg max-w-2xl leading-relaxed">
+            Your professional identity is <span className="font-semibold text-text-primary">{completeness}% complete</span>. 
+            Build, refine, and publish your career story seamlessly.
+          </p>
+        </div>
+        <div className="flex gap-3 shrink-0">
+          <Button variant="outline" size="lg" asChild className="rounded-full">
+            <Link href="/profile">Edit Profile</Link>
+          </Button>
+          {isPortfolioPublished ? (
+            <Button variant="default" size="lg" asChild className="rounded-full shadow-sm">
+              <a href={publicUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                <Globe className="w-4 h-4" />
+                Live Portfolio
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
             </Button>
-            {isPortfolioPublished ? (
-              <Button variant="default" asChild>
-                <a href={publicUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                  <Globe className="w-4 h-4" />
-                  View Live Site
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </Button>
-            ) : (
-              <Button variant="default" asChild>
-                <Link href="/portfolio" className="flex items-center gap-2">
-                  <Zap className="w-4 h-4" />
-                  Publish Portfolio
-                </Link>
-              </Button>
-            )}
-          </div>
-        }
-      />
+          ) : (
+            <Button variant="default" size="lg" asChild className="rounded-full shadow-sm">
+              <Link href="/portfolio" className="flex items-center gap-2">
+                <Zap className="w-4 h-4" />
+                Publish Portfolio
+              </Link>
+            </Button>
+          )}
+        </div>
+      </div>
 
-      {/* Top Metrics Row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <StatCard
-          title="Profile Strength"
+      {/* ── TOP METRICS ROW ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <MetricCard
+          title="Profile Completeness"
           value={`${completeness}%`}
-          subtext={completeness >= 80 ? "Comprehensive" : completeness >= 50 ? "Moderate" : "Needs Attention"}
-          icon={<User className="w-5 h-5 text-brand" />}
+          subtext={completeness >= 80 ? "Excellent" : "Needs Attention"}
+          icon={<User className="w-4 h-4 text-text-muted" />}
         />
-
-        <StatCard
-          title="Resume Intelligence"
+        <MetricCard
+          title="Resume Extraction"
           value={resumeData ? "Active" : "None"}
-          subtext={resumeData ? resumeData.filename : "No resume uploaded"}
-          icon={<FileText className="w-5 h-5 text-brand" />}
+          subtext={resumeData ? "Processed" : "Upload required"}
+          icon={<FileText className="w-4 h-4 text-text-muted" />}
         />
-
-        <StatCard
+        <MetricCard
           title="Total Views"
           value={analyticsData?.summary?.totalViews?.toLocaleString() || "0"}
-          subtext="All-time portfolio traffic"
-          icon={<BarChart3 className="w-5 h-5 text-brand" />}
+          subtext="Lifetime traffic"
+          icon={<BarChart3 className="w-4 h-4 text-text-muted" />}
         />
-
-        <StatCard
+        <MetricCard
           title="Portfolio Status"
           value={isPortfolioPublished ? "Live" : "Draft"}
-          subtext={isPortfolioPublished ? "Publicly accessible" : "Private draft version"}
-          icon={<Globe className="w-5 h-5 text-brand" />}
+          subtext={isPortfolioPublished ? "Publicly accessible" : "Private"}
+          icon={<Globe className="w-4 h-4 text-text-muted" />}
         />
       </div>
 
-      {/* Main Grid Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left 2 Columns */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Profile Completion Engine Card */}
-          <Card className="border-border-strong bg-background rounded-none">
-            <CardHeader className="border-b border-border-light pb-4">
-              <div className="flex items-center justify-between">
+      {/* ── MAIN WORKSPACE GRID ── */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
+        
+        {/* Left Column (Main Focus) */}
+        <div className="xl:col-span-2 space-y-10">
+          
+          {/* Action Checklist */}
+          <section>
+            <div className="mb-4">
+              <h2 className="text-xl font-bold tracking-tight text-text-primary">Recommended Actions</h2>
+              <p className="text-sm text-text-secondary mt-1">Intelligent next steps to strengthen your professional profile.</p>
+            </div>
+            
+            {recommendations.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {recommendations.slice(0, 4).map((rec, i) => (
+                  <Link
+                    key={i}
+                    href={rec.href}
+                    className="group relative flex flex-col justify-between p-5 bg-surface border border-border-light hover:border-brand-hover rounded-xl card-hover-depth"
+                  >
+                    <span className="text-sm font-semibold text-text-primary mb-6 pr-6">
+                      {rec.label}
+                    </span>
+                    <div className="flex items-center text-xs font-bold text-brand group-hover:text-brand-hover">
+                      Take action <ArrowRight className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="p-6 bg-surface border border-success/30 rounded-xl flex items-start gap-4">
+                <div className="p-2 bg-success-muted rounded-full shrink-0">
+                  <CheckCircle2 className="w-5 h-5 text-success" />
+                </div>
                 <div>
-                  <CardTitle className="text-xl font-bold">Profile Strength Engine</CardTitle>
-                  <p className="text-xs text-text-secondary mt-1">
-                    Calculated from verified factual fields in your canonical profile.
-                  </p>
-                </div>
-                <Badge variant={completeness >= 80 ? "success" : completeness >= 50 ? "warning" : "error"}>
-                  {completeness}% Complete
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-6 space-y-6">
-              {/* Progress Bar */}
-              <div className="space-y-2">
-                <div className="w-full bg-surface-muted h-3 border border-border-strong overflow-hidden">
-                  <div
-                    className="bg-brand h-full transition-all duration-500"
-                    style={{ width: `${completeness}%` }}
-                  />
-                </div>
-                <div className="flex justify-between text-xs text-text-secondary font-medium">
-                  <span>Getting Started</span>
-                  <span>Professional Ready</span>
+                  <h3 className="text-sm font-bold text-text-primary mb-1">You&apos;re all set!</h3>
+                  <p className="text-sm text-text-secondary">Your profile is comprehensive and fully updated. Ensure your portfolio is published to share it with the world.</p>
                 </div>
               </div>
+            )}
+          </section>
 
-              {/* Action Checklist */}
-              {recommendations.length > 0 ? (
-                <div className="space-y-3 pt-2">
-                  <h4 className="text-xs font-bold uppercase tracking-widest text-text-secondary">
-                    Recommended Next Steps
-                  </h4>
-                  <div className="space-y-2">
-                    {recommendations.slice(0, 4).map((rec, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center justify-between p-3 border border-border-light bg-surface hover:border-brand transition-colors"
-                      >
-                        <span className="text-xs font-semibold text-text-primary flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-brand" />
-                          {rec.label}
-                        </span>
-                        <Link
-                          href={rec.href}
-                          className="text-xs font-bold text-brand hover:underline flex items-center gap-1"
-                        >
-                          Action <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
+          {/* Resume Intelligence */}
+          <section>
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight text-text-primary flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-brand" /> Resume Intelligence
+                </h2>
+                <p className="text-sm text-text-secondary mt-1">Automatic extraction of structured career data.</p>
+              </div>
+            </div>
+
+            <Card className="rounded-xl overflow-hidden border-border-light shadow-sm">
+              <CardContent className="p-0">
+                {resumeData ? (
+                  <div className="flex flex-col md:flex-row md:items-center justify-between p-6 gap-6">
+                    <div className="flex items-start gap-4">
+                      <div className="p-3 bg-brand-muted text-brand rounded-lg shrink-0">
+                        <FileText className="w-6 h-6" />
                       </div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="p-4 border border-success bg-success/10 text-success text-xs font-bold flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4" />
-                  Your profile has all essential fields completed!
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Resume Intelligence Primary Card */}
-          <Card className="border-border-strong bg-background rounded-none">
-            <CardHeader className="border-b border-border-light pb-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-brand" />
-                  <CardTitle className="text-xl font-bold">Resume Intelligence</CardTitle>
-                </div>
-                {resumeData && (
-                  <Badge variant={resumeData.status === "COMPLETED" ? "success" : "warning"}>
-                    {resumeData.status}
-                  </Badge>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent className="pt-6">
-              {resumeData ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 border border-border-strong bg-surface">
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-8 h-8 text-brand" />
                       <div>
-                        <p className="font-bold text-sm text-text-primary">{resumeData.filename}</p>
-                        <p className="text-xs text-text-secondary">
-                          {(resumeData.size / 1024).toFixed(1)} KB • Uploaded{" "}
-                          {new Date(resumeData.createdAt).toLocaleDateString()}
+                        <div className="flex items-center gap-3 mb-1">
+                          <h3 className="font-bold text-text-primary">{resumeData.filename}</h3>
+                          <Badge variant={resumeData.status === "COMPLETED" ? "success" : "warning"} className="text-[10px] px-2 py-0">
+                            {resumeData.status}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-text-secondary">
+                          {(resumeData.size / 1024).toFixed(1)} KB • Uploaded {new Date(resumeData.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href="/profile">Manage Resume</Link>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Button variant="outline" className="rounded-full" asChild>
+                        <Link href="/profile">Upload New</Link>
+                      </Button>
+                      {resumeData.status === "COMPLETED" && (
+                        <Button variant="default" className="rounded-full" asChild>
+                          <Link href="/profile">Review Data</Link>
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-8 text-center bg-surface flex flex-col items-center justify-center">
+                    <div className="w-12 h-12 bg-surface-muted rounded-full flex items-center justify-center mb-4">
+                      <FileText className="w-6 h-6 text-text-muted" />
+                    </div>
+                    <h3 className="text-base font-bold text-text-primary mb-2">No resume uploaded yet</h3>
+                    <p className="text-sm text-text-secondary max-w-md mx-auto mb-6">
+                      Upload your PDF resume to let Provia automatically extract your professional history, skills, and projects into structured data.
+                    </p>
+                    <Button variant="default" className="rounded-full" asChild>
+                      <Link href="/profile">Upload Resume</Link>
                     </Button>
                   </div>
+                )}
+              </CardContent>
+            </Card>
+          </section>
 
-                  {resumeData.status === "COMPLETED" && (
-                    <div className="p-4 bg-surface-muted/50 border border-border-light text-xs text-text-secondary space-y-2">
-                      <p className="font-bold text-text-primary">Extraction Results:</p>
-                      <p>
-                        Structured resume analysis completed. Experience, skills, and education entries are ready for review and transactional import into your profile.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <EmptyState
-                  title="No resume uploaded"
-                  description="Upload your PDF resume to let Provia automatically extract experience, education, skills, and projects."
-                  icon={<FileText className="w-6 h-6" />}
-                  actionLabel="Upload Resume"
-                  actionHref="/profile"
-                />
-              )}
-            </CardContent>
-          </Card>
         </div>
 
-        {/* Right Column */}
-        <div className="space-y-8">
-          {/* Quick Action Matrix */}
-          <Card className="border-border-strong bg-background rounded-none">
-            <CardHeader className="border-b border-border-light pb-4">
-              <CardTitle className="text-lg font-bold">Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4 space-y-2">
-              <Link
-                href="/profile"
-                className="flex items-center justify-between p-3 border border-border-light hover:border-brand bg-surface hover:bg-surface-muted transition-colors text-xs font-bold text-text-primary group"
-              >
-                <div className="flex items-center gap-3">
-                  <User className="w-4 h-4 text-brand" />
-                  <span>Update Profile Data</span>
-                </div>
-                <ArrowRight className="w-4 h-4 text-text-secondary group-hover:text-brand" />
-              </Link>
+        {/* Right Column (Secondary Focus) */}
+        <div className="space-y-10">
+          
+          {/* Quick Actions */}
+          <section>
+            <h2 className="text-sm font-bold uppercase tracking-widest text-text-muted mb-4">Quick Links</h2>
+            <div className="flex flex-col gap-3">
+              <QuickActionLink href="/profile" icon={User} label="Edit Profile Identity" />
+              <QuickActionLink href="/portfolio" icon={Globe} label="Generate Portfolio" />
+              <QuickActionLink href="/integrations" icon={GitBranch} label="Connect GitHub/LinkedIn" />
+              <QuickActionLink href="/analytics" icon={BarChart3} label="View Traffic Analytics" />
+            </div>
+          </section>
 
-              <Link
-                href="/portfolio"
-                className="flex items-center justify-between p-3 border border-border-light hover:border-brand bg-surface hover:bg-surface-muted transition-colors text-xs font-bold text-text-primary group"
-              >
-                <div className="flex items-center gap-3">
-                  <Globe className="w-4 h-4 text-brand" />
-                  <span>Generate Portfolio</span>
-                </div>
-                <ArrowRight className="w-4 h-4 text-text-secondary group-hover:text-brand" />
-              </Link>
+          {/* Connected Integrations */}
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-text-muted">Integrations</h2>
+              <Link href="/integrations" className="text-xs font-semibold text-brand hover:underline">Manage</Link>
+            </div>
+            
+            {connections.length > 0 ? (
+              <div className="flex flex-col gap-3">
+                {connections.map((conn) => (
+                  <div key={conn.provider} className="flex items-center justify-between p-4 bg-surface border border-border-light rounded-xl">
+                    <span className="text-sm font-bold text-text-primary">{conn.provider}</span>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full ${conn.state === 'SYNCED' || conn.state === 'CONNECTED' ? 'bg-success' : 'bg-warning'}`} />
+                      <span className="text-xs font-medium text-text-secondary">{conn.state}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-5 bg-surface border border-border-light border-dashed rounded-xl text-center">
+                <p className="text-sm text-text-secondary mb-3">No external integrations connected.</p>
+                <Button variant="outline" size="sm" className="rounded-full w-full" asChild>
+                  <Link href="/integrations">Connect Accounts</Link>
+                </Button>
+              </div>
+            )}
+          </section>
 
-              <Link
-                href="/integrations"
-                className="flex items-center justify-between p-3 border border-border-light hover:border-brand bg-surface hover:bg-surface-muted transition-colors text-xs font-bold text-text-primary group"
-              >
-                <div className="flex items-center gap-3">
-                  <GitBranch className="w-4 h-4 text-brand" />
-                  <span>Connect External Accounts</span>
-                </div>
-                <ArrowRight className="w-4 h-4 text-text-secondary group-hover:text-brand" />
-              </Link>
-
-              <Link
-                href="/analytics"
-                className="flex items-center justify-between p-3 border border-border-light hover:border-brand bg-surface hover:bg-surface-muted transition-colors text-xs font-bold text-text-primary group"
-              >
-                <div className="flex items-center gap-3">
-                  <BarChart3 className="w-4 h-4 text-brand" />
-                  <span>View Traffic Analytics</span>
-                </div>
-                <ArrowRight className="w-4 h-4 text-text-secondary group-hover:text-brand" />
-              </Link>
-            </CardContent>
-          </Card>
-
-          {/* Connection Status Card */}
-          <Card className="border-border-strong bg-background rounded-none">
-            <CardHeader className="border-b border-border-light pb-4">
-              <CardTitle className="text-lg font-bold">Connected Integrations</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4 space-y-3">
-              {connections.map((conn) => (
-                <div
-                  key={conn.provider}
-                  className="flex items-center justify-between p-3 border border-border-light bg-surface text-xs"
-                >
-                  <span className="font-bold text-text-primary">{conn.provider}</span>
-                  <Badge
-                    variant={conn.state === "SYNCED" || conn.state === "CONNECTED" ? "success" : "secondary"}
-                  >
-                    {conn.state}
-                  </Badge>
-                </div>
-              ))}
-
-              <Button variant="outline" size="sm" className="w-full mt-2" asChild>
-                <Link href="/integrations">Manage Connections</Link>
-              </Button>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
+  );
+}
+
+// Sub-components for cleaner code
+
+function MetricCard({ title, value, subtext, icon }: { title: string; value: string; subtext: string; icon: React.ReactNode }) {
+  return (
+    <div className="p-5 bg-surface border border-border-light rounded-xl flex flex-col justify-between h-32">
+      <div className="flex justify-between items-start">
+        <span className="text-xs font-bold text-text-secondary">{title}</span>
+        {icon}
+      </div>
+      <div>
+        <div className="text-2xl font-bold tracking-tight text-text-primary mb-1">{value}</div>
+        <div className="text-xs text-text-muted">{subtext}</div>
+      </div>
+    </div>
+  );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function QuickActionLink({ href, icon: Icon, label }: { href: string; icon: any; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center p-4 bg-surface border border-border-light rounded-xl hover:border-brand-hover hover:bg-surface-muted transition-colors group card-hover-depth"
+    >
+      <div className="w-8 h-8 rounded-full bg-surface-muted flex items-center justify-center mr-4 group-hover:bg-brand-muted transition-colors">
+        <Icon className="w-4 h-4 text-text-secondary group-hover:text-brand transition-colors" />
+      </div>
+      <span className="text-sm font-bold text-text-primary">{label}</span>
+    </Link>
   );
 }

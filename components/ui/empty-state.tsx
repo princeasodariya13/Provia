@@ -27,11 +27,11 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <div className={cn(
-      "border border-dashed border-border p-10 flex flex-col items-center text-center bg-surface-muted/40",
+      "border border-border-light p-12 flex flex-col items-center text-center bg-surface-muted/30 rounded-2xl",
       className
     )}>
       {icon && (
-        <div className="w-10 h-10 border border-border bg-background flex items-center justify-center mb-4 text-text-muted">
+        <div className="w-14 h-14 rounded-full bg-surface border border-border-light shadow-sm flex items-center justify-center mb-5 text-text-secondary ring-4 ring-surface-muted">
           {icon}
         </div>
       )}
@@ -40,15 +40,15 @@ export function EmptyState({
       <div className="flex flex-wrap gap-3 justify-center">
         {actionLabel && (
           actionHref ? (
-            <Button asChild variant="default" size="sm">
+            <Button asChild variant="default" size="sm" className="rounded-full font-bold shadow-sm">
               <a href={actionHref}>{actionLabel}</a>
             </Button>
           ) : onAction ? (
-            <Button onClick={onAction} variant="default" size="sm">{actionLabel}</Button>
+            <Button onClick={onAction} variant="default" size="sm" className="rounded-full font-bold shadow-sm">{actionLabel}</Button>
           ) : null
         )}
         {secondaryActionLabel && onSecondaryAction && (
-          <Button onClick={onSecondaryAction} variant="outline" size="sm">
+          <Button onClick={onSecondaryAction} variant="outline" size="sm" className="rounded-full font-bold shadow-sm bg-white">
             {secondaryActionLabel}
           </Button>
         )}

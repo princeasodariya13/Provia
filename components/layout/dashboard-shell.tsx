@@ -6,12 +6,10 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   User,
-  FileText,
   Globe,
   BarChart3,
   GitBranch,
   Settings,
-  HelpCircle,
   LogOut,
   ChevronLeft,
   ChevronRight,
@@ -53,10 +51,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-surface-muted flex flex-col justify-center items-center p-6">
-        <div className="w-6 h-6 bg-brand mb-4" />
-        <p className="text-xs font-semibold tracking-widest text-text-secondary uppercase">
-          Loading Provia...
+      <div className="min-h-screen bg-background flex flex-col justify-center items-center p-6">
+        <div className="w-8 h-8 bg-brand flex items-center justify-center rounded-lg shadow-sm mb-4">
+          <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse" />
+        </div>
+        <p className="text-[10px] font-bold tracking-widest text-text-muted uppercase">
+          Loading Workspace
         </p>
       </div>
     );
@@ -70,7 +70,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       items: [
         { title: "Overview", href: "/dashboard", icon: LayoutDashboard },
         { title: "Profile", href: "/profile", icon: User },
-        { title: "Resume Intelligence", href: "/profile", icon: FileText },
         { title: "Portfolio", href: "/portfolio", icon: Globe },
         { title: "Analytics", href: "/analytics", icon: BarChart3 },
       ],
@@ -85,7 +84,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       group: "Account",
       items: [
         { title: "Settings", href: "/settings", icon: Settings },
-        { title: "Help", href: "/settings#help", icon: HelpCircle },
       ],
     },
   ];
@@ -107,232 +105,214 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row text-text-primary">
+    <div className="min-h-screen bg-surface-muted flex flex-col md:flex-row text-text-primary selection:bg-brand/20">
 
-      {/* ── MOBILE TOP BAR ─────────────────────────────────────────── */}
-      <header className="md:hidden sticky top-0 z-40 bg-background border-b border-border flex items-center justify-between px-4 h-14">
+      {/* ── MOBILE TOP BAR ── */}
+      <header className="md:hidden sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-border-light flex items-center justify-between px-4 h-16 shadow-sm">
         <div className="flex items-center gap-3">
           <button
             onClick={() => setMobileOpen(true)}
-            className="p-1.5 text-text-secondary hover:text-text-primary transition-colors"
+            className="p-2 -ml-2 text-text-secondary hover:text-text-primary transition-colors rounded-full hover:bg-surface-muted"
             aria-label="Open navigation"
           >
             <Menu className="w-5 h-5" />
           </button>
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-brand flex items-center justify-center">
+            <div className="w-6 h-6 bg-brand flex items-center justify-center rounded shadow-sm">
               <div className="w-1.5 h-1.5 bg-white rounded-full" />
             </div>
-            <span className="font-bold text-sm tracking-tight uppercase">Provia</span>
+            <span className="font-bold text-[13px] tracking-tight text-text-primary">PROVIA</span>
           </Link>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setCommandOpen(true)}
-            className="p-1.5 text-text-secondary hover:text-text-primary transition-colors"
+            className="p-2 text-text-secondary hover:text-text-primary transition-colors rounded-full hover:bg-surface-muted"
           >
-            <Search className="w-4 h-4" />
+            <Search className="w-5 h-5" />
           </button>
           <Avatar
             src={user.avatarUrl}
             fallback={user.fullName || user.email}
             size="sm"
-            className="cursor-pointer"
+            className="cursor-pointer border border-border-light shadow-sm"
             onClick={() => setUserDropdownOpen(!userDropdownOpen)}
           />
         </div>
       </header>
 
-      {/* ── DESKTOP SIDEBAR ────────────────────────────────────────── */}
-      <aside className={`hidden md:flex flex-col sticky top-0 h-screen shrink-0 bg-surface-muted border-r border-border transition-all duration-200 ${collapsed ? "w-14" : "w-60"}`}>
+      {/* ── DESKTOP SIDEBAR ── */}
+      <aside className={`hidden md:flex flex-col sticky top-0 h-screen shrink-0 bg-surface border-r border-border-light shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-300 ease-in-out z-30 ${collapsed ? "w-[72px]" : "w-[260px]"}`}>
 
-        {/* Brand + collapse */}
-        <div className={`h-14 flex items-center border-b border-border px-4 ${collapsed ? "justify-center" : "justify-between"}`}>
+        {/* Brand Header */}
+        <div className="h-16 flex items-center px-4 justify-between shrink-0">
           {!collapsed ? (
-            <Link href="/dashboard" className="flex items-center gap-2.5 group">
-              <div className="w-5 h-5 bg-brand flex items-center justify-center shrink-0">
-                <div className="w-1.5 h-1.5 bg-white rounded-full" />
+            <Link href="/dashboard" className="flex items-center gap-3 pl-2 group">
+              <div className="w-7 h-7 bg-brand flex items-center justify-center rounded-lg shadow-sm group-hover:shadow-md transition-shadow shrink-0">
+                <div className="w-2 h-2 bg-white rounded-full" />
               </div>
-              <span className="font-bold text-sm tracking-tight uppercase text-text-primary group-hover:text-brand transition-colors">
-                Provia
+              <span className="font-extrabold text-[13px] tracking-widest text-text-primary group-hover:text-brand transition-colors">
+                PROVIA
               </span>
             </Link>
           ) : (
-            <Link href="/dashboard">
-              <div className="w-5 h-5 bg-brand flex items-center justify-center">
-                <div className="w-1.5 h-1.5 bg-white rounded-full" />
+            <Link href="/dashboard" className="mx-auto group">
+              <div className="w-7 h-7 bg-brand flex items-center justify-center rounded-lg shadow-sm group-hover:shadow-md transition-shadow">
+                <div className="w-2 h-2 bg-white rounded-full" />
               </div>
             </Link>
           )}
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className={`p-1 text-text-muted hover:text-text-primary transition-colors ${collapsed ? "hidden" : "flex"}`}
-            title={collapsed ? "Expand" : "Collapse"}
-          >
-            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-          </button>
         </div>
 
-        {/* Workspace label */}
+        {/* User Context Context */}
         {!collapsed && (
-          <div className="px-4 pt-5 pb-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
-              Personal
-            </span>
+          <div className="px-5 mt-4 mb-2">
+            <div className="flex items-center gap-3 p-3 rounded-xl border border-border-light bg-surface shadow-sm hover:border-brand-hover transition-colors cursor-pointer" onClick={() => router.push("/profile")}>
+              <Avatar src={user.avatarUrl} fallback={user.fullName || user.email} size="sm" className="ring-2 ring-background border border-border-light shadow-sm" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-bold truncate text-text-primary leading-tight">{user.fullName || "User"}</p>
+                <p className="text-[11px] font-medium truncate text-text-secondary leading-tight mt-0.5">Professional Account</p>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Nav */}
-        <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-5">
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto px-3 py-6 space-y-8 no-scrollbar">
           {navigation.map((group) => (
-            <div key={group.group}>
+            <div key={group.group} className="space-y-1">
               {!collapsed && (
-                <p className="px-2 mb-1 text-[10px] font-bold uppercase tracking-widest text-text-muted">
+                <p className="px-3 mb-3 text-[10px] font-bold uppercase tracking-widest text-text-muted">
                   {group.group}
                 </p>
               )}
-              <div className="space-y-0.5">
-                {group.items.map((item) => {
-                  const Icon = item.icon;
-                  const active = isActive(item.href);
-                  return (
-                    <Link
-                      key={item.title + item.href}
-                      href={item.href}
-                      title={collapsed ? item.title : undefined}
-                      className={`flex items-center gap-2.5 px-2.5 py-2 text-sm font-medium transition-colors rounded-none ${
-                        active
-                          ? "bg-brand text-white"
-                          : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
-                      } ${collapsed ? "justify-center px-0 py-2" : ""}`}
-                    >
-                      <Icon className={`w-4 h-4 shrink-0 ${active ? "text-white" : "text-text-secondary"}`} />
-                      {!collapsed && <span>{item.title}</span>}
-                    </Link>
-                  );
-                })}
-              </div>
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                const active = isActive(item.href);
+                return (
+                  <Link
+                    key={item.title + item.href}
+                    href={item.href}
+                    title={collapsed ? item.title : undefined}
+                    className={`flex items-center gap-3 px-3 py-2 text-[13px] font-bold transition-all rounded-xl ${
+                      active
+                        ? "bg-brand/10 text-brand"
+                        : "text-text-secondary hover:text-text-primary hover:bg-surface-muted"
+                    } ${collapsed ? "justify-center px-0 py-2.5 mx-auto w-10 h-10" : ""}`}
+                  >
+                    <Icon className={`w-4 h-4 shrink-0 transition-colors ${active ? "text-brand" : "text-text-muted group-hover:text-text-secondary"}`} />
+                    {!collapsed && <span>{item.title}</span>}
+                  </Link>
+                );
+              })}
             </div>
           ))}
         </nav>
 
-        {/* User footer */}
-        <div className="border-t border-border p-2 relative">
-          <button
-            onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-            className={`w-full flex items-center gap-2.5 px-2 py-2 hover:bg-surface-hover transition-colors text-left ${collapsed ? "justify-center" : ""}`}
-          >
-            <Avatar src={user.avatarUrl} fallback={user.fullName || user.email} size="sm" />
-            {!collapsed && (
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold truncate text-text-primary">{user.fullName || "Provia User"}</p>
-                <p className="text-[10px] truncate text-text-muted">{user.email}</p>
-              </div>
-            )}
-          </button>
-
-          {/* User dropdown */}
-          {userDropdownOpen && (
-            <div className="absolute bottom-full left-1 right-1 mb-1 bg-background border border-border shadow-sm py-1 z-50">
-              <div className="px-3 py-2 border-b border-border-light mb-1">
-                <p className="text-xs font-semibold text-text-primary truncate">{user.fullName || "User"}</p>
-                <p className="text-[10px] text-text-secondary truncate">{user.email}</p>
-              </div>
-              <Link
-                href="/profile"
-                onClick={() => setUserDropdownOpen(false)}
-                className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-muted transition-colors"
-              >
-                <User className="w-3.5 h-3.5 text-text-secondary" />
-                View Profile
-              </Link>
-              <Link
-                href="/settings"
-                onClick={() => setUserDropdownOpen(false)}
-                className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-muted transition-colors"
-              >
-                <Settings className="w-3.5 h-3.5 text-text-secondary" />
-                Settings
-              </Link>
+        {/* Sidebar Footer */}
+        <div className="p-4 border-t border-border-light bg-surface/50 backdrop-blur-sm">
+          {!collapsed ? (
+            <div className="flex items-center gap-2">
               <button
-                onClick={() => { setUserDropdownOpen(false); logout(); }}
-                className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-error hover:bg-surface-muted transition-colors border-t border-border-light mt-1"
+                onClick={() => setCollapsed(true)}
+                className="flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl border border-border-light text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors text-xs font-bold"
               >
-                <LogOut className="w-3.5 h-3.5" />
-                Log out
+                <ChevronLeft className="w-4 h-4" /> Collapse
+              </button>
+              <button
+                onClick={() => logout()}
+                className="p-2.5 rounded-xl border border-border-light text-error/70 hover:text-error hover:bg-error-muted transition-colors"
+                title="Log out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2 items-center">
+              <button
+                onClick={() => logout()}
+                className="w-10 h-10 flex items-center justify-center rounded-xl text-error/70 hover:text-error hover:bg-error-muted transition-colors"
+                title="Log out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setCollapsed(false)}
+                className="w-10 h-10 flex items-center justify-center rounded-xl border border-border-light text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
+                title="Expand"
+              >
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           )}
         </div>
       </aside>
 
-      {/* ── MOBILE DRAWER ──────────────────────────────────────────── */}
+      {/* ── MOBILE DRAWER ── */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
-          <div className="absolute inset-0 bg-black/30" onClick={() => setMobileOpen(false)} />
-          <div className="relative bg-surface-muted w-72 h-full flex flex-col border-r border-border shadow-sm">
-            {/* Drawer header */}
-            <div className="h-14 flex items-center justify-between px-4 border-b border-border">
-              <div className="flex items-center gap-2.5">
-                <div className="w-5 h-5 bg-brand flex items-center justify-center">
-                  <div className="w-1.5 h-1.5 bg-white rounded-full" />
+          <div className="absolute inset-0 bg-text-primary/20 backdrop-blur-sm transition-opacity" onClick={() => setMobileOpen(false)} />
+          <div className="absolute inset-y-0 left-0 w-4/5 max-w-sm bg-surface shadow-2xl flex flex-col transform transition-transform border-r border-border-light">
+            <div className="h-16 flex items-center justify-between px-5 border-b border-border-light bg-surface-muted/30">
+              <div className="flex items-center gap-3">
+                <div className="w-7 h-7 bg-brand flex items-center justify-center rounded-lg shadow-sm">
+                  <div className="w-2 h-2 bg-white rounded-full" />
                 </div>
-                <span className="font-bold text-sm tracking-tight uppercase">Provia</span>
+                <span className="font-extrabold text-[13px] tracking-widest text-text-primary">PROVIA</span>
               </div>
               <button
                 onClick={() => setMobileOpen(false)}
-                className="p-1.5 text-text-secondary hover:text-text-primary"
+                className="p-2 text-text-muted hover:text-text-primary rounded-full hover:bg-border-light transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Drawer nav */}
-            <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
+            <div className="p-5 border-b border-border-light bg-surface">
+              <div className="flex items-center gap-3">
+                <Avatar src={user.avatarUrl} fallback={user.fullName || user.email} size="sm" className="shadow-sm" />
+                <div className="min-w-0">
+                  <p className="text-sm font-bold truncate text-text-primary">{user.fullName || "User"}</p>
+                  <p className="text-xs text-text-secondary truncate">{user.email}</p>
+                </div>
+              </div>
+            </div>
+
+            <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-8">
               {navigation.map((group) => (
-                <div key={group.group}>
-                  <p className="px-2 mb-1 text-[10px] font-bold uppercase tracking-widest text-text-muted">
+                <div key={group.group} className="space-y-1">
+                  <p className="px-3 mb-3 text-[10px] font-bold uppercase tracking-widest text-text-muted">
                     {group.group}
                   </p>
-                  <div className="space-y-0.5">
-                    {group.items.map((item) => {
-                      const Icon = item.icon;
-                      const active = isActive(item.href);
-                      return (
-                        <Link
-                          key={item.title + item.href}
-                          href={item.href}
-                          onClick={() => setMobileOpen(false)}
-                          className={`flex items-center gap-2.5 px-2.5 py-2.5 text-sm font-medium transition-colors ${
-                            active
-                              ? "bg-brand text-white"
-                              : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
-                          }`}
-                        >
-                          <Icon className={`w-4 h-4 shrink-0 ${active ? "text-white" : "text-text-secondary"}`} />
-                          <span>{item.title}</span>
-                        </Link>
-                      );
-                    })}
-                  </div>
+                  {group.items.map((item) => {
+                    const Icon = item.icon;
+                    const active = isActive(item.href);
+                    return (
+                      <Link
+                        key={item.title + item.href}
+                        href={item.href}
+                        onClick={() => setMobileOpen(false)}
+                        className={`flex items-center gap-3 px-3 py-3 text-sm font-bold transition-all rounded-xl ${
+                          active
+                            ? "bg-brand/10 text-brand"
+                            : "text-text-secondary hover:text-text-primary hover:bg-surface-muted"
+                        }`}
+                      >
+                        <Icon className={`w-5 h-5 ${active ? "text-brand" : "text-text-muted"}`} />
+                        <span>{item.title}</span>
+                      </Link>
+                    );
+                  })}
                 </div>
               ))}
             </nav>
 
-            {/* Drawer user */}
-            <div className="border-t border-border p-4 space-y-3">
-              <div className="flex items-center gap-3">
-                <Avatar src={user.avatarUrl} fallback={user.fullName || user.email} size="sm" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-semibold truncate text-text-primary">{user.fullName || "User"}</p>
-                  <p className="text-[10px] truncate text-text-secondary">{user.email}</p>
-                </div>
-              </div>
+            <div className="p-5 border-t border-border-light bg-surface-muted/30">
               <button
                 onClick={() => logout()}
-                className="w-full flex items-center justify-center gap-2 py-2 border border-border text-xs font-semibold text-text-secondary hover:border-error hover:text-error transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-error/20 bg-error-muted/30 text-sm font-bold text-error hover:bg-error hover:text-white transition-colors"
               >
-                <LogOut className="w-3.5 h-3.5" />
+                <LogOut className="w-4 h-4" />
                 Log out
               </button>
             </div>
@@ -340,56 +320,38 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {/* ── MAIN CONTENT AREA ──────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
+      {/* ── MAIN CONTENT AREA ── */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden relative">
 
-        {/* Desktop topbar */}
-        <header className="hidden md:flex sticky top-0 z-20 bg-background border-b border-border h-14 items-center justify-between px-8">
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-text-muted font-medium">Workspace</span>
+        {/* Desktop Header */}
+        <header className="hidden md:flex sticky top-0 z-20 bg-background/80 backdrop-blur-xl border-b border-border-light h-16 items-center justify-between px-8">
+          <div className="flex items-center gap-2 text-[13px] font-medium">
+            <span className="text-text-secondary">Workspace</span>
             <span className="text-border-strong text-xs">/</span>
-            <span className="font-semibold text-text-primary">{getPageTitle()}</span>
+            <span className="font-bold text-text-primary">{getPageTitle()}</span>
           </div>
 
-          <div className="flex items-center gap-4">
-            {/* Search trigger */}
+          <div className="flex items-center gap-5">
+            {/* Command Palette Trigger */}
             <button
               onClick={() => setCommandOpen(true)}
-              className="flex items-center gap-2 px-3 py-1.5 text-xs text-text-secondary border border-border hover:border-border-strong hover:text-text-primary transition-colors bg-surface-muted"
+              className="flex items-center gap-3 pl-3 pr-1.5 py-1.5 text-xs text-text-secondary border border-border hover:border-border-strong hover:text-text-primary hover:bg-surface transition-all rounded-full bg-surface shadow-sm group w-56"
             >
-              <Search className="w-3.5 h-3.5" />
-              <span>Search...</span>
-              <kbd className="ml-2 px-1.5 py-0.5 text-[10px] font-mono border border-border bg-background text-text-muted">
+              <Search className="w-3.5 h-3.5 text-text-muted group-hover:text-text-primary transition-colors" />
+              <span className="flex-1 text-left font-medium">Search Provia...</span>
+              <kbd className="px-2 py-0.5 text-[10px] font-mono font-bold tracking-widest uppercase border border-border-light rounded-full bg-surface-muted text-text-secondary">
                 ⌘K
               </kbd>
             </button>
-
-            {/* Collapse toggle */}
-            <button
-              onClick={() => setCollapsed(!collapsed)}
-              className="p-1.5 text-text-muted hover:text-text-primary border border-border hover:border-border-strong transition-colors"
-              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
-            </button>
-
-            {/* User chip */}
-            <div className="flex items-center gap-2 pl-4 border-l border-border">
-              <Avatar src={user.avatarUrl} fallback={user.fullName || user.email} size="sm" />
-              <span className="text-xs font-semibold text-text-primary hidden lg:block">
-                {user.fullName || "Account"}
-              </span>
-            </div>
           </div>
         </header>
 
-        {/* Page content */}
-        <main className="flex-1 p-5 md:p-8 lg:p-10 max-w-6xl w-full mx-auto">
+        {/* Page Content */}
+        <main className="flex-1 p-5 sm:p-8 lg:p-12 w-full mx-auto">
           {children}
         </main>
       </div>
 
-      {/* Command palette */}
       <CommandPalette isOpen={commandOpen} onClose={() => setCommandOpen(false)} />
     </div>
   );

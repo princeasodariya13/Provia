@@ -5,8 +5,8 @@ import { useState, useEffect } from "react";
 import { apiClient } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { UploadCloud, CheckCircle, AlertCircle, RefreshCw } from "lucide-react";
+import { CardContent } from "@/components/ui/card";
+import { UploadCloud, CheckCircle, AlertCircle, RefreshCw, Camera } from "lucide-react";
 
 export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
   const [file, setFile] = useState<File | null>(null);
@@ -17,6 +17,7 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
 
   useEffect(() => {
     if (!currentAvatar) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       apiClient.get<any>("/api/v1/profile").then((res) => {
         if (res.success && res.data?.avatarUrl) {
           setPreview(res.data.avatarUrl);
@@ -47,7 +48,6 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
       const res = await fetch("/api/v1/profile/avatar", {
         method: "POST",
         body: formData,
-        // No Content-Type header so browser sets multipart boundary
       });
       const data = await res.json();
 
@@ -63,27 +63,37 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
   };
 
   return (
-    <Card className="border-border-strong rounded-none">
-      <CardContent className="pt-6 flex items-center gap-6">
-        <div className="w-24 h-24 rounded-full bg-surface border border-border-strong flex items-center justify-center overflow-hidden shrink-0">
-          {preview ? (
-            <img src={preview} alt="Avatar Preview" className="w-full h-full object-cover" />
-          ) : (
-            <span className="text-text-secondary text-xs">No Photo</span>
-          )}
-        </div>
-        <div className="space-y-4 flex-1">
-          <Input type="file" accept="image/jpeg, image/png" onChange={handleFileChange} className="rounded-none cursor-pointer" />
-          <div className="flex items-center gap-4">
-            <Button onClick={handleUpload} disabled={!file || uploading} className="rounded-none">
-              {uploading ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <UploadCloud className="w-4 h-4 mr-2" />}
-              Upload Photo
-            </Button>
-            {success && <span className="text-success text-sm flex items-center gap-1"><CheckCircle className="w-4 h-4" /> Updated</span>}
-            {error && <span className="text-error text-sm flex items-center gap-1"><AlertCircle className="w-4 h-4" /> {error}</span>}
+    <section className="bg-surface border border-border-light rounded-2xl overflow-hidden shadow-sm">
+      <div className="border-b border-border-light p-5 bg-surface-muted/30">
+        <h2 className="text-base font-bold text-text-primary">Profile Photo</h2>
+      </div>
+      <CardContent className="p-6">
+        <div className="flex flex-col items-center gap-6">
+          <div className="relative group">
+            <div className="w-28 h-28 rounded-full bg-surface-muted border-2 border-surface flex items-center justify-center overflow-hidden shrink-0 shadow-sm ring-1 ring-border-light">
+              {preview ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={preview} alt="Avatar Preview" className="w-full h-full object-cover" />
+              ) : (
+                <Camera className="w-8 h-8 text-text-muted" />
+              )}
+            </div>
+          </div>
+          
+          <div className="w-full space-y-4">
+            <Input type="file" accept="image/jpeg, image/png" onChange={handleFileChange} className="cursor-pointer text-xs h-9 rounded-lg" />
+            <div className="flex items-center gap-3 w-full">
+              <Button onClick={handleUpload} disabled={!file || uploading} size="sm" className="rounded-full w-full shadow-sm font-bold">
+                {uploading ? <RefreshCw className="w-3.5 h-3.5 mr-2 animate-spin" /> : <UploadCloud className="w-3.5 h-3.5 mr-2" />}
+                Upload
+              </Button>
+            </div>
+            
+            {success && <div className="text-success text-xs font-semibold flex items-center justify-center gap-1.5"><CheckCircle className="w-3.5 h-3.5" /> Uploaded successfully</div>}
+            {error && <div className="text-error text-xs font-semibold flex items-center justify-center gap-1.5"><AlertCircle className="w-3.5 h-3.5" /> {error}</div>}
           </div>
         </div>
       </CardContent>
-    </Card>
+    </section>
   );
 }

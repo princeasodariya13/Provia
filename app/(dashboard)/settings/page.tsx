@@ -3,11 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageHeader } from "@/components/ui/page-header";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Lock, ShieldAlert, Download, Trash2, Key, CheckCircle2, AlertCircle } from "lucide-react";
+import { ShieldAlert, Download, Trash2, Key, CheckCircle2, AlertCircle, Laptop } from "lucide-react";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -42,6 +41,9 @@ export default function SettingsPage() {
         setPwStatus({ type: "error", msg: data.error || "Failed to change password." });
       } else {
         setPwStatus({ type: "success", msg: "Password changed successfully. Redirecting to login..." });
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmNewPassword("");
         setTimeout(() => router.push("/login"), 2000);
       }
     } catch {
@@ -95,229 +97,198 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto pb-16">
+    <div className="space-y-12 max-w-4xl mx-auto pb-16">
       <PageHeader
         title="Account Settings"
-        description="Manage your security credentials, active sessions, data privacy, and account lifecycle."
-        breadcrumbs={[
-          { label: "Workspace", href: "/dashboard" },
-          { label: "Settings", href: "/settings" },
-        ]}
+        description="Manage your security preferences, active sessions, and personal data."
+        breadcrumbs={[{ label: "Account", href: "/settings" }, { label: "Settings", href: "/settings" }]}
       />
 
-      {/* Change Password */}
-      <Card className="border-border-strong bg-background rounded-none">
-        <CardHeader className="border-b border-border-light pb-4">
-          <div className="flex items-center gap-2">
-            <Key className="w-5 h-5 text-brand" />
-            <CardTitle className="text-xl font-bold">Change Password</CardTitle>
+      <div className="space-y-8">
+        
+        {/* Security & Authentication */}
+        <section className="bg-surface border border-border-light rounded-2xl overflow-hidden shadow-sm">
+          <div className="p-6 border-b border-border-light bg-surface-muted/30">
+            <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
+              <Key className="w-5 h-5 text-text-secondary" /> Change Password
+            </h2>
+            <p className="text-sm text-text-secondary mt-1">Ensure your account is using a long, random password to stay secure.</p>
           </div>
-          <CardDescription className="text-xs text-text-secondary mt-1">
-            Ensure your account is using a strong, unique password.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1">
-                Current Password
-              </label>
-              <Input
-                type="password"
-                placeholder="••••••••"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1">
-                New Password
-              </label>
-              <Input
-                type="password"
-                placeholder="Min. 8 characters"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                minLength={8}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1">
-                Confirm New Password
-              </label>
-              <Input
-                type="password"
-                placeholder="••••••••"
-                value={confirmNewPassword}
-                onChange={(e) => setConfirmNewPassword(e.target.value)}
-                required
-              />
-            </div>
-
-            {pwStatus && (
-              <div
-                className={`p-3 text-xs font-bold border flex items-center gap-2 ${
-                  pwStatus.type === "error"
-                    ? "border-error bg-error/10 text-error"
-                    : "border-success bg-success/10 text-success"
-                }`}
-              >
-                {pwStatus.type === "error" ? <AlertCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
-                <span>{pwStatus.msg}</span>
+          
+          <CardContent className="p-6 sm:p-8">
+            <form onSubmit={handleChangePassword} className="space-y-5 max-w-lg">
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-text-secondary">Current Password</label>
+                <Input
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  required
+                />
               </div>
-            )}
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-text-secondary">New Password</label>
+                <Input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-text-secondary">Confirm New Password</label>
+                <Input
+                  type="password"
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  required
+                />
+              </div>
 
-            <Button type="submit" disabled={pwLoading} variant="default">
-              {pwLoading ? "Updating..." : "Update Password"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      {/* Device Security */}
-      <Card className="border-border-strong bg-background rounded-none">
-        <CardHeader className="border-b border-border-light pb-4">
-          <div className="flex items-center gap-2">
-            <Lock className="w-5 h-5 text-brand" />
-            <CardTitle className="text-xl font-bold">Device & Session Security</CardTitle>
-          </div>
-          <CardDescription className="text-xs text-text-secondary mt-1">
-            Immediately invalidate all active session tokens across all web browsers and devices.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-6 space-y-4">
-          <p className="text-sm text-text-secondary">
-            If you suspect unauthorized access or lost a device, log out of all sessions immediately.
-          </p>
-
-          <Button
-            onClick={handleLogoutAll}
-            disabled={logoutAllLoading}
-            variant="outline"
-            className="flex items-center gap-2"
-          >
-            <ShieldAlert className="w-4 h-4 text-warning" />
-            {logoutAllLoading ? "Revoking Sessions..." : "Log Out of All Devices"}
-          </Button>
-
-          {logoutAllStatus && (
-            <div
-              className={`p-3 text-xs font-bold border flex items-center gap-2 max-w-md ${
-                logoutAllStatus.type === "error"
-                  ? "border-error bg-error/10 text-error"
-                  : "border-success bg-success/10 text-success"
-              }`}
-            >
-              {logoutAllStatus.type === "error" ? <AlertCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
-              <span>{logoutAllStatus.msg}</span>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Export Data */}
-      <Card className="border-border-strong bg-background rounded-none">
-        <CardHeader className="border-b border-border-light pb-4">
-          <div className="flex items-center gap-2">
-            <Download className="w-5 h-5 text-brand" />
-            <CardTitle className="text-xl font-bold">Export Account Data</CardTitle>
-          </div>
-          <CardDescription className="text-xs text-text-secondary mt-1">
-            Download a machine-readable JSON export of your profile, resume data, portfolios, and history.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-6 space-y-4">
-          <p className="text-sm text-text-secondary">
-            You own your professional data. Click below to download a full JSON file containing your complete account data model.
-          </p>
-
-          <Button asChild variant="outline" className="flex items-center gap-2 w-fit">
-            <a href="/api/v1/account/export">
-              <Download className="w-4 h-4" />
-              Download JSON Export
-            </a>
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Danger Zone - Account Deletion */}
-      <Card className="border-error bg-background rounded-none">
-        <CardHeader className="border-b border-error/40 bg-error/5 pb-4">
-          <div className="flex items-center gap-2 text-error">
-            <Trash2 className="w-5 h-5" />
-            <CardTitle className="text-xl font-bold text-error">Danger Zone: Delete Account</CardTitle>
-          </div>
-          <CardDescription className="text-xs text-error/80 mt-1">
-            Permanently erase your Provia profile, Cloudinary assets, resumes, and portfolios.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-6 space-y-4">
-          <p className="text-sm text-text-secondary">
-            Once deleted, your account cannot be recovered. All published portfolios will be taken offline immediately.
-          </p>
-
-          {!showDeleteSection ? (
-            <Button
-              onClick={() => setShowDeleteSection(true)}
-              variant="destructive"
-              className="flex items-center gap-2"
-            >
-              <Trash2 className="w-4 h-4" />
-              Delete Account...
-            </Button>
-          ) : (
-            <form onSubmit={handleDeleteAccount} className="space-y-4 max-w-md border p-4 border-error/40 bg-error/5">
-              <p className="text-xs font-bold text-text-primary">
-                To confirm permanent deletion, type your account email address below:
-              </p>
-              <Input
-                type="email"
-                placeholder="Account email address"
-                value={confirmEmail}
-                onChange={(e) => setConfirmEmail(e.target.value)}
-                required
-                className="border-error/40"
-              />
-
-              {deleteStatus && (
-                <div
-                  className={`p-3 text-xs font-bold border flex items-center gap-2 ${
-                    deleteStatus.type === "error"
-                      ? "border-error bg-error/10 text-error"
-                      : "border-success bg-success/10 text-success"
-                  }`}
-                >
-                  {deleteStatus.type === "error" ? <AlertCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
-                  <span>{deleteStatus.msg}</span>
+              {pwStatus && (
+                <div className={`p-4 flex items-start gap-3 rounded-xl border text-sm font-semibold ${
+                  pwStatus.type === "success" 
+                    ? "bg-success-muted border-success/30 text-success" 
+                    : "bg-error-muted border-error/30 text-error"
+                }`}>
+                  {pwStatus.type === "success" ? <CheckCircle2 className="w-5 h-5 shrink-0" /> : <AlertCircle className="w-5 h-5 shrink-0" />}
+                  <span>{pwStatus.msg}</span>
                 </div>
               )}
 
-              <div className="flex gap-3">
-                <Button
-                  type="button"
-                  onClick={() => setShowDeleteSection(false)}
-                  variant="outline"
-                  size="sm"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={deleteLoading}
-                  variant="destructive"
-                  size="sm"
-                >
-                  {deleteLoading ? "Deleting..." : "Permanently Delete Account"}
+              <div className="pt-2">
+                <Button type="submit" disabled={pwLoading} className="rounded-full px-6 font-bold">
+                  {pwLoading ? "Updating Password..." : "Update Password"}
                 </Button>
               </div>
             </form>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </section>
+
+        {/* Sessions */}
+        <section className="bg-surface border border-border-light rounded-2xl overflow-hidden shadow-sm">
+           <div className="p-6 border-b border-border-light bg-surface-muted/30">
+            <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
+              <Laptop className="w-5 h-5 text-text-secondary" /> Active Sessions
+            </h2>
+            <p className="text-sm text-text-secondary mt-1">Manage your active sessions across devices.</p>
+          </div>
+          <CardContent className="p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div>
+                <h4 className="font-bold text-text-primary mb-1">Revoke all sessions</h4>
+                <p className="text-sm text-text-secondary">
+                  This will log you out of all devices, including this one. You will need to log back in.
+                </p>
+              </div>
+              <Button variant="outline" onClick={handleLogoutAll} disabled={logoutAllLoading} className="shrink-0 rounded-full font-bold">
+                {logoutAllLoading ? "Revoking..." : "Log out all devices"}
+              </Button>
+            </div>
+            
+            {logoutAllStatus && (
+              <div className={`mt-6 p-4 flex items-start gap-3 rounded-xl border text-sm font-semibold ${
+                logoutAllStatus.type === "success" 
+                  ? "bg-success-muted border-success/30 text-success" 
+                  : "bg-error-muted border-error/30 text-error"
+              }`}>
+                {logoutAllStatus.type === "success" ? <CheckCircle2 className="w-5 h-5 shrink-0" /> : <AlertCircle className="w-5 h-5 shrink-0" />}
+                <span>{logoutAllStatus.msg}</span>
+              </div>
+            )}
+          </CardContent>
+        </section>
+
+        {/* Data & Privacy */}
+        <section className="bg-surface border border-border-light rounded-2xl overflow-hidden shadow-sm">
+          <div className="p-6 border-b border-border-light bg-surface-muted/30">
+            <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
+              <Download className="w-5 h-5 text-text-secondary" /> Data & Privacy
+            </h2>
+            <p className="text-sm text-text-secondary mt-1">Export your canonical profile data and assets.</p>
+          </div>
+          <CardContent className="p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div>
+              <h4 className="font-bold text-text-primary mb-1">Export Account Data</h4>
+              <p className="text-sm text-text-secondary max-w-md">
+                Download a complete JSON export of your canonical profile, connected integrations, and published portfolios.
+              </p>
+            </div>
+            <Button variant="outline" asChild className="shrink-0 rounded-full font-bold shadow-sm">
+              <a href="/api/v1/account/export" download="provia_export.json">
+                Download JSON
+              </a>
+            </Button>
+          </CardContent>
+        </section>
+
+        {/* Danger Zone */}
+        <section className="bg-surface border border-error/30 rounded-2xl overflow-hidden">
+          <div className="p-6 border-b border-error/30 bg-error-muted/30">
+            <h2 className="text-lg font-bold text-error flex items-center gap-2">
+              <ShieldAlert className="w-5 h-5" /> Danger Zone
+            </h2>
+            <p className="text-sm text-error/80 mt-1">Irreversible destructive actions.</p>
+          </div>
+          <CardContent className="p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-6">
+              <div>
+                <h4 className="font-bold text-text-primary mb-1">Delete Account</h4>
+                <p className="text-sm text-text-secondary max-w-md">
+                  Permanently delete your account, canonical profile, uploaded resumes, and all published portfolios. This action cannot be undone.
+                </p>
+              </div>
+              <Button 
+                variant="destructive" 
+                onClick={() => setShowDeleteSection(!showDeleteSection)}
+                className="shrink-0 rounded-full font-bold bg-error hover:bg-[#A31D27] text-white shadow-sm"
+              >
+                <Trash2 className="w-4 h-4 mr-2" /> Delete Account
+              </Button>
+            </div>
+
+            {showDeleteSection && (
+              <div className="mt-8 p-6 bg-error-muted/30 border border-error/30 rounded-xl max-w-xl">
+                <h4 className="font-bold text-error mb-2">Are you absolutely sure?</h4>
+                <p className="text-sm text-text-secondary mb-6">
+                  Please type your email address below to confirm account deletion. This will instantly destroy all your data.
+                </p>
+                <form onSubmit={handleDeleteAccount} className="space-y-4">
+                  <Input
+                    type="email"
+                    placeholder="Enter your email to confirm"
+                    value={confirmEmail}
+                    onChange={(e) => setConfirmEmail(e.target.value)}
+                    required
+                    className="border-error/30 focus-visible:ring-error"
+                  />
+                  
+                  {deleteStatus && (
+                    <div className={`p-4 flex items-start gap-3 rounded-lg text-sm font-semibold ${
+                      deleteStatus.type === "success" 
+                        ? "bg-success-muted text-success" 
+                        : "bg-error-muted text-error"
+                    }`}>
+                      {deleteStatus.type === "success" ? <CheckCircle2 className="w-5 h-5 shrink-0" /> : <AlertCircle className="w-5 h-5 shrink-0" />}
+                      <span>{deleteStatus.msg}</span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-end gap-3 pt-2">
+                    <Button type="button" variant="ghost" onClick={() => setShowDeleteSection(false)} className="rounded-full">
+                      Cancel
+                    </Button>
+                    <Button type="submit" disabled={deleteLoading} className="rounded-full bg-error hover:bg-[#A31D27] text-white font-bold">
+                      {deleteLoading ? "Deleting..." : "Confirm Deletion"}
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            )}
+          </CardContent>
+        </section>
+
+      </div>
     </div>
   );
 }
