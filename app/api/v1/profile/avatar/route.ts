@@ -65,7 +65,7 @@ export const POST = withAPIHandler(async (req) => {
       if (matches && matches[1]) {
         await CloudinaryService.destroyAsset(matches[1], "image");
       }
-    } catch (e) {
+    } catch {
       // Ignore destroy failure
     }
   }

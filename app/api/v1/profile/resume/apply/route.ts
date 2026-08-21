@@ -51,7 +51,7 @@ export const POST = withAPIHandler(async (req) => {
     });
   }
 
-  const updateData: any = {};
+  const updateData: Record<string, string> = {};
   if (selections.personalInfo && structuredData.personalInfo) {
     if (structuredData.personalInfo.fullName) updateData.fullName = structuredData.personalInfo.fullName;
     if (structuredData.personalInfo.headline) updateData.headline = structuredData.personalInfo.headline;

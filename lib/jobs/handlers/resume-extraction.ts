@@ -4,7 +4,6 @@ import { prisma } from "@/lib/db";
 import { AnalyticsService } from "@/lib/analytics/service";
 import { AIService } from "@/lib/ai/service";
 import { ResumeExtractionSchema } from "@/lib/schemas/resume";
-import pdfParse from "pdf-parse";
 import { logger } from "@/lib/logger";
 
 export const ResumeExtractionHandler = {
@@ -42,6 +41,8 @@ export const ResumeExtractionHandler = {
       // 2. Parse PDF
       let pdfText = "";
       try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const pdfParse = require("pdf-parse");
         const parsed = await pdfParse(buffer);
         pdfText = parsed.text;
       } catch (parseError) {
