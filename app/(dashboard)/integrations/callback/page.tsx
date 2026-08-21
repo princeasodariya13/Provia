@@ -32,11 +32,9 @@ function CallbackHandler() {
       }
 
       setStatus(`Importing data from ${provider}...`);
-      const redirectUri = window.location.origin + `/integrations/callback?provider=${provider?.toLowerCase()}`;
       
       const res = await apiClient.post(`/api/v1/integrations/${provider}/import`, {
         code,
-        redirectUri,
         state,
       });
 

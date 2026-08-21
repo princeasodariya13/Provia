@@ -11,10 +11,10 @@ import { encryptToken } from "@/lib/integrations/crypto";
 import { Provider } from "@prisma/client";
 import { z } from "zod";
 import { AnalyticsService } from "@/lib/analytics/service";
+import { env } from "@/lib/env";
 
 const importSchema = z.object({
   code: z.string(),
-  redirectUri: z.string(),
   state: z.string(),
 });
 
@@ -26,8 +26,15 @@ export const POST = withAPIHandler(async (req, args: unknown) => {
   const providerEnum = paramProvider.toUpperCase() as Provider;
   
   let connector: SourceConnector;
-  if (providerEnum === "GITHUB") connector = githubConnector;
-  else if (providerEnum === "LINKEDIN") connector = linkedinConnector;
+  let canonicalRedirectUri: string;
+  if (providerEnum === "GITHUB") {
+    connector = githubConnector;
+    canonicalRedirectUri = env.GITHUB_CALLBACK_URL;
+  }
+  else if (providerEnum === "LINKEDIN") {
+    connector = linkedinConnector;
+    canonicalRedirectUri = env.LINKEDIN_CALLBACK_URL;
+  }
   else throw new APIError("Invalid provider", 400);
 
   if (!connector.isConfigured()) {
@@ -38,7 +45,7 @@ export const POST = withAPIHandler(async (req, args: unknown) => {
   const data = importSchema.parse(body);
 
   // 1. Get tokens
-  const tokens = await connector.exchangeToken(data.code, data.redirectUri);
+  const tokens = await connector.exchangeToken(data.code, canonicalRedirectUri);
 
   const encAccess = tokens.accessToken ? encryptToken(tokens.accessToken) : null;
   const encRefresh = tokens.refreshToken ? encryptToken(tokens.refreshToken) : null;

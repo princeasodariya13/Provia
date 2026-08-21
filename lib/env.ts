@@ -8,15 +8,15 @@ const envSchema = z.object({
   // Integrations
   GITHUB_CLIENT_ID: z.string().optional(),
   GITHUB_CLIENT_SECRET: z.string().optional(),
-  GITHUB_CALLBACK_URL: z.string().url().optional(),
+  GITHUB_CALLBACK_URL: z.string().url(),
   
   LINKEDIN_CLIENT_ID: z.string().optional(),
   LINKEDIN_CLIENT_SECRET: z.string().optional(),
-  LINKEDIN_CALLBACK_URL: z.string().url().optional(),
+  LINKEDIN_CALLBACK_URL: z.string().url(),
   
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
-  GOOGLE_CALLBACK_URL: z.string().url().optional(),
+  GOOGLE_CALLBACK_URL: z.string().url(),
   
   INTEGRATION_TOKEN_ENCRYPTION_KEY: z.string().optional(),
 
@@ -69,13 +69,13 @@ export const env = envSchema.parse({
   SESSION_SECRET: process.env.SESSION_SECRET || "default_development_secret_that_is_long_enough_32",
   GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
-  GITHUB_CALLBACK_URL: process.env.GITHUB_CALLBACK_URL,
+  GITHUB_CALLBACK_URL: process.env.GITHUB_CALLBACK_URL || `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/integrations/callback?provider=github`,
   LINKEDIN_CLIENT_ID: process.env.LINKEDIN_CLIENT_ID,
   LINKEDIN_CLIENT_SECRET: process.env.LINKEDIN_CLIENT_SECRET,
-  LINKEDIN_CALLBACK_URL: process.env.LINKEDIN_CALLBACK_URL,
+  LINKEDIN_CALLBACK_URL: process.env.LINKEDIN_CALLBACK_URL || `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/integrations/callback?provider=linkedin`,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-  GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL,
+  GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL || `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/v1/auth/google/callback`,
   INTEGRATION_TOKEN_ENCRYPTION_KEY: process.env.INTEGRATION_TOKEN_ENCRYPTION_KEY,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   EMAIL_FROM: process.env.EMAIL_FROM || "noreply@provia.app",

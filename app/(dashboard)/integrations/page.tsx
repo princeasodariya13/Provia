@@ -35,11 +35,10 @@ export default function IntegrationsPage() {
 
   const handleConnect = async (provider: string) => {
     setError(null);
-    const redirectUri = window.location.origin + `/integrations/callback?provider=${provider.toLowerCase()}`;
     const state = window.crypto.randomUUID();
     sessionStorage.setItem("oauth_state", state);
     
-    const res = await apiClient.get<{ authUrl: string }>(`/api/v1/integrations/${provider}/connect?redirectUri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(state)}`);
+    const res = await apiClient.get<{ authUrl: string }>(`/api/v1/integrations/${provider}/connect?state=${encodeURIComponent(state)}`);
     if (res.success && res.data) {
       window.location.href = res.data.authUrl;
     } else {
