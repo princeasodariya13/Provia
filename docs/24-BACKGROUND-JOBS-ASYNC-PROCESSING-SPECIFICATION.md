@@ -1,54 +1,78 @@
-# 24 - Background Jobs & Asynchronous Processing Foundation
+# Background Jobs & Asynchronous Processing Foundation Specification
 
-## 1. Objective
-Establish a production-grade asynchronous background job foundation for Provia. This foundation moves suitable long-running/retryable operations (such as AI profile analysis, portfolio generation, and external provider synchronization) away from direct request/response execution. It provides a robust, provider-agnostic abstraction backed initially by PostgreSQL, designed for future migration to external queues (e.g., BullMQ, SQS) if needed.
+## Purpose
+The purpose of this architecture is to move suitable long-running and retryable operations away from direct request/response execution. This foundation ensures that operations such as AI profile analysis, portfolio generation, and third-party data synchronization do not block API requests, can automatically recover from transient failures, and execute reliably in the background.
 
-## 2. Architecture & Job Abstraction
-- **Types & Schemas**: Defined in `lib/jobs/types.ts` and `lib/jobs/schemas.ts`. Each job type (e.g., `PROFILE_ANALYSIS`) has a strongly-typed Zod payload schema to ensure execution safety.
-- **Job Service (`lib/jobs/service.ts`)**: The orchestrator for creating, fetching, and retrying jobs. It ensures idempotency and safe data persistence.
-- **Job Registry (`lib/jobs/registry.ts`)**: A centralized map of `JobType` to `JobDefinition`, allowing easy registration of new handlers.
-- **Job Processor (`lib/jobs/processor.ts`)**: An atomic, lock-based PostgreSQL worker that polls for queued jobs, manages retries with exponential backoff, and recovers stale processing jobs.
+## Architecture
+The background job system is built natively on top of PostgreSQL using Prisma, with a clean abstraction layer (Service/Processor pattern) that allows future migration to external queueing systems like BullMQ, Redis, or SQS without rewriting business logic. The architecture consists of:
+- **Database Layer**: A `Job` model storing all necessary state (status, payload, retries).
+- **Service Layer (`JobService`)**: Centralized creation, retrieval, and retry logic.
+- **Processing Layer (`JobProcessor`)**: Atomic claim logic, failure handling, and handler execution.
+- **Handler Registry**: Individual job handlers (`ProfileAnalysis`, `PortfolioGeneration`, `ProviderSync`) encapsulating specific business logic by reusing existing application services.
+- **Worker Execution**: A dedicated `worker.ts` entrypoint that safely polls for jobs.
 
-## 3. Database Model
-A new Prisma model `Job` was added to PostgreSQL with the following fields:
-- `id`, `userId`, `type`
-- `status` (`QUEUED`, `PROCESSING`, `COMPLETED`, `FAILED`, `CANCELLED`)
-- `payload` and `result` (JSON storage)
-- `errorCode`, `errorMessage` (for safe user exposure without stack traces)
-- `attempts`, `maxAttempts` (defaults to 3)
-- `availableAt`, `lockedAt`, `startedAt`, `completedAt`, `failedAt`
-- Indexes: `(status, availableAt)`, `(userId, createdAt)`, `(type, status)` for efficient worker claiming.
+## Job Lifecycle
+Jobs transition through a strictly defined set of states:
+- **QUEUED**: The initial state when a job is created, or when returned for retry. The `availableAt` field dictates when the job can be processed.
+- **PROCESSING**: The job has been atomically claimed by a worker and is actively running.
+- **COMPLETED**: The handler executed successfully. The result is stored, and the job is done.
+- **FAILED**: The job encountered an error and has exceeded its `maxAttempts`, or the error was deemed non-retryable.
 
-## 4. Job Lifecycle & Claiming Strategy
-1. **QUEUED**: The job is created or scheduled for a retry (waiting for `availableAt` to pass).
-2. **PROCESSING**: The worker atomically claims the job using PostgreSQL raw query `FOR UPDATE SKIP LOCKED`. If multiple workers attempt to claim the same job, the locking guarantees that each worker skips locked rows and takes the next available job, eliminating contention and `P2025` lock-miss errors.
-3. **COMPLETED**: The handler returns successfully, and the result is saved.
-4. **FAILED**: The job exceeds `maxAttempts` or encounters a non-retryable error.
+## Job Types
+The system uses a strict, typed job definition system. Current supported types include:
+- `PROFILE_ANALYSIS`: Calls the AI service to analyze a user's raw data and generate structured output.
+- `PORTFOLIO_GENERATION`: Calls the Portfolio Content service to assemble and format a user's portfolio.
+- `PROVIDER_SYNC`: Calls the Integration architecture to fetch updated profile data from platforms like GitHub or LinkedIn.
+- `EMAIL_DELIVERY`: Enqueues notification and transaction emails.
 
-## 5. Idempotency Strategy
-Idempotency is enforced at two levels:
-1. **Active Check**: If a user attempts to trigger a job while another job of the same type and `userId` is currently `QUEUED` or `PROCESSING`, the `JobService` gracefully returns the existing active job instead of duplicating it.
-2. **Database Level**: The `Job` model has a unique `idempotencyKey` field. If clients provide an `idempotencyKey` during job creation, PostgreSQL natively guarantees duplicate prevention, and the service transparently handles the `P2002` error to return the existing job.
+## Payload Validation
+Every job type enforces its own unique Zod schema (`schemas.ts`). When a job is created, its payload is parsed and validated against this schema, ensuring that the background worker never attempts to process malformed data. No sensitive information (such as OAuth tokens, passwords, or raw API keys) is ever stored in generic job payloads.
 
-## 6. Worker Execution & Stale Recovery
-- **Worker Script**: `npm run worker` starts `scripts/worker.ts`.
-- **Graceful Shutdown**: Intercepts `SIGINT` and `SIGTERM` to allow the current job to finish before stopping the polling loop.
-- **Stale Recovery**: A `recoverStaleJobs` routine runs alongside polling to identify jobs stuck in `PROCESSING` longer than a configured timeout. If attempts remain, they are requeued; otherwise, they are marked `FAILED` with a `TIMEOUT` error code.
+## Claiming Strategy & Concurrency Model
+To prevent multiple workers from executing the same job concurrently, the `JobProcessor` utilizes an atomic claiming strategy native to PostgreSQL:
+```sql
+UPDATE "Job"
+SET status = 'PROCESSING', "lockedAt" = $1, "startedAt" = $1, attempts = attempts + 1
+WHERE id = (
+  SELECT id FROM "Job" WHERE status = 'QUEUED' AND "availableAt" <= $1
+  ORDER BY "createdAt" ASC LIMIT 1
+  FOR UPDATE SKIP LOCKED
+) RETURNING *;
+```
+The `FOR UPDATE SKIP LOCKED` clause ensures safe multi-worker concurrency without deadlocking or locking rows longer than necessary, guaranteeing that each job is processed exactly once per attempt.
 
-## 7. API Endpoints
-- `GET /api/v1/jobs/[id]`: Safely retrieves job status and results for the authenticated user.
-- `POST /api/v1/jobs/[id]/retry`: Re-queues a explicitly `FAILED` job for the authenticated user, resetting attempts.
-- Jobs are created internally via specific feature endpoints (e.g., `POST /api/v1/ai/analyze-profile?async=true`), rather than an arbitrary generic `POST /api/v1/jobs` endpoint, to prevent abuse.
+## Retries & Backoff
+The system implements bounded retries with exponential backoff:
+- **maxAttempts**: Defaults to 3.
+- **Backoff Calculation**: If attempt 1 fails, the job is delayed by ~5 seconds. Attempt 2 adds a delay of ~30 seconds, etc. 
+If the maximum number of attempts is exhausted, the job permanently transitions to `FAILED`. 
 
-## 8. Security & Multi-User Isolation
-- **No Secrets in Payloads**: OAuth tokens and API keys are strictly kept out of job payloads. Handlers rely on existing services (e.g., `AIService`) which fetch required credentials at runtime.
-- **User Ownership**: Every API endpoint (GET status, POST retry) verifies that `job.userId === currentUser.id`. A user can never inspect, execute, or retry another user's job.
-- **Payload Validation**: Zod strictly validates all payloads upon creation.
+## Stale Job Recovery
+To account for process crashes or network partition events while a job is in the `PROCESSING` state, the `JobProcessor` implements a stale job recovery mechanism. A configurable processing timeout dictates how long a job can remain `PROCESSING`. If a job's `lockedAt` timestamp exceeds this timeout, the worker will automatically requeue the job (if attempts remain) or mark it as `FAILED`.
 
-## 9. Integration
-- `PROFILE_ANALYSIS` job type has been implemented (`lib/jobs/handlers/profile-analysis.ts`).
-- `POST /api/v1/ai/analyze-profile` now accepts an `async=true` query parameter to enqueue a background job instead of blocking the HTTP request, preserving backward compatibility for existing clients while enabling asynchronous UI flows.
+## Idempotency
+To prevent harmful duplicate executions (e.g., triggering multiple simultaneous AI analyses for the same user), the system supports an `idempotencyKey` field. Rather than creating a permanent database-level unique constraint (which would block users from running a job again in the future), the application layer actively blocks new jobs if there is already an existing `QUEUED` or `PROCESSING` job with the same idempotency characteristics.
 
-## 10. Known Limitations
-- The claiming strategy uses a raw `FOR UPDATE SKIP LOCKED` query, which requires direct database access and bypasses Prisma's type safety for that specific transaction.
-- Adding the `idempotencyKey` to the Prisma schema requires a database migration. This migration must be executed against the production Neon database before the new worker logic is deployed.
+## Security
+- **Authentication**: All API routes interacting with jobs (`POST /api/v1/jobs`, `GET /api/v1/jobs/[id]`) mandate `requireAuth()`.
+- **Authorization**: Job ownership is strictly verified. User A cannot view, retry, or create jobs on behalf of User B.
+- **Data Protection**: Stack traces and internal provider credentials are never returned to clients.
+- **Payload Safety**: Generic payloads do not include API keys, JWTs, or session secrets.
+
+## Logging
+The background worker leverages the existing Pino structured logger. Every significant lifecycle event (`job.created`, `job.started`, `job.completed`, `job.retry_scheduled`, `job.failed`) is logged with structured fields (`jobId`, `jobType`, `userId`, `attempt`, `durationMs`). Sensitive data is systematically excluded from the log stream.
+
+## Worker Execution
+The worker operates via a clean polling loop implemented in `scripts/worker.ts`.
+- Command: `npm run worker`
+- Graceful Shutdown: The worker listens for `SIGINT` and `SIGTERM`, preventing jobs from being abandoned mid-flight.
+- Environment Constraints: Uses `JOB_POLL_INTERVAL_MS` for safe polling pauses rather than tight loops.
+
+## API Boundaries
+- `POST /api/v1/jobs`: Enqueues explicitly supported safe job types. 
+- `GET /api/v1/jobs/[id]`: Returns sanitized job status.
+- `POST /api/v1/jobs/[id]/retry`: Allows manual retry of failed jobs.
+- Direct backward compatibility paths exist in legacy endpoints (like `POST /api/v1/ai/analyze-profile?async=true`), safely wrapping the async job initialization logic for existing frontends.
+
+## Future Migration
+By isolating the database layer into `JobService` and the processing layer into `JobProcessor`, replacing the PostgreSQL queue with a distributed external queue (like Redis + BullMQ) requires zero changes to the underlying job handlers, payload schemas, or external API boundaries.

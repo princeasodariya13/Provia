@@ -32,7 +32,7 @@ export const geminiProvider: AIProvider = {
       let parsed;
       try {
         parsed = JSON.parse(text.trim());
-      } catch (err) {
+      } catch {
         throw new APIError("AI Provider returned invalid JSON", 502);
       }
 

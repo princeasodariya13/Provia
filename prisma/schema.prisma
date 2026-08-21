@@ -27,6 +27,7 @@ model User {
   portfolios    PortfolioDocument[]
   publication   PortfolioPublication?
   jobs          Job[]
+  resume        Resume?
 }
 
 enum Role {
@@ -43,6 +44,7 @@ enum SourceType {
   GITHUB
   LINKEDIN
   MANUAL
+  RESUME
 }
 
 enum ConnectionState {
@@ -80,6 +82,23 @@ model RawSourceSnapshot {
   createdAt    DateTime    @default(now())
 
   connection   Connection  @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+}
+
+model Resume {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  fileUrl         String
+  publicId        String
+  originalFileName String
+  mimeType        String
+  fileSize        Int
+  status          JobStatus @default(QUEUED)
+  structuredData  String?   // JSON
+  extractionError String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ProfessionalProfile {

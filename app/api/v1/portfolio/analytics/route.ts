@@ -3,10 +3,9 @@ import { withAPIHandler } from "@/lib/api-handler";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { RateLimiterService } from "@/lib/rate-limit";
-import { getClientIp } from "@/lib/ip";
 import { APIError } from "@/lib/errors";
 
-export const GET = withAPIHandler(async (req) => {
+export const GET = withAPIHandler(async () => {
   const user = await requireAuth();
 
   // Use generic API rate limit for analytics queries (e.g. 30 requests per minute)
