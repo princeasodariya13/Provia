@@ -21,12 +21,14 @@ A new Prisma model `Job` was added to PostgreSQL with the following fields:
 
 ## 4. Job Lifecycle & Claiming Strategy
 1. **QUEUED**: The job is created or scheduled for a retry (waiting for `availableAt` to pass).
-2. **PROCESSING**: The worker atomically claims the job using Prisma's `update` with conditional `status: "QUEUED"`. If multiple workers attempt to claim the same job, only one succeeds, and the others receive a Prisma `P2025` error (which is safely caught).
+2. **PROCESSING**: The worker atomically claims the job using PostgreSQL raw query `FOR UPDATE SKIP LOCKED`. If multiple workers attempt to claim the same job, the locking guarantees that each worker skips locked rows and takes the next available job, eliminating contention and `P2025` lock-miss errors.
 3. **COMPLETED**: The handler returns successfully, and the result is saved.
 4. **FAILED**: The job exceeds `maxAttempts` or encounters a non-retryable error.
 
 ## 5. Idempotency Strategy
-Idempotency is enforced at the active job level. If a user attempts to trigger a job (e.g., `PROFILE_ANALYSIS`) while another job of the same type and `userId` is currently `QUEUED` or `PROCESSING`, the `JobService` gracefully returns the existing active job instead of duplicating it. This prevents duplicate destructive or expensive operations without locking the user out of future valid executions.
+Idempotency is enforced at two levels:
+1. **Active Check**: If a user attempts to trigger a job while another job of the same type and `userId` is currently `QUEUED` or `PROCESSING`, the `JobService` gracefully returns the existing active job instead of duplicating it.
+2. **Database Level**: The `Job` model has a unique `idempotencyKey` field. If clients provide an `idempotencyKey` during job creation, PostgreSQL natively guarantees duplicate prevention, and the service transparently handles the `P2002` error to return the existing job.
 
 ## 6. Worker Execution & Stale Recovery
 - **Worker Script**: `npm run worker` starts `scripts/worker.ts`.
@@ -48,4 +50,5 @@ Idempotency is enforced at the active job level. If a user attempts to trigger a
 - `POST /api/v1/ai/analyze-profile` now accepts an `async=true` query parameter to enqueue a background job instead of blocking the HTTP request, preserving backward compatibility for existing clients while enabling asynchronous UI flows.
 
 ## 10. Known Limitations
-- The current claiming strategy uses standard conditional database updates. While highly effective for a few worker nodes, extreme concurrency (e.g., 100+ aggressive workers) might benefit from `SELECT FOR UPDATE SKIP LOCKED` (via raw SQL query) or an external queue like Redis/BullMQ. The abstraction is designed to make this migration seamless if needed.
+- The claiming strategy uses a raw `FOR UPDATE SKIP LOCKED` query, which requires direct database access and bypasses Prisma's type safety for that specific transaction.
+- Adding the `idempotencyKey` to the Prisma schema requires a database migration. This migration must be executed against the production Neon database before the new worker logic is deployed.

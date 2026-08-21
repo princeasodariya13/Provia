@@ -3,7 +3,6 @@ import { logger } from "@/lib/logger";
 import { getJobHandler } from "./registry";
 import { JobService } from "./service";
 import { JobType } from "./types";
-import { env } from "@/lib/env";
 
 export const JobProcessor = {
   /**
@@ -13,36 +12,39 @@ export const JobProcessor = {
   async claimNextJob() {
     const now = new Date();
 
-    // 1. Find a candidate
-    const candidate = await prisma.job.findFirst({
-      where: {
-        status: "QUEUED",
-        availableAt: { lte: now }
-      },
-      orderBy: { createdAt: "asc" },
-      select: { id: true, attempts: true }
-    });
-
-    if (!candidate) return null;
-
-    // 2. Try to atomically claim it
     try {
-      const claimed = await prisma.job.update({
-        where: {
-          id: candidate.id,
-          status: "QUEUED" // Only update if still QUEUED!
-        },
-        data: {
-          status: "PROCESSING",
-          lockedAt: now,
-          startedAt: now,
-          attempts: candidate.attempts + 1,
-        }
-      });
+      // 1. Atomically find, lock, and update a single queued job
+      // Using PostgreSQL FOR UPDATE SKIP LOCKED to prevent lock contention
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const claimedJobs: any[] = await prisma.$queryRawUnsafe(`
+        UPDATE "Job"
+        SET status = 'PROCESSING',
+            "lockedAt" = $1,
+            "startedAt" = $1,
+            attempts = attempts + 1,
+            "updatedAt" = $1
+        WHERE id = (
+          SELECT id
+          FROM "Job"
+          WHERE status = 'QUEUED'
+            AND "availableAt" <= $1
+          ORDER BY "createdAt" ASC
+          LIMIT 1
+          FOR UPDATE SKIP LOCKED
+        )
+        RETURNING *;
+      `, now);
 
+      if (!claimedJobs || claimedJobs.length === 0) {
+        return null;
+      }
+
+      const claimed = claimedJobs[0];
+      // Note: $queryRaw returns Dates correctly, but Prisma maps it to generic object.
+      // We pass it to mapToEntity which expects the general structure.
       return JobService.mapToEntity(claimed);
     } catch (error) {
-      // If someone else claimed it, Prisma will throw a P2025 error (Record to update not found).
+      logger.error({ err: error }, "Failed to claim next job with SKIP LOCKED");
       return null;
     }
   },

@@ -33,4 +33,5 @@ export interface JobEntity<T = Record<string, unknown>> {
   failedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
+  idempotencyKey: string | null;
 }

@@ -29,18 +29,34 @@ export const JobService = {
       return this.mapToEntity<T>(existingActive);
     }
 
-    const job = await prisma.job.create({
-      data: {
-        userId: params.userId,
-        type: params.type,
-        payload: JSON.stringify(safePayload),
-        status: "QUEUED",
+    try {
+      const job = await prisma.job.create({
+        data: {
+          userId: params.userId,
+          type: params.type,
+          payload: JSON.stringify(safePayload),
+          status: "QUEUED",
+          idempotencyKey: params.idempotencyKey || null,
+        }
+      });
+
+      logger.info({ jobId: job.id, type: job.type, userId: job.userId }, "job.created");
+
+      return this.mapToEntity<T>(job);
+    } catch (error: unknown) {
+      const err = error as { code?: string };
+      // Prisma P2002 is unique constraint violation
+      if (err.code === 'P2002' && params.idempotencyKey) {
+        const existingJob = await prisma.job.findUnique({
+          where: { idempotencyKey: params.idempotencyKey }
+        });
+        if (existingJob) {
+          logger.info({ jobId: existingJob.id, type: params.type }, "Job idempotent DB-level return");
+          return this.mapToEntity<T>(existingJob);
+        }
       }
-    });
-
-    logger.info({ jobId: job.id, type: job.type, userId: job.userId }, "job.created");
-
-    return this.mapToEntity<T>(job);
+      throw error;
+    }
   },
 
   async getJob(id: string, userId?: string) {
@@ -99,6 +115,7 @@ export const JobService = {
       failedAt: prismaJob.failedAt,
       createdAt: prismaJob.createdAt,
       updatedAt: prismaJob.updatedAt,
+      idempotencyKey: prismaJob.idempotencyKey,
     };
   }
 };
