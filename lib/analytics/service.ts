@@ -10,6 +10,7 @@ export type AnalyticsEventName =
   | "auth.password_changed"
   | "auth.account_deleted"
   | "auth.rate_limited"
+  | "auth.google_login_success"
   | "integration.connect_started"
   | "integration.import_succeeded"
   | "integration.import_failed"

@@ -16,6 +16,7 @@ const envSchema = z.object({
   
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
+  GOOGLE_CALLBACK_URL: z.string().url().optional(),
   
   INTEGRATION_TOKEN_ENCRYPTION_KEY: z.string().optional(),
 
@@ -74,6 +75,7 @@ export const env = envSchema.parse({
   LINKEDIN_CALLBACK_URL: process.env.LINKEDIN_CALLBACK_URL,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+  GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL,
   INTEGRATION_TOKEN_ENCRYPTION_KEY: process.env.INTEGRATION_TOKEN_ENCRYPTION_KEY,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   EMAIL_FROM: process.env.EMAIL_FROM || "noreply@provia.app",
