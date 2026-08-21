@@ -115,6 +115,23 @@ export default function SettingsPage() {
         </form>
       </section>
 
+      {/* Export Data */}
+      <section style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 10, padding: "1.5rem", marginBottom: "2rem" }}>
+        <h2 style={{ fontWeight: 600, fontSize: "1.1rem", marginBottom: "0.5rem" }}>
+          Export My Data
+        </h2>
+        <p style={{ fontSize: "0.875rem", color: "#6b7280", marginBottom: "1rem" }}>
+          Download a machine-readable JSON copy of your profile, portfolios, AI generations, and account history.
+        </p>
+        <a
+          href="/api/v1/account/export"
+          className="inline-block text-center"
+          style={{ ...buttonStyle, background: "#f3f4f6", color: "#374151", border: "1px solid #d1d5db", textDecoration: "none" }}
+        >
+          Export Data
+        </a>
+      </section>
+
       {/* Account Deletion */}
       <section style={{ background: "#fff", border: "1px solid #fca5a5", borderRadius: 10, padding: "1.5rem" }}>
         <h2 style={{ fontWeight: 600, fontSize: "1.1rem", marginBottom: "0.5rem", color: "#dc2626" }}>

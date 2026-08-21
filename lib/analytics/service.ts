@@ -11,6 +11,8 @@ export type AnalyticsEventName =
   | "auth.account_deleted"
   | "auth.rate_limited"
   | "auth.google_login_success"
+  | "account.export_completed"
+  | "account.export_rate_limited"
   | "integration.connect_started"
   | "integration.import_succeeded"
   | "integration.import_failed"
