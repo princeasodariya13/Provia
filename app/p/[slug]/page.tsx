@@ -69,6 +69,9 @@ export default async function PublicPortfolioPage({ params }: { params: Promise<
   // Fire-and-forget analytics event
   AnalyticsService.record({
     eventName: "portfolio.public_viewed",
+    userId: publication.userId,
+    entityId: publication.id,
+    entityType: "PortfolioPublication",
     metadata: {
       slug: resolvedParams.slug,
       templateId,
