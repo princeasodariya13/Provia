@@ -67,8 +67,8 @@ export const JobProcessor = {
       
       if (job.attempts < job.maxAttempts) {
         // Requeue
-        await prisma.job.update({
-          where: { id: job.id },
+        await prisma.job.updateMany({
+          where: { id: job.id, status: "PROCESSING" },
           data: {
             status: "QUEUED",
             lockedAt: null,
@@ -77,8 +77,8 @@ export const JobProcessor = {
         });
       } else {
         // Mark failed
-        await prisma.job.update({
-          where: { id: job.id },
+        await prisma.job.updateMany({
+          where: { id: job.id, status: "PROCESSING" },
           data: {
             status: "FAILED",
             failedAt: new Date(),
@@ -106,8 +106,8 @@ export const JobProcessor = {
       const result = await handler.handler(job);
 
       // Complete
-      await prisma.job.update({
-        where: { id: job.id },
+      await prisma.job.updateMany({
+        where: { id: job.id, status: "PROCESSING" },
         data: {
           status: "COMPLETED",
           completedAt: new Date(),
@@ -129,8 +129,8 @@ export const JobProcessor = {
         // Backoff: 5s, 30s, etc.
         const backoffSeconds = job.attempts === 1 ? 5 : Math.pow(6, job.attempts - 1);
         
-        await prisma.job.update({
-          where: { id: job.id },
+        await prisma.job.updateMany({
+          where: { id: job.id, status: "PROCESSING" },
           data: {
             status: "QUEUED",
             errorCode: "RETRYABLE_ERROR",
@@ -148,8 +148,8 @@ export const JobProcessor = {
         }, "job.retry_scheduled");
 
       } else {
-        await prisma.job.update({
-          where: { id: job.id },
+        await prisma.job.updateMany({
+          where: { id: job.id, status: "PROCESSING" },
           data: {
             status: "FAILED",
             failedAt: new Date(),
