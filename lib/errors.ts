@@ -1,10 +1,12 @@
 export class APIError extends Error {
   statusCode: number;
+  errors?: unknown;
   
-  constructor(message: string, statusCode: number = 500) {
+  constructor(message: string, statusCode: number = 500, errors?: unknown) {
     super(message);
     this.name = "APIError";
     this.statusCode = statusCode;
+    this.errors = errors;
   }
 }
 

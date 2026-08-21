@@ -57,6 +57,12 @@ export const POST = withAPIHandler(async (req) => {
     throw new UnauthorizedError("Invalid email or password");
   }
 
+  // ---- STEP 30: ENFORCE EMAIL VERIFICATION ----
+  if (!user.emailVerified) {
+    AnalyticsService.record({ eventName: "auth.login_failed", userId: user.id, metadata: { reason: "unverified_email" } });
+    throw new APIError("Please verify your email before signing in.", 403, { code: "UNVERIFIED_EMAIL" });
+  }
+
   const safeUser = {
     id: user.id,
     name: user.name,

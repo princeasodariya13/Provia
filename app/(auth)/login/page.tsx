@@ -16,10 +16,16 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isUnverified, setIsUnverified] = useState(false);
+  const [resendStatus, setResendStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [resendMsg, setResendMsg] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsUnverified(false);
+    setResendStatus("idle");
+    setResendMsg("");
     setIsLoading(true);
 
     const res = await login({ email, password });
@@ -27,7 +33,34 @@ export default function LoginPage() {
       router.push("/dashboard");
     } else {
       setError(res.error || "An error occurred");
+      const details = res.details as { code?: string } | undefined;
+      if (details?.code === "UNVERIFIED_EMAIL") {
+        setIsUnverified(true);
+      }
       setIsLoading(false);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    setResendStatus("loading");
+    setResendMsg("");
+    try {
+      const res = await fetch("/api/v1/auth/resend-verification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setResendStatus("success");
+        setResendMsg(data.message || "Verification link sent!");
+      } else {
+        setResendStatus("error");
+        setResendMsg(data.error || "Failed to send verification link.");
+      }
+    } catch {
+      setResendStatus("error");
+      setResendMsg("An unexpected error occurred.");
     }
   };
 
@@ -46,8 +79,24 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="p-3 bg-error/10 border border-error text-error text-sm font-medium">
-                {error}
+              <div className="p-3 bg-error/10 border border-error text-error text-sm font-medium flex flex-col gap-2">
+                <p>{error}</p>
+                {isUnverified && (
+                  <div className="mt-1">
+                    {resendStatus === "idle" && (
+                      <button
+                        type="button"
+                        onClick={handleResendVerification}
+                        className="underline font-semibold hover:text-error/80 transition-colors"
+                      >
+                        Resend verification email
+                      </button>
+                    )}
+                    {resendStatus === "loading" && <span className="opacity-70">Sending...</span>}
+                    {resendStatus === "success" && <span className="text-emerald-600 font-semibold">{resendMsg}</span>}
+                    {resendStatus === "error" && <span>{resendMsg}</span>}
+                  </div>
+                )}
               </div>
             )}
             <div className="space-y-2">
