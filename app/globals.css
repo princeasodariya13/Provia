@@ -1,56 +1,99 @@
 @import "tailwindcss";
 
 /* ============================================================
-   PROVIA DESIGN SYSTEM — PREMIUM SAAS TOKENS
+   PROVIA DESIGN SYSTEM
    
-   Surface Model: Sophisticated dark-neutral with crisp editorial
-   Brand: Crimson red on near-black surfaces
-   Typography: Inter — tight tracking, strong hierarchy
+   `:root` — Light editorial premium (landing, auth, public)
+   `.provia-dark` — Dark SaaS (authenticated dashboard)
    ============================================================ */
 
+/* ─── LIGHT THEME (Landing / Auth / Public) ─────────────────── */
 :root {
-  /* === CORE SURFACES === */
-  --background: #0C0C0E;       /* Deep near-black — primary canvas */
-  --surface: #111115;          /* Elevated surface — cards, panels */
-  --surface-muted: #1A1A20;    /* Subtle muted — inner panels, inputs */
-  --surface-hover: #1F1F28;    /* Hover state surface */
+  /* Core Surfaces */
+  --background: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-muted: #F5EFE8;
+  --surface-hover: #EDE5DC;
 
-  /* === TYPOGRAPHY === */
-  --text-primary: #F0EDE8;     /* Warm white — primary headings/body */
-  --text-secondary: #8B8895;   /* Muted purple-gray — secondary text */
-  --text-muted: #55535F;       /* Deeply muted — placeholders, captions */
+  /* Typography */
+  --text-primary: #000000;
+  --text-secondary: #4D4D4D;
+  --text-muted: #937962;
 
-  /* === BORDERS === */
-  --border: #2A2830;           /* Default border — subtle */
-  --border-strong: #3D3A48;    /* Strong border — active, important */
-  --border-light: #1E1C26;     /* Very subtle border — dividers */
+  /* Borders */
+  --border: #C9BEB9;
+  --border-strong: #000000;
+  --border-light: #E8E0D8;
 
-  /* === BRAND === */
-  --brand: #E0323E;            /* Provia crimson — primary action */
-  --brand-hover: #C42630;      /* Brand hover — darkened */
-  --brand-muted: #3D1419;      /* Brand tint for backgrounds */
+  /* Brand */
+  --brand: #CC2936;
+  --brand-hover: #A61F2A;
+  --brand-muted: #FDECEA;
 
-  /* === SEMANTIC PALETTE === */
-  --success: #34A870;          /* Emerald green */
-  --success-muted: #0D2E1C;    /* Success background tint */
-  --warning: #E09832;          /* Amber warning */
-  --warning-muted: #2E2008;    /* Warning background tint */
-  --error: #E0323E;            /* Error red (matches brand) */
-  --error-muted: #2E0C10;      /* Error background tint */
-  --info: #4F9FE8;             /* Sky blue */
-  --info-muted: #0D1E2E;       /* Info background tint */
+  /* Semantic */
+  --success: #285943;
+  --success-muted: #EAF4EE;
+  --warning: #D9822B;
+  --warning-muted: #FEF3E2;
+  --error: #CC2936;
+  --error-muted: #FDECEA;
+  --info: #2B6CB0;
+  --info-muted: #EBF4FF;
 
-  /* === ACCENT TINTS (used sparingly) === */
+  /* Accent Palette */
+  --taupe: #937962;
+  --beige: #BFAE9F;
+  --accent: #C9BEB9;
+  --warm-accent: #F1BF98;
+
+  /* Focus */
+  --focus: #CC2936;
+}
+
+/* ─── DARK THEME (Dashboard / Authenticated App) ─────────────── */
+.provia-dark {
+  /* Core Surfaces */
+  --background: #0C0C0E;
+  --surface: #111115;
+  --surface-muted: #1A1A20;
+  --surface-hover: #1F1F28;
+
+  /* Typography */
+  --text-primary: #F0EDE8;
+  --text-secondary: #8B8895;
+  --text-muted: #55535F;
+
+  /* Borders */
+  --border: #2A2830;
+  --border-strong: #3D3A48;
+  --border-light: #1E1C26;
+
+  /* Brand (same crimson, same feel) */
+  --brand: #E0323E;
+  --brand-hover: #C42630;
+  --brand-muted: #3D1419;
+
+  /* Semantic */
+  --success: #34A870;
+  --success-muted: #0D2E1C;
+  --warning: #E09832;
+  --warning-muted: #2E2008;
+  --error: #E0323E;
+  --error-muted: #2E0C10;
+  --info: #4F9FE8;
+  --info-muted: #0D1E2E;
+
+  /* Accent Palette (darkened) */
   --taupe: #6B5F52;
   --beige: #2E2720;
   --accent: #3D3848;
   --warm-accent: #3A2C1A;
 
-  /* === FOCUS RING === */
+  /* Focus */
   --focus: #E0323E;
 }
 
-/* === TAILWIND THEME MAPPING === */
+/* ─── TAILWIND THEME MAPPING ─────────────────────────────────── */
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
@@ -83,7 +126,7 @@
   --color-accent: var(--accent);
   --color-warm-accent: var(--warm-accent);
 
-  /* Shadcn/UI compat aliases */
+  /* Shadcn/UI aliases */
   --color-foreground: var(--text-primary);
   --color-muted-foreground: var(--text-secondary);
   --color-ring: var(--focus);
@@ -93,14 +136,14 @@
   --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 
-  /* Border Radius */
+  /* Border Radius — editorial sharp */
   --radius-sm: 0;
   --radius-md: 0.125rem;
   --radius-lg: 0.25rem;
   --radius-xl: 0.5rem;
 }
 
-/* === BASE STYLES === */
+/* ─── BASE ────────────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -118,7 +161,6 @@ body {
   line-height: 1.6;
 }
 
-/* === TYPOGRAPHY SCALE === */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -126,7 +168,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.15;
 }
 
-/* === SCROLLBAR STYLING === */
+/* ─── SCROLLBAR ───────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -136,43 +178,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 ::-webkit-scrollbar-thumb {
   background: var(--border-strong);
-  border-radius: 0;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--brand);
 }
 
-/* === SELECTION === */
+/* ─── SELECTION ────────────────────────────────────────────────── */
 ::selection {
-  background: color-mix(in srgb, var(--brand) 30%, transparent);
+  background: color-mix(in srgb, var(--brand) 20%, transparent);
   color: var(--text-primary);
 }
 
-/* === FOCUS VISIBLE === */
+/* ─── FOCUS ────────────────────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
-/* === INPUT BASE === */
-input, textarea, select {
-  background-color: var(--surface-muted);
-  color: var(--text-primary);
-  border-color: var(--border-strong);
-}
-
-input::placeholder, textarea::placeholder {
-  color: var(--text-muted);
-}
-
-/* === SMOOTH TRANSITIONS === */
-a, button {
-  transition-property: color, background-color, border-color, opacity;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 120ms;
-}
-
-/* === MOTION PREFERENCES === */
+/* ─── REDUCED MOTION ───────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

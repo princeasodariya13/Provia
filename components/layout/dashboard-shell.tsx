@@ -58,7 +58,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex flex-col justify-center items-center p-6">
+      <div className="provia-dark min-h-screen bg-background flex flex-col justify-center items-center p-6">
         <div className="w-12 h-12 bg-brand animate-pulse mb-4" />
         <p className="text-sm font-semibold tracking-wider text-text-secondary uppercase">
           Loading Provia Workspace...
@@ -106,7 +106,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row text-text-primary antialiased">
+    <div className="provia-dark min-h-screen bg-background flex flex-col md:flex-row text-text-primary antialiased">
       {/* Mobile Header Bar */}
       <header className="md:hidden flex items-center justify-between px-4 py-3 bg-surface border-b border-border-strong sticky top-0 z-40">
         <div className="flex items-center gap-3">
