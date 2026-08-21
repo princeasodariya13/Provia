@@ -24,7 +24,7 @@ import { CommandPalette } from "@/components/ui/command-palette";
 interface NavItem {
   title: string;
   href: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 interface NavGroup {

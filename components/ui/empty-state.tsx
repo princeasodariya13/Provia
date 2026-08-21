@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Button } from "./button";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export interface EmptyStateProps {
   title: string;
@@ -41,7 +42,7 @@ export function EmptyState({
         {actionLabel && (
           actionHref ? (
             <Button asChild variant="default" size="sm" className="rounded-full font-bold shadow-sm">
-              <a href={actionHref}>{actionLabel}</a>
+              <Link href={actionHref}>{actionLabel}</Link>
             </Button>
           ) : onAction ? (
             <Button onClick={onAction} variant="default" size="sm" className="rounded-full font-bold shadow-sm">{actionLabel}</Button>

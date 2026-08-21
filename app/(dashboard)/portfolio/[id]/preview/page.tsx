@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
 import { TemplateRegistry } from "@/lib/portfolio/templates/registry";
 import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
+import Link from "next/link";
 
 interface PreviewPageProps {
   params: Promise<{ id: string }>;
@@ -56,9 +57,9 @@ export default async function PortfolioPreviewPage({ params }: PreviewPageProps)
           <span className="text-text-secondary">
             Template: {templateDef.metadata.name}
           </span>
-          <a href="/portfolio" className="text-accent hover:underline">
+          <Link href="/portfolio" className="text-accent hover:underline">
             Back to Dashboard
-          </a>
+          </Link>
         </div>
       </div>
       

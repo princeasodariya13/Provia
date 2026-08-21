@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/hooks/useAuth";
+import { SmoothScroll } from "@/components/layout/smooth-scroll";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -30,7 +31,9 @@ export default function RootLayout({
       className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-background text-text-primary">
-        <AuthProvider>{children}</AuthProvider>
+        <SmoothScroll>
+          <AuthProvider>{children}</AuthProvider>
+        </SmoothScroll>
       </body>
     </html>
   );

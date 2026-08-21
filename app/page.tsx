@@ -1,9 +1,15 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, GitBranch, LayoutTemplate, Briefcase } from "lucide-react"
+
+import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { Navbar } from "@/components/layout/navbar"
 import { Footer } from "@/components/layout/footer"
+import { FeaturesBento } from "@/components/landing/features-bento"
+import { HeroScroll } from "@/components/landing/hero-scroll"
+import { Testimonials } from "@/components/landing/testimonials"
+import { IntegrationsPreview } from "@/components/landing/integrations-preview"
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect"
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient"
 
 export default function Home() {
   return (
@@ -37,16 +43,21 @@ export default function Home() {
                 Articulated.
               </h1>
 
-              <p className="text-xl md:text-2xl text-text-secondary mb-12 font-medium leading-relaxed max-w-lg border-l-2 border-brand pl-6">
-                Connect your GitHub and LinkedIn. We normalize the data into a sophisticated, premium portfolio ready for top-tier recruiters.
-              </p>
+              <div className="text-xl md:text-2xl text-text-secondary mb-12 font-medium leading-relaxed max-w-lg border-l-2 border-brand pl-6">
+                <TextGenerateEffect 
+                  words="Connect your GitHub and LinkedIn. We normalize the data into a sophisticated, premium portfolio ready for top-tier recruiters." 
+                  className="font-medium"
+                />
+              </div>
 
               <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
-                <Button size="lg" className="h-14 px-10 text-base rounded-none bg-brand text-white hover:bg-brand-hover shadow-none" asChild>
-                  <Link href="/register">
-                    Start Building <ArrowRight className="ml-3 h-5 w-5" />
-                  </Link>
-                </Button>
+                <HoverBorderGradient
+                  href="/register"
+                  containerClassName="border-0 rounded-none w-full sm:w-auto bg-transparent"
+                  className="h-14 px-10 text-base rounded-none bg-brand text-white hover:bg-brand-hover shadow-none flex items-center justify-center w-full"
+                >
+                  Start Building <ArrowRight className="ml-3 h-5 w-5" />
+                </HoverBorderGradient>
                 <Button size="lg" variant="outline" className="h-14 px-10 text-base rounded-none border-border-strong text-text-primary hover:bg-taupe hover:text-white transition-colors shadow-none bg-transparent">
                   View Live Examples
                 </Button>
@@ -70,8 +81,13 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Dashboard Product Showcase */}
+        <section className="w-full relative z-10 bg-background -mt-20 md:-mt-32">
+          <HeroScroll />
+        </section>
+
         {/* Feature Grid */}
-        <section id="features" className="w-full relative z-10 py-32 px-4 md:px-12 xl:px-24 bg-surface border-y border-border-light">
+        <section id="features" className="w-full relative z-10 py-24 px-4 md:px-12 xl:px-24 bg-surface border-y border-border-light">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-end mb-24">
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-text-primary max-w-md">
@@ -82,46 +98,15 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-border-light">
-              <Card className="rounded-none border-0 border-b md:border-b-0 md:border-r border-border-light bg-transparent shadow-none p-10 hover:bg-background transition-colors">
-                <CardHeader className="p-0 mb-12">
-                  <div className="mb-8 w-12 h-12 bg-beige flex items-center justify-center rounded-none">
-                    <GitBranch className="h-5 w-5 text-text-primary" />
-                  </div>
-                  <CardTitle className="text-2xl mb-4">Data Synchronization</CardTitle>
-                  <CardDescription className="text-base leading-relaxed">
-                    Connect your existing profiles. We automatically sync repositories, contributions, and professional history without manual data entry.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card className="rounded-none border-0 border-b md:border-b-0 md:border-r border-border-light bg-transparent shadow-none p-10 hover:bg-background transition-colors">
-                <CardHeader className="p-0 mb-12">
-                  <div className="mb-8 w-12 h-12 bg-accent flex items-center justify-center rounded-none">
-                    <LayoutTemplate className="h-5 w-5 text-text-primary" />
-                  </div>
-                  <CardTitle className="text-2xl mb-4">Editorial Templates</CardTitle>
-                  <CardDescription className="text-base leading-relaxed">
-                    Select from layouts prioritizing typography, whitespace, and structural harmony over flashy generic components.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card className="rounded-none border-0 bg-transparent shadow-none p-10 hover:bg-background transition-colors relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-warm-accent rounded-bl-full opacity-20" />
-                <CardHeader className="p-0 mb-12 relative z-10">
-                  <div className="mb-8 w-12 h-12 bg-brand flex items-center justify-center rounded-none">
-                    <Briefcase className="h-5 w-5 text-white" />
-                  </div>
-                  <CardTitle className="text-2xl mb-4">Career Optimized</CardTitle>
-                  <CardDescription className="text-base leading-relaxed">
-                    Engineered to highlight the depth of your work. Designed to communicate competence within the recruiter&apos;s strict 6-second review window.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </div>
+            <FeaturesBento />
           </div>
         </section>
+
+        {/* Testimonials */}
+        <Testimonials />
+
+        {/* Integrations Preview */}
+        <IntegrationsPreview />
 
         {/* CTA Section */}
         <section className="w-full relative z-10 py-40 px-4 overflow-hidden">
