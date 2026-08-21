@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -29,18 +30,6 @@ export function ResumeIntelligence() {
   const [applying, setApplying] = useState(false);
   const [applySuccess, setApplySuccess] = useState(false);
 
-  useEffect(() => {
-    fetchResumeStatus();
-  }, []);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (status === "QUEUED" || status === "PROCESSING") {
-      interval = setInterval(fetchResumeStatus, 3000);
-    }
-    return () => clearInterval(interval);
-  }, [status]);
-
   const fetchResumeStatus = async () => {
     const res = await apiClient.get<any>("/api/v1/profile/resume");
     if (res.success && res.data) {
@@ -50,6 +39,28 @@ export function ResumeIntelligence() {
       setStatus("NONE");
     }
   };
+
+  useEffect(() => {
+    let isMounted = true;
+    apiClient.get<any>("/api/v1/profile/resume").then((res) => {
+      if (!isMounted) return;
+      if (res.success && res.data) {
+        setResumeData(res.data);
+        setStatus(res.data.status);
+      } else {
+        setStatus("NONE");
+      }
+    });
+    return () => { isMounted = false; };
+  }, []);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (status === "QUEUED" || status === "PROCESSING") {
+      interval = setInterval(fetchResumeStatus, 3000);
+    }
+    return () => clearInterval(interval);
+  }, [status]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

@@ -42,8 +42,9 @@ export const ResumeExtractionHandler = {
       let pdfText = "";
       try {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const pdfParse = require("pdf-parse");
-        const parsed = await pdfParse(buffer);
+        const pdfParseModule = require("pdf-parse");
+        const parseFunc = typeof pdfParseModule === "function" ? pdfParseModule : (pdfParseModule.default || pdfParseModule);
+        const parsed = await parseFunc(buffer);
         pdfText = parsed.text;
       } catch (parseError) {
         throw new Error(`Failed to parse PDF: ${parseError instanceof Error ? parseError.message : "Unknown error"}`);
