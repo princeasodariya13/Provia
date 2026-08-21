@@ -1,152 +1,106 @@
 @import "tailwindcss";
 
 /* ============================================================
-   PROVIA DESIGN SYSTEM
+   PROVIA DESIGN SYSTEM — SINGLE LIGHT EDITORIAL PALETTE
    
-   `:root` — Light editorial premium (landing, auth, public)
-   `.provia-dark` — Dark SaaS (authenticated dashboard)
+   Source of truth: the original Provia landing page.
+   One identity, applied consistently across every surface.
    ============================================================ */
 
-/* ─── LIGHT THEME (Landing / Auth / Public) ─────────────────── */
 :root {
-  /* Core Surfaces */
-  --background: #FFFFFF;
-  --surface: #FFFFFF;
-  --surface-muted: #F5EFE8;
-  --surface-hover: #EDE5DC;
+  /* ── SURFACES ───────────────────────────────────────────── */
+  --background:     #FFFFFF;
+  --surface:        #FFFFFF;
+  --surface-muted:  #F5EFE8;   /* Warm off-white — sidebar, secondary areas */
+  --surface-hover:  #EDE5DC;   /* Hover tint on muted surfaces */
 
-  /* Typography */
-  --text-primary: #000000;
+  /* ── TYPOGRAPHY ─────────────────────────────────────────── */
+  --text-primary:   #000000;
   --text-secondary: #4D4D4D;
-  --text-muted: #937962;
+  --text-muted:     #937962;   /* Warm taupe for labels / captions */
 
-  /* Borders */
-  --border: #C9BEB9;
-  --border-strong: #000000;
-  --border-light: #E8E0D8;
+  /* ── BORDERS ────────────────────────────────────────────── */
+  --border:         #C9BEB9;   /* Default subtle border */
+  --border-strong:  #000000;   /* Editorial black border */
+  --border-light:   #E8E0D8;   /* Very light dividers */
 
-  /* Brand */
-  --brand: #CC2936;
-  --brand-hover: #A61F2A;
-  --brand-muted: #FDECEA;
+  /* ── BRAND ──────────────────────────────────────────────── */
+  --brand:          #CC2936;   /* Provia crimson */
+  --brand-hover:    #A61F2A;
+  --brand-muted:    #FDECEA;   /* Light brand tint for backgrounds */
 
-  /* Semantic */
-  --success: #285943;
-  --success-muted: #EAF4EE;
-  --warning: #D9822B;
-  --warning-muted: #FEF3E2;
-  --error: #CC2936;
-  --error-muted: #FDECEA;
-  --info: #2B6CB0;
-  --info-muted: #EBF4FF;
+  /* ── SEMANTIC STATUS ────────────────────────────────────── */
+  --success:        #285943;
+  --success-muted:  #EAF4EE;
+  --warning:        #D9822B;
+  --warning-muted:  #FEF3E2;
+  --error:          #CC2936;
+  --error-muted:    #FDECEA;
+  --info:           #2B6CB0;
+  --info-muted:     #EBF4FF;
 
-  /* Accent Palette */
-  --taupe: #937962;
-  --beige: #BFAE9F;
-  --accent: #C9BEB9;
-  --warm-accent: #F1BF98;
+  /* ── ACCENT PALETTE ─────────────────────────────────────── */
+  --taupe:          #937962;
+  --beige:          #BFAE9F;
+  --accent:         #C9BEB9;
+  --warm-accent:    #F1BF98;
 
-  /* Focus */
-  --focus: #CC2936;
+  /* ── FOCUS ──────────────────────────────────────────────── */
+  --focus:          #CC2936;
 }
 
-/* ─── DARK THEME (Dashboard / Authenticated App) ─────────────── */
-.provia-dark {
-  /* Core Surfaces */
-  --background: #0C0C0E;
-  --surface: #111115;
-  --surface-muted: #1A1A20;
-  --surface-hover: #1F1F28;
-
-  /* Typography */
-  --text-primary: #F0EDE8;
-  --text-secondary: #8B8895;
-  --text-muted: #55535F;
-
-  /* Borders */
-  --border: #2A2830;
-  --border-strong: #3D3A48;
-  --border-light: #1E1C26;
-
-  /* Brand (same crimson, same feel) */
-  --brand: #E0323E;
-  --brand-hover: #C42630;
-  --brand-muted: #3D1419;
-
-  /* Semantic */
-  --success: #34A870;
-  --success-muted: #0D2E1C;
-  --warning: #E09832;
-  --warning-muted: #2E2008;
-  --error: #E0323E;
-  --error-muted: #2E0C10;
-  --info: #4F9FE8;
-  --info-muted: #0D1E2E;
-
-  /* Accent Palette (darkened) */
-  --taupe: #6B5F52;
-  --beige: #2E2720;
-  --accent: #3D3848;
-  --warm-accent: #3A2C1A;
-
-  /* Focus */
-  --focus: #E0323E;
-}
-
-/* ─── TAILWIND THEME MAPPING ─────────────────────────────────── */
+/* ── TAILWIND THEME MAPPING ─────────────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-surface: var(--surface);
+  --color-background:    var(--background);
+  --color-surface:       var(--surface);
   --color-surface-muted: var(--surface-muted);
   --color-surface-hover: var(--surface-hover);
 
-  --color-text-primary: var(--text-primary);
+  --color-text-primary:   var(--text-primary);
   --color-text-secondary: var(--text-secondary);
-  --color-text-muted: var(--text-muted);
+  --color-text-muted:     var(--text-muted);
 
-  --color-border: var(--border);
+  --color-border:        var(--border);
   --color-border-strong: var(--border-strong);
-  --color-border-light: var(--border-light);
+  --color-border-light:  var(--border-light);
 
-  --color-brand: var(--brand);
-  --color-brand-hover: var(--brand-hover);
-  --color-brand-muted: var(--brand-muted);
+  --color-brand:         var(--brand);
+  --color-brand-hover:   var(--brand-hover);
+  --color-brand-muted:   var(--brand-muted);
 
-  --color-success: var(--success);
+  --color-success:       var(--success);
   --color-success-muted: var(--success-muted);
-  --color-warning: var(--warning);
+  --color-warning:       var(--warning);
   --color-warning-muted: var(--warning-muted);
-  --color-error: var(--error);
-  --color-error-muted: var(--error-muted);
-  --color-info: var(--info);
-  --color-info-muted: var(--info-muted);
+  --color-error:         var(--error);
+  --color-error-muted:   var(--error-muted);
+  --color-info:          var(--info);
+  --color-info-muted:    var(--info-muted);
 
-  --color-taupe: var(--taupe);
-  --color-beige: var(--beige);
-  --color-accent: var(--accent);
-  --color-warm-accent: var(--warm-accent);
+  --color-taupe:         var(--taupe);
+  --color-beige:         var(--beige);
+  --color-accent:        var(--accent);
+  --color-warm-accent:   var(--warm-accent);
 
-  /* Shadcn/UI aliases */
-  --color-foreground: var(--text-primary);
-  --color-muted-foreground: var(--text-secondary);
-  --color-ring: var(--focus);
-  --color-input: var(--border);
+  /* Shadcn / compat aliases */
+  --color-foreground:         var(--text-primary);
+  --color-muted-foreground:   var(--text-secondary);
+  --color-ring:               var(--focus);
+  --color-input:              var(--border);
 
   /* Typography */
   --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 
-  /* Border Radius — editorial sharp */
+  /* Border-radius — sharp editorial */
   --radius-sm: 0;
   --radius-md: 0.125rem;
   --radius-lg: 0.25rem;
   --radius-xl: 0.5rem;
 }
 
-/* ─── BASE ────────────────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+/* ── BASE ───────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
 html {
   -webkit-font-smoothing: antialiased;
@@ -168,34 +122,25 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.15;
 }
 
-/* ─── SCROLLBAR ───────────────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--surface-muted);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--brand);
-}
+/* ── SCROLLBAR ──────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--surface-muted); }
+::-webkit-scrollbar-thumb { background: var(--accent); }
+::-webkit-scrollbar-thumb:hover { background: var(--brand); }
 
-/* ─── SELECTION ────────────────────────────────────────────────── */
+/* ── SELECTION ──────────────────────────────────────────────── */
 ::selection {
-  background: color-mix(in srgb, var(--brand) 20%, transparent);
+  background: color-mix(in srgb, var(--brand) 15%, transparent);
   color: var(--text-primary);
 }
 
-/* ─── FOCUS ────────────────────────────────────────────────────── */
+/* ── FOCUS ──────────────────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
-/* ─── REDUCED MOTION ───────────────────────────────────────────── */
+/* ── REDUCED MOTION ─────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

@@ -94,21 +94,21 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-start justify-center pt-20 px-4">
-      <div className="bg-background border border-border-strong w-full max-w-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-        <div className="flex items-center px-4 border-b border-border-strong bg-surface">
-          <Search className="w-5 h-5 text-text-secondary shrink-0 mr-3" />
+    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-start justify-center pt-20 px-4">
+      <div className="bg-background border border-border w-full max-w-xl shadow-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150 rounded-none">
+        <div className="flex items-center px-4 border-b border-border bg-surface-muted">
+          <Search className="w-4 h-4 text-text-muted shrink-0 mr-3" />
           <input
             type="text"
             placeholder="Type a command or search workspace..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
-            className="w-full bg-transparent py-4 text-sm outline-none text-text-primary placeholder:text-text-secondary"
+            className="w-full bg-transparent py-3.5 text-sm outline-none text-text-primary placeholder:text-text-muted font-medium"
           />
           <button
             onClick={onClose}
-            className="p-1 hover:bg-surface-muted text-text-secondary rounded-none"
+            className="p-1 hover:bg-surface-hover text-text-secondary transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -116,27 +116,27 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
         <div className="max-h-80 overflow-y-auto p-2">
           {filteredGroups.length === 0 ? (
-            <div className="p-8 text-center text-sm text-text-secondary">
+            <div className="p-8 text-center text-sm text-text-muted font-medium">
               No matching commands found.
             </div>
           ) : (
             filteredGroups.map((group) => (
               <div key={group.group} className="mb-3">
-                <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-text-secondary">
+                <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-text-muted">
                   {group.group}
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   {group.items.map((item) => {
                     const Icon = item.icon;
                     return (
                       <button
                         key={item.label}
                         onClick={() => handleSelect(item)}
-                        className="w-full flex items-center px-3 py-2.5 text-sm text-text-primary hover:bg-brand hover:text-white transition-colors text-left group"
+                        className="w-full flex items-center px-3 py-2.5 text-sm text-text-primary hover:bg-brand hover:text-white transition-colors text-left group font-medium"
                       >
-                        <Icon className="w-4 h-4 mr-3 text-brand group-hover:text-white shrink-0" />
-                        <span className="font-medium flex-1">{item.label}</span>
-                        <span className="text-xs text-text-secondary group-hover:text-white/80 font-mono">
+                        <Icon className="w-4 h-4 mr-3 text-text-secondary group-hover:text-white shrink-0" />
+                        <span className="flex-1">{item.label}</span>
+                        <span className="text-xs text-text-muted group-hover:text-white/80 font-mono">
                           ↵
                         </span>
                       </button>
@@ -148,10 +148,10 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           )}
         </div>
 
-        <div className="px-4 py-2 border-t border-border-light bg-surface text-[11px] text-text-secondary flex justify-between">
+        <div className="px-4 py-2 border-t border-border-light bg-surface-muted text-[11px] text-text-muted flex justify-between font-medium">
           <span>Navigate with search</span>
           <span>
-            <kbd className="px-1.5 py-0.5 border border-border-strong bg-background text-[10px]">
+            <kbd className="px-1.5 py-0.5 border border-border bg-background text-[10px] font-mono text-text-secondary">
               ESC
             </kbd>{" "}
             to close

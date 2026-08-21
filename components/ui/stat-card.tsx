@@ -7,51 +7,35 @@ export interface StatCardProps {
   value: string | number;
   subtext?: string;
   icon?: React.ReactNode;
-  trend?: {
-    value: string;
-    positive?: boolean;
-  };
+  trend?: { value: string; positive?: boolean };
   className?: string;
 }
 
-export function StatCard({
-  title,
-  value,
-  subtext,
-  icon,
-  trend,
-  className,
-}: StatCardProps) {
+export function StatCard({ title, value, subtext, icon, trend, className }: StatCardProps) {
   return (
-    <Card className={cn("rounded-none border-border-strong bg-background hover:border-brand/50 transition-colors", className)}>
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between space-y-0 pb-2">
-          <span className="text-xs font-bold uppercase tracking-widest text-text-secondary">
+    <Card className={cn("border-border bg-surface-muted hover:border-border-strong transition-colors", className)}>
+      <CardContent className="p-5">
+        <div className="flex items-center justify-between pb-3">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
             {title}
           </span>
-          {icon && <div className="text-brand">{icon}</div>}
+          {icon && <span className="text-text-muted">{icon}</span>}
         </div>
-        <div className="flex items-baseline gap-2 mt-1">
-          <div className="text-3xl font-bold tracking-tight text-text-primary">
-            {value}
-          </div>
+        <div className="flex items-baseline gap-2">
+          <div className="text-2xl font-bold tracking-tight text-text-primary">{value}</div>
           {trend && (
-            <span
-              className={cn(
-                "text-xs font-bold px-1.5 py-0.5 border",
-                trend.positive
-                  ? "bg-success/10 border-success text-success"
-                  : "bg-error/10 border-error text-error"
-              )}
-            >
+            <span className={cn(
+              "text-[10px] font-bold px-1.5 py-0.5 border",
+              trend.positive
+                ? "bg-success-muted border-success text-success"
+                : "bg-error-muted border-error text-error"
+            )}>
               {trend.value}
             </span>
           )}
         </div>
         {subtext && (
-          <p className="text-xs text-text-secondary mt-2 font-medium">
-            {subtext}
-          </p>
+          <p className="text-xs text-text-muted mt-1.5">{subtext}</p>
         )}
       </CardContent>
     </Card>

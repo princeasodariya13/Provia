@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import * as React from "react";
@@ -19,7 +18,6 @@ import {
   Menu,
   X,
   Search,
-  UserCheck,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Avatar } from "@/components/ui/avatar";
@@ -29,7 +27,6 @@ interface NavItem {
   title: string;
   href: string;
   icon: React.ElementType;
-  badge?: string;
 }
 
 interface NavGroup {
@@ -41,15 +38,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout, isLoading } = useAuth();
-  
+
   const [collapsed, setCollapsed] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [commandOpen, setCommandOpen] = React.useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
 
-
-
-  // Auth boundary check
+  // Auth boundary
   React.useEffect(() => {
     if (!isLoading && !user) {
       router.push("/login");
@@ -58,10 +53,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="provia-dark min-h-screen bg-background flex flex-col justify-center items-center p-6">
-        <div className="w-12 h-12 bg-brand animate-pulse mb-4" />
-        <p className="text-sm font-semibold tracking-wider text-text-secondary uppercase">
-          Loading Provia Workspace...
+      <div className="min-h-screen bg-surface-muted flex flex-col justify-center items-center p-6">
+        <div className="w-6 h-6 bg-brand mb-4" />
+        <p className="text-xs font-semibold tracking-widest text-text-secondary uppercase">
+          Loading Provia...
         </p>
       </div>
     );
@@ -75,7 +70,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       items: [
         { title: "Overview", href: "/dashboard", icon: LayoutDashboard },
         { title: "Profile", href: "/profile", icon: User },
-        { title: "Portfolio Engine", href: "/portfolio", icon: Globe },
+        { title: "Resume Intelligence", href: "/profile", icon: FileText },
+        { title: "Portfolio", href: "/portfolio", icon: Globe },
         { title: "Analytics", href: "/analytics", icon: BarChart3 },
       ],
     },
@@ -89,47 +85,51 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       group: "Account",
       items: [
         { title: "Settings", href: "/settings", icon: Settings },
-        { title: "Help & Support", href: "/settings#help", icon: HelpCircle },
+        { title: "Help", href: "/settings#help", icon: HelpCircle },
       ],
     },
   ];
 
   const getPageTitle = () => {
     if (pathname === "/dashboard") return "Overview";
-    if (pathname === "/profile") return "Profile Workspace";
-    if (pathname === "/portfolio") return "Portfolio Engine";
+    if (pathname === "/profile") return "Profile";
+    if (pathname === "/portfolio") return "Portfolio";
     if (pathname === "/analytics") return "Analytics";
     if (pathname === "/integrations") return "Integrations";
-    if (pathname === "/settings") return "Account Settings";
-    if (pathname.startsWith("/portfolio/")) return "Portfolio Details";
+    if (pathname === "/settings") return "Settings";
+    if (pathname.startsWith("/portfolio/")) return "Portfolio";
     return "Workspace";
   };
 
+  const isActive = (href: string) => {
+    if (href === "/dashboard") return pathname === "/dashboard";
+    return pathname === href || pathname.startsWith(href + "/");
+  };
+
   return (
-    <div className="provia-dark min-h-screen bg-background flex flex-col md:flex-row text-text-primary antialiased">
-      {/* Mobile Header Bar */}
-      <header className="md:hidden flex items-center justify-between px-4 py-3 bg-surface border-b border-border-strong sticky top-0 z-40">
+    <div className="min-h-screen bg-background flex flex-col md:flex-row text-text-primary">
+
+      {/* ── MOBILE TOP BAR ─────────────────────────────────────────── */}
+      <header className="md:hidden sticky top-0 z-40 bg-background border-b border-border flex items-center justify-between px-4 h-14">
         <div className="flex items-center gap-3">
           <button
             onClick={() => setMobileOpen(true)}
-            className="p-1 text-text-primary hover:bg-surface-muted border border-border-strong"
-            aria-label="Open navigation drawer"
+            className="p-1.5 text-text-secondary hover:text-text-primary transition-colors"
+            aria-label="Open navigation"
           >
             <Menu className="w-5 h-5" />
           </button>
-          <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg">
-            <span className="w-7 h-7 bg-brand text-white flex items-center justify-center text-sm font-black">
-              P
-            </span>
-            <span>PROVIA</span>
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <div className="w-5 h-5 bg-brand flex items-center justify-center">
+              <div className="w-1.5 h-1.5 bg-white rounded-full" />
+            </div>
+            <span className="font-bold text-sm tracking-tight uppercase">Provia</span>
           </Link>
         </div>
-
         <div className="flex items-center gap-2">
           <button
             onClick={() => setCommandOpen(true)}
-            className="p-1.5 border border-border-strong text-text-secondary hover:text-text-primary"
-            title="Search (Cmd+K)"
+            className="p-1.5 text-text-secondary hover:text-text-primary transition-colors"
           >
             <Search className="w-4 h-4" />
           </button>
@@ -137,92 +137,76 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             src={user.avatarUrl}
             fallback={user.fullName || user.email}
             size="sm"
-            onClick={() => setUserDropdownOpen(!userDropdownOpen)}
             className="cursor-pointer"
+            onClick={() => setUserDropdownOpen(!userDropdownOpen)}
           />
         </div>
       </header>
 
-      {/* Desktop Sidebar */}
-      <aside
-        className={`hidden md:flex flex-col bg-surface border-r border-border-strong sticky top-0 h-screen transition-all duration-200 z-30 shrink-0 ${
-          collapsed ? "w-16" : "w-64"
-        }`}
-      >
-        {/* Brand Header */}
-        <div className="p-4 border-b border-border-strong flex items-center justify-between h-16">
+      {/* ── DESKTOP SIDEBAR ────────────────────────────────────────── */}
+      <aside className={`hidden md:flex flex-col sticky top-0 h-screen shrink-0 bg-surface-muted border-r border-border transition-all duration-200 ${collapsed ? "w-14" : "w-60"}`}>
+
+        {/* Brand + collapse */}
+        <div className={`h-14 flex items-center border-b border-border px-4 ${collapsed ? "justify-center" : "justify-between"}`}>
           {!collapsed ? (
             <Link href="/dashboard" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 bg-brand text-white font-black flex items-center justify-center text-lg tracking-tighter">
-                P
+              <div className="w-5 h-5 bg-brand flex items-center justify-center shrink-0">
+                <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-lg tracking-tight leading-none group-hover:text-brand transition-colors">
-                  PROVIA
-                </span>
-                <span className="text-[10px] font-bold tracking-widest text-text-secondary uppercase mt-0.5">
-                  Platform
-                </span>
-              </div>
+              <span className="font-bold text-sm tracking-tight uppercase text-text-primary group-hover:text-brand transition-colors">
+                Provia
+              </span>
             </Link>
           ) : (
-            <Link href="/dashboard" className="mx-auto">
-              <div className="w-8 h-8 bg-brand text-white font-black flex items-center justify-center text-lg">
-                P
+            <Link href="/dashboard">
+              <div className="w-5 h-5 bg-brand flex items-center justify-center">
+                <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
             </Link>
           )}
-
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="hidden md:flex p-1 border border-border-strong hover:bg-surface-muted text-text-secondary hover:text-text-primary transition-colors"
-            title={collapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+            className={`p-1 text-text-muted hover:text-text-primary transition-colors ${collapsed ? "hidden" : "flex"}`}
+            title={collapsed ? "Expand" : "Collapse"}
           >
             {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
         </div>
 
-        {/* Workspace Indicator */}
+        {/* Workspace label */}
         {!collapsed && (
-          <div className="px-4 py-3 bg-surface-muted/40 border-b border-border-light flex items-center justify-between text-xs">
-            <span className="font-bold uppercase tracking-wider text-text-secondary text-[10px]">
-              Workspace
-            </span>
-            <span className="font-semibold text-text-primary flex items-center gap-1 text-[11px]">
-              <span className="w-2 h-2 rounded-full bg-success inline-block" />
+          <div className="px-4 pt-5 pb-2">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
               Personal
             </span>
           </div>
         )}
 
-        {/* Nav Groups */}
-        <div className="flex-1 overflow-y-auto py-4 px-2 space-y-6">
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-5">
           {navigation.map((group) => (
             <div key={group.group}>
               {!collapsed && (
-                <div className="px-3 mb-2 text-[10px] font-bold uppercase tracking-widest text-text-secondary">
+                <p className="px-2 mb-1 text-[10px] font-bold uppercase tracking-widest text-text-muted">
                   {group.group}
-                </div>
+                </p>
               )}
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {group.items.map((item) => {
                   const Icon = item.icon;
-                  const isActive =
-                    pathname === item.href ||
-                    (item.href !== "/dashboard" && pathname.startsWith(item.href));
-
+                  const active = isActive(item.href);
                   return (
                     <Link
-                      key={item.title}
+                      key={item.title + item.href}
                       href={item.href}
                       title={collapsed ? item.title : undefined}
-                      className={`flex items-center gap-3 px-3 py-2 text-sm font-semibold transition-colors ${
-                        isActive
-                          ? "bg-brand text-white border-l-2 border-brand"
-                          : "text-text-secondary hover:text-text-primary hover:bg-surface-muted/70"
-                      } ${collapsed ? "justify-center px-0" : ""}`}
+                      className={`flex items-center gap-2.5 px-2.5 py-2 text-sm font-medium transition-colors rounded-none ${
+                        active
+                          ? "bg-brand text-white"
+                          : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
+                      } ${collapsed ? "justify-center px-0 py-2" : ""}`}
                     >
-                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-white" : "text-text-secondary"}`} />
+                      <Icon className={`w-4 h-4 shrink-0 ${active ? "text-white" : "text-text-secondary"}`} />
                       {!collapsed && <span>{item.title}</span>}
                     </Link>
                   );
@@ -230,60 +214,49 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           ))}
-        </div>
+        </nav>
 
-        {/* User Footer Profile */}
-        <div className="p-3 border-t border-border-strong relative bg-surface">
-          <div
+        {/* User footer */}
+        <div className="border-t border-border p-2 relative">
+          <button
             onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-            className="flex items-center gap-3 p-2 hover:bg-surface-muted cursor-pointer transition-colors border border-border-light"
+            className={`w-full flex items-center gap-2.5 px-2 py-2 hover:bg-surface-hover transition-colors text-left ${collapsed ? "justify-center" : ""}`}
           >
-            <Avatar
-              src={user.avatarUrl}
-              fallback={user.fullName || user.email}
-              size="sm"
-            />
+            <Avatar src={user.avatarUrl} fallback={user.fullName || user.email} size="sm" />
             {!collapsed && (
-              <div className="flex flex-col min-w-0 flex-1">
-                <span className="text-xs font-bold truncate text-text-primary">
-                  {user.fullName || "Provia User"}
-                </span>
-                <span className="text-[10px] text-text-secondary truncate font-mono">
-                  {user.email}
-                </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-semibold truncate text-text-primary">{user.fullName || "Provia User"}</p>
+                <p className="text-[10px] truncate text-text-muted">{user.email}</p>
               </div>
             )}
-          </div>
+          </button>
 
-          {/* User Dropdown Menu */}
+          {/* User dropdown */}
           {userDropdownOpen && (
-            <div className="absolute bottom-full left-2 right-2 mb-2 bg-background border border-border-strong shadow-xl p-1 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150">
-              <div className="px-3 py-2 border-b border-border-light text-xs">
-                <p className="font-bold text-text-primary truncate">{user.fullName || "User"}</p>
+            <div className="absolute bottom-full left-1 right-1 mb-1 bg-background border border-border shadow-sm py-1 z-50">
+              <div className="px-3 py-2 border-b border-border-light mb-1">
+                <p className="text-xs font-semibold text-text-primary truncate">{user.fullName || "User"}</p>
                 <p className="text-[10px] text-text-secondary truncate">{user.email}</p>
               </div>
               <Link
                 href="/profile"
                 onClick={() => setUserDropdownOpen(false)}
-                className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-text-primary hover:bg-brand hover:text-white transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-muted transition-colors"
               >
-                <User className="w-3.5 h-3.5" />
+                <User className="w-3.5 h-3.5 text-text-secondary" />
                 View Profile
               </Link>
               <Link
                 href="/settings"
                 onClick={() => setUserDropdownOpen(false)}
-                className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-text-primary hover:bg-brand hover:text-white transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-muted transition-colors"
               >
-                <Settings className="w-3.5 h-3.5" />
+                <Settings className="w-3.5 h-3.5 text-text-secondary" />
                 Settings
               </Link>
               <button
-                onClick={() => {
-                  setUserDropdownOpen(false);
-                  logout();
-                }}
-                className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-error hover:bg-error hover:text-white transition-colors text-left border-t border-border-light mt-1"
+                onClick={() => { setUserDropdownOpen(false); logout(); }}
+                className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-error hover:bg-surface-muted transition-colors border-t border-border-light mt-1"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 Log out
@@ -293,47 +266,50 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      {/* Mobile Navigation Drawer */}
+      {/* ── MOBILE DRAWER ──────────────────────────────────────────── */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex md:hidden">
-          <div className="bg-surface w-4/5 max-w-xs h-full flex flex-col border-r border-border-strong animate-in slide-in-from-left duration-200">
-            <div className="p-4 border-b border-border-strong flex items-center justify-between">
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div className="absolute inset-0 bg-black/30" onClick={() => setMobileOpen(false)} />
+          <div className="relative bg-surface-muted w-72 h-full flex flex-col border-r border-border shadow-sm">
+            {/* Drawer header */}
+            <div className="h-14 flex items-center justify-between px-4 border-b border-border">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-brand text-white font-black flex items-center justify-center text-lg">
-                  P
+                <div className="w-5 h-5 bg-brand flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 bg-white rounded-full" />
                 </div>
-                <span className="font-bold text-lg tracking-tight">PROVIA</span>
+                <span className="font-bold text-sm tracking-tight uppercase">Provia</span>
               </div>
               <button
                 onClick={() => setMobileOpen(false)}
-                className="p-1 border border-border-strong text-text-primary"
+                className="p-1.5 text-text-secondary hover:text-text-primary"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-6">
+            {/* Drawer nav */}
+            <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
               {navigation.map((group) => (
                 <div key={group.group}>
-                  <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-text-secondary">
+                  <p className="px-2 mb-1 text-[10px] font-bold uppercase tracking-widest text-text-muted">
                     {group.group}
-                  </div>
-                  <div className="space-y-1">
+                  </p>
+                  <div className="space-y-0.5">
                     {group.items.map((item) => {
                       const Icon = item.icon;
-                      const isActive = pathname === item.href;
+                      const active = isActive(item.href);
                       return (
                         <Link
-                          key={item.title}
+                          key={item.title + item.href}
                           href={item.href}
                           onClick={() => setMobileOpen(false)}
-                          className={`flex items-center gap-3 px-3 py-2.5 text-sm font-semibold transition-colors ${
-                            isActive
+                          className={`flex items-center gap-2.5 px-2.5 py-2.5 text-sm font-medium transition-colors ${
+                            active
                               ? "bg-brand text-white"
-                              : "text-text-secondary hover:text-text-primary hover:bg-surface-muted"
+                              : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
                           }`}
                         >
-                          <Icon className="w-4 h-4" />
+                          <Icon className={`w-4 h-4 shrink-0 ${active ? "text-white" : "text-text-secondary"}`} />
                           <span>{item.title}</span>
                         </Link>
                       );
@@ -341,21 +317,22 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                   </div>
                 </div>
               ))}
-            </div>
+            </nav>
 
-            <div className="p-4 border-t border-border-strong space-y-2">
-              <div className="flex items-center gap-3 mb-2">
+            {/* Drawer user */}
+            <div className="border-t border-border p-4 space-y-3">
+              <div className="flex items-center gap-3">
                 <Avatar src={user.avatarUrl} fallback={user.fullName || user.email} size="sm" />
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold truncate">{user.fullName || "User"}</p>
-                  <p className="text-[10px] text-text-secondary truncate">{user.email}</p>
+                  <p className="text-xs font-semibold truncate text-text-primary">{user.fullName || "User"}</p>
+                  <p className="text-[10px] truncate text-text-secondary">{user.email}</p>
                 </div>
               </div>
               <button
                 onClick={() => logout()}
-                className="w-full flex items-center justify-center gap-2 py-2 border border-error text-error text-xs font-bold hover:bg-error hover:text-white transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-2 border border-border text-xs font-semibold text-text-secondary hover:border-error hover:text-error transition-colors"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="w-3.5 h-3.5" />
                 Log out
               </button>
             </div>
@@ -363,50 +340,57 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {/* Main Product Area */}
+      {/* ── MAIN CONTENT AREA ──────────────────────────────────────── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
-        {/* Desktop Header */}
-        <header className="hidden md:flex items-center justify-between px-8 py-4 bg-surface border-b border-border-strong h-16 sticky top-0 z-20">
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-bold uppercase tracking-widest text-text-secondary">
-              Workspace /
-            </span>
-            <h1 className="text-base font-bold text-text-primary">{getPageTitle()}</h1>
+
+        {/* Desktop topbar */}
+        <header className="hidden md:flex sticky top-0 z-20 bg-background border-b border-border h-14 items-center justify-between px-8">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-text-muted font-medium">Workspace</span>
+            <span className="text-border-strong text-xs">/</span>
+            <span className="font-semibold text-text-primary">{getPageTitle()}</span>
           </div>
 
           <div className="flex items-center gap-4">
+            {/* Search trigger */}
             <button
               onClick={() => setCommandOpen(true)}
-              className="flex items-center gap-2 px-3 py-1.5 border border-border-strong bg-background text-text-secondary hover:text-text-primary text-xs transition-colors"
+              className="flex items-center gap-2 px-3 py-1.5 text-xs text-text-secondary border border-border hover:border-border-strong hover:text-text-primary transition-colors bg-surface-muted"
             >
-              <Search className="w-3.5 h-3.5 text-brand" />
-              <span>Search workspace...</span>
-              <kbd className="px-1.5 py-0.5 border border-border-strong bg-surface text-[10px] font-mono text-text-secondary">
+              <Search className="w-3.5 h-3.5" />
+              <span>Search...</span>
+              <kbd className="ml-2 px-1.5 py-0.5 text-[10px] font-mono border border-border bg-background text-text-muted">
                 ⌘K
               </kbd>
             </button>
 
-            <div className="flex items-center gap-2 border-l border-border-strong pl-4">
-              <Avatar
-                src={user.avatarUrl}
-                fallback={user.fullName || user.email}
-                size="sm"
-              />
-              <span className="text-xs font-bold text-text-primary">
+            {/* Collapse toggle */}
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="p-1.5 text-text-muted hover:text-text-primary border border-border hover:border-border-strong transition-colors"
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
+            </button>
+
+            {/* User chip */}
+            <div className="flex items-center gap-2 pl-4 border-l border-border">
+              <Avatar src={user.avatarUrl} fallback={user.fullName || user.email} size="sm" />
+              <span className="text-xs font-semibold text-text-primary hidden lg:block">
                 {user.fullName || "Account"}
               </span>
             </div>
           </div>
         </header>
 
-        {/* Page Content Container */}
-        <main className="flex-1 p-4 md:p-8 lg:p-10 max-w-7xl w-full mx-auto">
+        {/* Page content */}
+        <main className="flex-1 p-5 md:p-8 lg:p-10 max-w-6xl w-full mx-auto">
           {children}
         </main>
-
-        {/* Command Palette */}
-        <CommandPalette isOpen={commandOpen} onClose={() => setCommandOpen(false)} />
       </div>
+
+      {/* Command palette */}
+      <CommandPalette isOpen={commandOpen} onClose={() => setCommandOpen(false)} />
     </div>
   );
 }

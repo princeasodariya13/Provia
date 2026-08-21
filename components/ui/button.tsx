@@ -14,17 +14,24 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         className={cn(
-          "inline-flex items-center justify-center whitespace-nowrap rounded-none text-sm font-semibold tracking-wide ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-40",
+          "inline-flex items-center justify-center whitespace-nowrap rounded-none text-sm font-semibold tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-40",
           {
+            /* Primary — brand crimson */
             "bg-brand text-white hover:bg-brand-hover": variant === "default",
-            "bg-surface-muted text-text-primary hover:bg-accent/40 border border-border": variant === "secondary",
-            "border border-border-strong bg-transparent text-text-primary hover:bg-surface-muted hover:border-brand": variant === "outline",
-            "hover:bg-surface-muted hover:text-text-primary text-text-secondary": variant === "ghost",
+            /* Secondary — warm surface */
+            "bg-surface-muted text-text-primary border border-border hover:bg-surface-hover": variant === "secondary",
+            /* Outline — thin black border editorial */
+            "border border-border-strong bg-transparent text-text-primary hover:bg-surface-muted": variant === "outline",
+            /* Ghost — minimal */
+            "text-text-secondary hover:text-text-primary hover:bg-surface-muted": variant === "ghost",
+            /* Destructive */
             "bg-error text-white hover:bg-error/90": variant === "destructive",
+            /* Link */
             "text-brand underline-offset-4 hover:underline p-0": variant === "link",
+            /* Sizes */
             "h-10 px-6 py-2": size === "default",
             "h-8 px-4 text-xs": size === "sm",
-            "h-12 px-10 text-base": size === "lg",
+            "h-12 px-8 text-base": size === "lg",
             "h-10 w-10 p-0": size === "icon",
           },
           className

@@ -1,6 +1,6 @@
 import * as React from "react";
-import { cn } from "@/lib/utils";
 import { Button } from "./button";
+import { cn } from "@/lib/utils";
 
 export interface EmptyStateProps {
   title: string;
@@ -26,33 +26,29 @@ export function EmptyState({
   className,
 }: EmptyStateProps) {
   return (
-    <div
-      className={cn(
-        "border border-dashed border-border-strong p-8 md:p-12 text-center flex flex-col items-center justify-center bg-surface/30",
-        className
-      )}
-    >
+    <div className={cn(
+      "border border-dashed border-border p-10 flex flex-col items-center text-center bg-surface-muted/40",
+      className
+    )}>
       {icon && (
-        <div className="w-12 h-12 bg-surface border border-border-strong flex items-center justify-center mb-4 text-brand">
+        <div className="w-10 h-10 border border-border bg-background flex items-center justify-center mb-4 text-text-muted">
           {icon}
         </div>
       )}
-      <h3 className="text-xl font-bold text-text-primary mb-2">{title}</h3>
-      <p className="text-text-secondary text-sm max-w-md mb-6 leading-relaxed">
-        {description}
-      </p>
+      <h3 className="text-base font-bold text-text-primary mb-1.5">{title}</h3>
+      <p className="text-sm text-text-secondary max-w-sm mb-6 leading-relaxed">{description}</p>
       <div className="flex flex-wrap gap-3 justify-center">
-        {actionLabel && (actionHref ? (
-          <Button asChild variant="default" size="default">
-            <a href={actionHref}>{actionLabel}</a>
-          </Button>
-        ) : onAction ? (
-          <Button onClick={onAction} variant="default" size="default">
-            {actionLabel}
-          </Button>
-        ) : null)}
+        {actionLabel && (
+          actionHref ? (
+            <Button asChild variant="default" size="sm">
+              <a href={actionHref}>{actionLabel}</a>
+            </Button>
+          ) : onAction ? (
+            <Button onClick={onAction} variant="default" size="sm">{actionLabel}</Button>
+          ) : null
+        )}
         {secondaryActionLabel && onSecondaryAction && (
-          <Button onClick={onSecondaryAction} variant="outline" size="default">
+          <Button onClick={onSecondaryAction} variant="outline" size="sm">
             {secondaryActionLabel}
           </Button>
         )}
