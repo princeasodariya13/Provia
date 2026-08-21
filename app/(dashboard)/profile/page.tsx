@@ -1,4 +1,6 @@
 import { ProfileForm } from "./ProfileForm";
+import { AvatarUploader } from "./AvatarUploader";
+import { ResumeIntelligence } from "./ResumeIntelligence";
 
 export default function ProfilePage() {
   return (
@@ -8,8 +10,16 @@ export default function ProfilePage() {
         <h1 className="text-4xl font-bold tracking-tight mb-2">Professional Profile</h1>
         <p className="text-text-secondary text-lg">Manage your canonical professional data. This seeds your portfolio.</p>
       </div>
-      
-      <ProfileForm />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="md:col-span-1 space-y-6">
+          <AvatarUploader />
+          <ResumeIntelligence />
+        </div>
+        <div className="md:col-span-2">
+          <ProfileForm />
+        </div>
+      </div>
     </div>
   );
 }

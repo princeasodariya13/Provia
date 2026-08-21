@@ -106,6 +106,21 @@ export const GET = withAPIHandler(async (req) => {
             }
           }
         }
+      },
+      resumes: {
+        select: {
+          id: true,
+          originalFileName: true,
+          mimeType: true,
+          fileSize: true,
+          status: true,
+          structuredData: true,
+          extractionError: true,
+          isActive: true,
+          version: true,
+          createdAt: true,
+          updatedAt: true,
+        }
       }
     }
   });
@@ -187,6 +202,19 @@ export const GET = withAPIHandler(async (req) => {
       eventName: a.eventName,
       createdAt: a.createdAt,
       metadata: a.metadata ? JSON.parse(a.metadata) : null,
+    })),
+    resumes: fullUser.resumes.map(r => ({
+      id: r.id,
+      filename: r.originalFileName,
+      mimeType: r.mimeType,
+      size: r.fileSize,
+      status: r.status,
+      structuredData: r.structuredData ? JSON.parse(r.structuredData) : null,
+      extractionError: r.extractionError,
+      isActive: r.isActive,
+      version: r.version,
+      createdAt: r.createdAt,
+      updatedAt: r.updatedAt,
     })),
   };
 

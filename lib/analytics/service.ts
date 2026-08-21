@@ -29,6 +29,11 @@ export type AnalyticsEventName =
   | "portfolio.share_initiated"
   | "api.request_completed"
   | "api.request_failed"
+  | "resume.uploaded"
+  | "resume.parse_completed"
+  | "resume.parse_failed"
+  | "resume.applied"
+  | "asset.avatar_updated"
   | "system.error";
 
 export interface AnalyticsEventPayload {

@@ -27,7 +27,7 @@ model User {
   portfolios    PortfolioDocument[]
   publication   PortfolioPublication?
   jobs          Job[]
-  resume        Resume?
+  resumes       Resume[]
 }
 
 enum Role {
@@ -86,7 +86,7 @@ model RawSourceSnapshot {
 
 model Resume {
   id              String    @id @default(cuid())
-  userId          String    @unique
+  userId          String    
   fileUrl         String
   publicId        String
   originalFileName String
@@ -95,10 +95,14 @@ model Resume {
   status          JobStatus @default(QUEUED)
   structuredData  String?   // JSON
   extractionError String?
+  isActive        Boolean   @default(true)
+  version         Int       @default(1)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, version])
 }
 
 model ProfessionalProfile {

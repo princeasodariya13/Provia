@@ -18,3 +18,8 @@ export const EmailDeliveryPayloadSchema = z.object({
   template: z.enum(["WELCOME", "PASSWORD_RESET", "SECURITY_ALERT", "VERIFY_EMAIL"]),
   action: z.string().optional(), // For security alerts
 });
+
+export const ResumeExtractionPayloadSchema = z.object({
+  userId: z.string(),
+  resumeId: z.string(),
+});
