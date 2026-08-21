@@ -7,10 +7,27 @@ import bcrypt from "bcryptjs";
 import { APIError } from "@/lib/errors";
 import { AnalyticsService } from "@/lib/analytics/service";
 import { JobService } from "@/lib/jobs";
+import { RateLimiterService } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/ip";
+import { env } from "@/lib/env";
 
 export const POST = withAPIHandler(async (req) => {
   const body = await req.json();
   const data = registerSchema.parse(body);
+
+  const ip = getClientIp(req);
+  const windowSecs = parseInt(env.AUTH_RATE_LIMIT_WINDOW_SECONDS);
+
+  // 1. IP Rate Limit (prevent mass account creation)
+  const ipResult = await RateLimiterService.check(
+    `auth:register:ip:${ip}`,
+    parseInt(env.AUTH_REGISTER_IP_LIMIT),
+    windowSecs
+  );
+  if (!ipResult.allowed) {
+    AnalyticsService.record({ eventName: "auth.rate_limited", metadata: { endpoint: "register", keyType: "ip" } });
+    throw new APIError("Too many requests. Please try again later.", 429);
+  }
 
   const existingUser = await prisma.user.findUnique({
     where: { email: data.email },

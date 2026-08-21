@@ -9,6 +9,7 @@ export type AnalyticsEventName =
   | "auth.email_verified"
   | "auth.password_changed"
   | "auth.account_deleted"
+  | "auth.rate_limited"
   | "integration.connect_started"
   | "integration.import_succeeded"
   | "integration.import_failed"

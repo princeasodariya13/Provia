@@ -6,10 +6,26 @@ import { jwtVerify, decodeJwt } from "jose";
 import { env } from "@/lib/env";
 import { APIError } from "@/lib/errors";
 import { AnalyticsService } from "@/lib/analytics/service";
+import { RateLimiterService } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/ip";
 
 export const POST = withAPIHandler(async (request: Request) => {
   const body = await request.json();
   const { token } = verifyEmailSchema.parse(body);
+
+  const ip = getClientIp(request);
+  const windowSecs = parseInt(env.AUTH_RATE_LIMIT_WINDOW_SECONDS);
+
+  // 1. IP Rate Limit
+  const ipResult = await RateLimiterService.check(
+    `auth:verify-email:ip:${ip}`,
+    parseInt(env.AUTH_VERIFY_EMAIL_IP_LIMIT),
+    windowSecs
+  );
+  if (!ipResult.allowed) {
+    AnalyticsService.record({ eventName: "auth.rate_limited", metadata: { endpoint: "verify-email", keyType: "ip" } });
+    throw new APIError("Too many requests. Please try again later.", 429);
+  }
 
   try {
     const unverifiedPayload = decodeJwt(token);
