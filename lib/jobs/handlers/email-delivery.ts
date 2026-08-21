@@ -44,6 +44,21 @@ export const EmailDeliveryHandler = {
         break;
       }
 
+      case "VERIFY_EMAIL": {
+        // Stateless JWT for email verification — signed with SESSION_SECRET + user.email
+        // so it auto-invalidates if email changes.
+        const emailSecretBase = env.SESSION_SECRET + user.email;
+        const EMAIL_SECRET_KEY = new TextEncoder().encode(emailSecretBase);
+        const verifyToken = await new SignJWT({ userId: user.id })
+          .setProtectedHeader({ alg: "HS256" })
+          .setIssuedAt()
+          .setExpirationTime("24h")
+          .sign(EMAIL_SECRET_KEY);
+        const verifyUrl = `${env.NEXT_PUBLIC_APP_URL}/verify-email?token=${verifyToken}`;
+        result = await EmailService.sendEmailVerificationEmail(user.email, user.name, verifyUrl);
+        break;
+      }
+
       case "SECURITY_ALERT":
         result = await EmailService.sendSecurityNotification(
           user.email, 

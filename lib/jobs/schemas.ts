@@ -15,6 +15,6 @@ export const ProviderSyncPayloadSchema = z.object({
 
 export const EmailDeliveryPayloadSchema = z.object({
   userId: z.string(),
-  template: z.enum(["WELCOME", "PASSWORD_RESET", "SECURITY_ALERT"]),
+  template: z.enum(["WELCOME", "PASSWORD_RESET", "SECURITY_ALERT", "VERIFY_EMAIL"]),
   action: z.string().optional(), // For security alerts
 });

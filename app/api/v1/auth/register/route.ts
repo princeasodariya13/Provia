@@ -6,6 +6,7 @@ import { createSession } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 import { APIError } from "@/lib/errors";
 import { AnalyticsService } from "@/lib/analytics/service";
+import { JobService } from "@/lib/jobs";
 
 export const POST = withAPIHandler(async (req) => {
   const body = await req.json();
@@ -36,6 +37,14 @@ export const POST = withAPIHandler(async (req) => {
     role: user.role,
     email: user.email!,
   });
+
+  // Queue email verification (non-blocking — registration succeeds regardless)
+  JobService.createJob({
+    userId: user.id,
+    type: "EMAIL_DELIVERY",
+    payload: { userId: user.id, template: "VERIFY_EMAIL" },
+    idempotencyKey: `email-verify-${user.id}`,
+  }).catch(() => { /* Non-blocking */ });
 
   AnalyticsService.record({
     eventName: "auth.registered",

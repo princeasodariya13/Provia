@@ -64,3 +64,16 @@ export const getSecurityNotificationEmail = (action: string, time: string) => {
   `;
   return baseTemplate("Security Alert", content);
 };
+
+export const getEmailVerificationEmail = (name: string | null, verifyUrl: string) => {
+  const safeName = name ? escapeHtml(name) : "there";
+  const content = `
+    <p>Hi ${safeName},</p>
+    <p>Please verify your email address to complete your Provia account setup. Click the button below — this link expires in 24 hours.</p>
+    <p style="text-align: center; margin: 32px 0;">
+      <a href="${escapeHtml(verifyUrl)}" class="button">Verify Email Address</a>
+    </p>
+    <p>If you didn't create a Provia account, you can safely ignore this email.</p>
+  `;
+  return baseTemplate("Verify your email", content);
+};

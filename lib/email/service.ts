@@ -1,6 +1,6 @@
 import { EmailProvider, EmailMessage, EmailDeliveryResult } from "./types";
 import { ResendProvider } from "./providers/resend";
-import { getWelcomeEmail, getPasswordResetEmail, getSecurityNotificationEmail } from "./templates";
+import { getWelcomeEmail, getPasswordResetEmail, getSecurityNotificationEmail, getEmailVerificationEmail } from "./templates";
 import { logger } from "@/lib/logger";
 
 class EmailServiceImpl {
@@ -36,6 +36,14 @@ class EmailServiceImpl {
       to: { email: to },
       subject: "Provia Security Alert",
       html: getSecurityNotificationEmail(action, new Date().toLocaleString()),
+    });
+  }
+
+  async sendEmailVerificationEmail(to: string, name: string | null, verifyUrl: string) {
+    return this.sendEmail({
+      to: { email: to, name: name || undefined },
+      subject: "Verify your Provia email address",
+      html: getEmailVerificationEmail(name, verifyUrl),
     });
   }
 }
