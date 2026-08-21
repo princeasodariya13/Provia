@@ -1,6 +1,7 @@
 import { Provider } from "@prisma/client";
 import { SourceConnector, IntegrationData } from "./connector";
 import { APIError } from "../errors";
+import { env } from "../env";
 
 export class LinkedInConnector implements SourceConnector {
   getProviderId(): Provider {
@@ -8,7 +9,7 @@ export class LinkedInConnector implements SourceConnector {
   }
 
   isConfigured(): boolean {
-    return !!(process.env.LINKEDIN_CLIENT_ID && process.env.LINKEDIN_CLIENT_SECRET);
+    return !!(env.LINKEDIN_CLIENT_ID && env.LINKEDIN_CLIENT_SECRET);
   }
 
   getAuthUrl(redirectUri: string, state: string): string {
@@ -16,7 +17,7 @@ export class LinkedInConnector implements SourceConnector {
     
     const params = new URLSearchParams({
       response_type: "code",
-      client_id: process.env.LINKEDIN_CLIENT_ID!,
+      client_id: env.LINKEDIN_CLIENT_ID!,
       redirect_uri: redirectUri,
       state,
       scope: "openid profile email",
@@ -31,8 +32,8 @@ export class LinkedInConnector implements SourceConnector {
       grant_type: "authorization_code",
       code,
       redirect_uri: redirectUri,
-      client_id: process.env.LINKEDIN_CLIENT_ID!,
-      client_secret: process.env.LINKEDIN_CLIENT_SECRET!,
+      client_id: env.LINKEDIN_CLIENT_ID!,
+      client_secret: env.LINKEDIN_CLIENT_SECRET!,
     });
 
     const res = await fetch("https://www.linkedin.com/oauth/v2/accessToken", {

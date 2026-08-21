@@ -35,6 +35,10 @@ const envSchema = z.object({
   UPSTASH_REDIS_REST_URL: z.string().url().optional(),
   UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
 
+  // BACKGROUND JOBS
+  JOB_POLL_INTERVAL_MS: z.string().optional().default("3000"),
+  JOB_PROCESSING_TIMEOUT_MS: z.string().optional().default("300000"),
+
   // AI
   GEMINI_API_KEY: z.string().optional(),
   AI_MODEL: z.string().optional(),
@@ -63,6 +67,8 @@ export const env = envSchema.parse({
   SENTRY_DSN: process.env.SENTRY_DSN,
   UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
   UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+  JOB_POLL_INTERVAL_MS: process.env.JOB_POLL_INTERVAL_MS,
+  JOB_PROCESSING_TIMEOUT_MS: process.env.JOB_PROCESSING_TIMEOUT_MS,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
   AI_MODEL: process.env.AI_MODEL || "gemini-2.5-flash",
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",

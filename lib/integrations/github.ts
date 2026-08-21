@@ -2,6 +2,7 @@ import { Provider } from "@prisma/client";
 import { SourceConnector, IntegrationData } from "./connector";
 import { APIError } from "../errors";
 import { logger } from "../logger";
+import { env } from "../env";
 
 export class GitHubConnector implements SourceConnector {
   getProviderId(): Provider {
@@ -9,14 +10,14 @@ export class GitHubConnector implements SourceConnector {
   }
 
   isConfigured(): boolean {
-    return !!(process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET);
+    return !!(env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET);
   }
 
   getAuthUrl(redirectUri: string, state: string): string {
     if (!this.isConfigured()) throw new APIError("GitHub provider not configured", 501);
     
     const params = new URLSearchParams({
-      client_id: process.env.GITHUB_CLIENT_ID!,
+      client_id: env.GITHUB_CLIENT_ID!,
       redirect_uri: redirectUri,
       scope: "read:user",
       state,
@@ -34,8 +35,8 @@ export class GitHubConnector implements SourceConnector {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        client_id: process.env.GITHUB_CLIENT_ID,
-        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        client_id: env.GITHUB_CLIENT_ID,
+        client_secret: env.GITHUB_CLIENT_SECRET,
         code,
         redirect_uri: redirectUri,
       }),

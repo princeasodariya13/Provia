@@ -1,8 +1,9 @@
 import crypto from "crypto";
+import { env } from "../env";
 
 // 32-byte key is required for aes-256-gcm
 const getEncryptionKey = () => {
-  const keyStr = process.env.INTEGRATION_TOKEN_ENCRYPTION_KEY || "";
+  const keyStr = env.INTEGRATION_TOKEN_ENCRYPTION_KEY || "";
   if (keyStr.length !== 32) {
     throw new Error("INTEGRATION_TOKEN_ENCRYPTION_KEY must be exactly 32 characters long in production.");
   }
