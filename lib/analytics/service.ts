@@ -8,6 +8,7 @@ export type AnalyticsEventName =
   | "auth.logout"
   | "auth.email_verified"
   | "auth.password_changed"
+  | "auth.sessions_revoked"
   | "auth.account_deleted"
   | "auth.rate_limited"
   | "auth.google_login_success"

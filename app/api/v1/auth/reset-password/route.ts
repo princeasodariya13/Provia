@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { withAPIHandler } from "@/lib/api-handler";
 import { prisma } from "@/lib/db";
 import { jwtVerify } from "jose";
+import { clearSession } from "@/lib/auth";
 import { env } from "@/lib/env";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
@@ -49,14 +50,19 @@ export const POST = withAPIHandler(async (request: Request) => {
     // Update user
     await prisma.user.update({
       where: { id: userId },
-      data: { passwordHash: newPasswordHash },
+      data: { 
+        passwordHash: newPasswordHash,
+        sessionVersion: { increment: 1 }
+      },
     });
+
+    await clearSession();
 
     return NextResponse.json({
       success: true,
       message: "Password has been successfully reset.",
     });
-  } catch (err) {
+  } catch {
     // Catch token verification errors (expired, signature mismatch due to changed password)
     throw new APIError("Invalid or expired token", 400);
   }

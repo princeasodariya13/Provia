@@ -14,6 +14,8 @@ export default function SettingsPage() {
   const [pwLoading, setPwLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showDeleteSection, setShowDeleteSection] = useState(false);
+  const [logoutAllStatus, setLogoutAllStatus] = useState<{ type: "success" | "error"; msg: string } | null>(null);
+  const [logoutAllLoading, setLogoutAllLoading] = useState(false);
 
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault();
@@ -67,6 +69,25 @@ export default function SettingsPage() {
     }
   }
 
+  async function handleLogoutAll() {
+    setLogoutAllLoading(true);
+    setLogoutAllStatus(null);
+    try {
+      const res = await fetch("/api/v1/auth/logout-all", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) {
+        setLogoutAllStatus({ type: "error", msg: data.error || "Failed to log out of devices." });
+      } else {
+        setLogoutAllStatus({ type: "success", msg: "Successfully logged out of all devices. Redirecting..." });
+        setTimeout(() => router.push("/login"), 2000);
+      }
+    } catch {
+      setLogoutAllStatus({ type: "error", msg: "An unexpected error occurred." });
+    } finally {
+      setLogoutAllLoading(false);
+    }
+  }
+
   return (
     <div style={{ maxWidth: 640, margin: "0 auto", padding: "2rem 1rem" }}>
       <h1 style={{ fontWeight: 700, fontSize: "1.75rem", marginBottom: "2rem" }}>Account Settings</h1>
@@ -113,6 +134,28 @@ export default function SettingsPage() {
             {pwLoading ? "Updating…" : "Update Password"}
           </button>
         </form>
+      </section>
+
+      {/* Security - Device Management */}
+      <section style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 10, padding: "1.5rem", marginBottom: "2rem" }}>
+        <h2 style={{ fontWeight: 600, fontSize: "1.1rem", marginBottom: "0.5rem" }}>
+          Device Security
+        </h2>
+        <p style={{ fontSize: "0.875rem", color: "#6b7280", marginBottom: "1rem" }}>
+          Log out of all devices and active sessions immediately. You will be prompted to log back in.
+        </p>
+        <button
+          onClick={handleLogoutAll}
+          disabled={logoutAllLoading}
+          style={{ ...buttonStyle, background: "#f3f4f6", color: "#374151", border: "1px solid #d1d5db", opacity: logoutAllLoading ? 0.6 : 1 }}
+        >
+          {logoutAllLoading ? "Logging out..." : "Log Out of All Devices"}
+        </button>
+        {logoutAllStatus && (
+          <p style={{ color: logoutAllStatus.type === "error" ? "#dc2626" : "#16a34a", fontSize: "0.875rem", marginTop: "0.75rem" }}>
+            {logoutAllStatus.msg}
+          </p>
+        )}
       </section>
 
       {/* Export Data */}

@@ -46,13 +46,14 @@ export const POST = withAPIHandler(async (req) => {
       email: data.email,
       passwordHash,
     },
-    select: { id: true, name: true, email: true, role: true, createdAt: true, updatedAt: true },
+    select: { id: true, name: true, email: true, role: true, sessionVersion: true, createdAt: true, updatedAt: true },
   });
 
   await createSession({
     id: user.id,
     role: user.role,
     email: user.email!,
+    sessionVersion: user.sessionVersion,
   });
 
   // Queue email verification (non-blocking — registration succeeds regardless)

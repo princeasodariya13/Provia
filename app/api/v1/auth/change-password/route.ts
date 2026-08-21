@@ -29,7 +29,13 @@ export const POST = withAPIHandler(async (request: Request) => {
   }
 
   const newHash = await bcrypt.hash(newPassword, 10);
-  await prisma.user.update({ where: { id: user.id }, data: { passwordHash: newHash } });
+  await prisma.user.update({ 
+    where: { id: user.id }, 
+    data: { 
+      passwordHash: newHash,
+      sessionVersion: { increment: 1 } 
+    } 
+  });
 
   // Invalidate session so the user must log in again with new password
   await clearSession();

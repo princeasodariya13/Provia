@@ -68,6 +68,7 @@ export const POST = withAPIHandler(async (req) => {
     name: user.name,
     email: user.email!,
     role: user.role,
+    sessionVersion: user.sessionVersion,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };

@@ -125,6 +125,7 @@ export const GET = withAPIHandler(async (req) => {
       id: user.id,
       role: user.role,
       email: user.email!,
+      sessionVersion: user.sessionVersion,
     });
 
     AnalyticsService.record({ eventName: "auth.login_succeeded", userId: user.id, metadata: { provider: "google" } });

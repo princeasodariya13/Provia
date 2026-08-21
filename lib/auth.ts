@@ -12,6 +12,7 @@ export interface SessionPayload {
   userId: string;
   role: Role;
   email: string;
+  sessionVersion: number;
   expiresAt: number;
 }
 
@@ -35,11 +36,12 @@ export async function decrypt(token: string): Promise<SessionPayload | null> {
   }
 }
 
-export async function createSession(user: Pick<User, "id" | "role"> & { email: string }) {
+export async function createSession(user: Pick<User, "id" | "role" | "sessionVersion"> & { email: string }) {
   const sessionToken = await encrypt({
     userId: user.id,
     role: user.role,
     email: user.email,
+    sessionVersion: user.sessionVersion,
   });
 
   const cookieStore = await cookies();
@@ -75,8 +77,12 @@ export async function getCurrentUser() {
   
   const user = await prisma.user.findUnique({
     where: { id: session.userId },
-    select: { id: true, name: true, email: true, role: true, createdAt: true, updatedAt: true }
+    select: { id: true, name: true, email: true, role: true, sessionVersion: true, createdAt: true, updatedAt: true }
   });
+  
+  if (!user || user.sessionVersion !== session.sessionVersion) {
+    return null; // Session revoked or user deleted
+  }
   
   return user;
 }
