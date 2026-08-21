@@ -21,12 +21,19 @@ const envSchema = z.object({
 
   // EMAIL
   RESEND_API_KEY: z.string().optional(),
-  EMAIL_FROM: z.string().email().optional(),
+  EMAIL_FROM: z.string().min(1).optional(), // Accepts "Name <email@example.com>" format
 
   // CLOUDINARY
   CLOUDINARY_CLOUD_NAME: z.string().optional(),
   CLOUDINARY_API_KEY: z.string().optional(),
   CLOUDINARY_API_SECRET: z.string().optional(),
+
+  // SENTRY
+  SENTRY_DSN: z.string().url().optional(),
+
+  // UPSTASH REDIS
+  UPSTASH_REDIS_REST_URL: z.string().url().optional(),
+  UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
 
   // AI
   GEMINI_API_KEY: z.string().optional(),
@@ -53,6 +60,9 @@ export const env = envSchema.parse({
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+  SENTRY_DSN: process.env.SENTRY_DSN,
+  UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+  UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
   AI_MODEL: process.env.AI_MODEL || "gemini-2.5-flash",
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
