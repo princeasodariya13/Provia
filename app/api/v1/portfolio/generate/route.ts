@@ -2,9 +2,30 @@ import { NextResponse } from "next/server";
 import { withAPIHandler } from "@/lib/api-handler";
 import { requireAuth } from "@/lib/auth";
 import { PortfolioContentService } from "@/lib/portfolio/service";
+import { JobService } from "@/lib/jobs";
 
-export const POST = withAPIHandler(async () => {
+export const POST = withAPIHandler(async (request: Request) => {
   const user = await requireAuth();
+  
+  const searchParams = new URL(request.url).searchParams;
+  const asyncMode = searchParams.get("async") === "true";
+
+  if (asyncMode) {
+    const job = await JobService.createJob({
+      userId: user.id,
+      type: "PORTFOLIO_GENERATION",
+      payload: { userId: user.id },
+      idempotencyKey: `portfolio-generate-${user.id}`,
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        jobId: job.id,
+        status: job.status,
+      }
+    });
+  }
   
   const record = await PortfolioContentService.generatePortfolio(user.id);
 

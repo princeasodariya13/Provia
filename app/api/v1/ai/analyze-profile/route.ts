@@ -15,6 +15,7 @@ export const POST = withAPIHandler(async (request: Request) => {
       userId: user.id,
       type: "PROFILE_ANALYSIS",
       payload: { userId: user.id },
+      idempotencyKey: `profile-analysis-${user.id}`,
     });
 
     return NextResponse.json({
