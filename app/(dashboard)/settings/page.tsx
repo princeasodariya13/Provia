@@ -2,6 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { PageHeader } from "@/components/ui/page-header";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Lock, ShieldAlert, Download, Trash2, Key, CheckCircle2, AlertCircle } from "lucide-react";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -35,7 +41,7 @@ export default function SettingsPage() {
       if (!res.ok) {
         setPwStatus({ type: "error", msg: data.error || "Failed to change password." });
       } else {
-        setPwStatus({ type: "success", msg: "Password changed. You will be redirected to login." });
+        setPwStatus({ type: "success", msg: "Password changed successfully. Redirecting to login..." });
         setTimeout(() => router.push("/login"), 2000);
       }
     } catch {
@@ -59,7 +65,7 @@ export default function SettingsPage() {
       if (!res.ok) {
         setDeleteStatus({ type: "error", msg: data.error || "Failed to delete account." });
       } else {
-        setDeleteStatus({ type: "success", msg: "Account deleted. Redirecting…" });
+        setDeleteStatus({ type: "success", msg: "Account deleted. Redirecting..." });
         setTimeout(() => router.push("/"), 2000);
       }
     } catch {
@@ -89,163 +95,229 @@ export default function SettingsPage() {
   }
 
   return (
-    <div style={{ maxWidth: 640, margin: "0 auto", padding: "2rem 1rem" }}>
-      <h1 style={{ fontWeight: 700, fontSize: "1.75rem", marginBottom: "2rem" }}>Account Settings</h1>
+    <div className="space-y-8 max-w-4xl mx-auto pb-16">
+      <PageHeader
+        title="Account Settings"
+        description="Manage your security credentials, active sessions, data privacy, and account lifecycle."
+        breadcrumbs={[
+          { label: "Workspace", href: "/dashboard" },
+          { label: "Settings", href: "/settings" },
+        ]}
+      />
 
       {/* Change Password */}
-      <section style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 10, padding: "1.5rem", marginBottom: "2rem" }}>
-        <h2 style={{ fontWeight: 600, fontSize: "1.1rem", marginBottom: "1rem" }}>Change Password</h2>
-        <form onSubmit={handleChangePassword} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-          <input
-            type="password"
-            placeholder="Current password"
-            value={currentPassword}
-            onChange={e => setCurrentPassword(e.target.value)}
-            required
-            style={inputStyle}
-          />
-          <input
-            type="password"
-            placeholder="New password (min. 8 characters)"
-            value={newPassword}
-            onChange={e => setNewPassword(e.target.value)}
-            minLength={8}
-            required
-            style={inputStyle}
-          />
-          <input
-            type="password"
-            placeholder="Confirm new password"
-            value={confirmNewPassword}
-            onChange={e => setConfirmNewPassword(e.target.value)}
-            required
-            style={inputStyle}
-          />
-          {pwStatus && (
-            <p style={{ color: pwStatus.type === "error" ? "#dc2626" : "#16a34a", fontSize: "0.875rem" }}>
-              {pwStatus.msg}
-            </p>
-          )}
-          <button
-            type="submit"
-            disabled={pwLoading}
-            style={{ ...buttonStyle, background: "#000", color: "#fff", opacity: pwLoading ? 0.6 : 1 }}
-          >
-            {pwLoading ? "Updating…" : "Update Password"}
-          </button>
-        </form>
-      </section>
+      <Card className="border-border-strong bg-background rounded-none">
+        <CardHeader className="border-b border-border-light pb-4">
+          <div className="flex items-center gap-2">
+            <Key className="w-5 h-5 text-brand" />
+            <CardTitle className="text-xl font-bold">Change Password</CardTitle>
+          </div>
+          <CardDescription className="text-xs text-text-secondary mt-1">
+            Ensure your account is using a strong, unique password.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1">
+                Current Password
+              </label>
+              <Input
+                type="password"
+                placeholder="••••••••"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                required
+              />
+            </div>
 
-      {/* Security - Device Management */}
-      <section style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 10, padding: "1.5rem", marginBottom: "2rem" }}>
-        <h2 style={{ fontWeight: 600, fontSize: "1.1rem", marginBottom: "0.5rem" }}>
-          Device Security
-        </h2>
-        <p style={{ fontSize: "0.875rem", color: "#6b7280", marginBottom: "1rem" }}>
-          Log out of all devices and active sessions immediately. You will be prompted to log back in.
-        </p>
-        <button
-          onClick={handleLogoutAll}
-          disabled={logoutAllLoading}
-          style={{ ...buttonStyle, background: "#f3f4f6", color: "#374151", border: "1px solid #d1d5db", opacity: logoutAllLoading ? 0.6 : 1 }}
-        >
-          {logoutAllLoading ? "Logging out..." : "Log Out of All Devices"}
-        </button>
-        {logoutAllStatus && (
-          <p style={{ color: logoutAllStatus.type === "error" ? "#dc2626" : "#16a34a", fontSize: "0.875rem", marginTop: "0.75rem" }}>
-            {logoutAllStatus.msg}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1">
+                New Password
+              </label>
+              <Input
+                type="password"
+                placeholder="Min. 8 characters"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                minLength={8}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1">
+                Confirm New Password
+              </label>
+              <Input
+                type="password"
+                placeholder="••••••••"
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            {pwStatus && (
+              <div
+                className={`p-3 text-xs font-bold border flex items-center gap-2 ${
+                  pwStatus.type === "error"
+                    ? "border-error bg-error/10 text-error"
+                    : "border-success bg-success/10 text-success"
+                }`}
+              >
+                {pwStatus.type === "error" ? <AlertCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
+                <span>{pwStatus.msg}</span>
+              </div>
+            )}
+
+            <Button type="submit" disabled={pwLoading} variant="default">
+              {pwLoading ? "Updating..." : "Update Password"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      {/* Device Security */}
+      <Card className="border-border-strong bg-background rounded-none">
+        <CardHeader className="border-b border-border-light pb-4">
+          <div className="flex items-center gap-2">
+            <Lock className="w-5 h-5 text-brand" />
+            <CardTitle className="text-xl font-bold">Device & Session Security</CardTitle>
+          </div>
+          <CardDescription className="text-xs text-text-secondary mt-1">
+            Immediately invalidate all active session tokens across all web browsers and devices.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="pt-6 space-y-4">
+          <p className="text-sm text-text-secondary">
+            If you suspect unauthorized access or lost a device, log out of all sessions immediately.
           </p>
-        )}
-      </section>
+
+          <Button
+            onClick={handleLogoutAll}
+            disabled={logoutAllLoading}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <ShieldAlert className="w-4 h-4 text-warning" />
+            {logoutAllLoading ? "Revoking Sessions..." : "Log Out of All Devices"}
+          </Button>
+
+          {logoutAllStatus && (
+            <div
+              className={`p-3 text-xs font-bold border flex items-center gap-2 max-w-md ${
+                logoutAllStatus.type === "error"
+                  ? "border-error bg-error/10 text-error"
+                  : "border-success bg-success/10 text-success"
+              }`}
+            >
+              {logoutAllStatus.type === "error" ? <AlertCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
+              <span>{logoutAllStatus.msg}</span>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Export Data */}
-      <section style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 10, padding: "1.5rem", marginBottom: "2rem" }}>
-        <h2 style={{ fontWeight: 600, fontSize: "1.1rem", marginBottom: "0.5rem" }}>
-          Export My Data
-        </h2>
-        <p style={{ fontSize: "0.875rem", color: "#6b7280", marginBottom: "1rem" }}>
-          Download a machine-readable JSON copy of your profile, portfolios, AI generations, and account history.
-        </p>
-        <a
-          href="/api/v1/account/export"
-          className="inline-block text-center"
-          style={{ ...buttonStyle, background: "#f3f4f6", color: "#374151", border: "1px solid #d1d5db", textDecoration: "none" }}
-        >
-          Export Data
-        </a>
-      </section>
+      <Card className="border-border-strong bg-background rounded-none">
+        <CardHeader className="border-b border-border-light pb-4">
+          <div className="flex items-center gap-2">
+            <Download className="w-5 h-5 text-brand" />
+            <CardTitle className="text-xl font-bold">Export Account Data</CardTitle>
+          </div>
+          <CardDescription className="text-xs text-text-secondary mt-1">
+            Download a machine-readable JSON export of your profile, resume data, portfolios, and history.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="pt-6 space-y-4">
+          <p className="text-sm text-text-secondary">
+            You own your professional data. Click below to download a full JSON file containing your complete account data model.
+          </p>
 
-      {/* Account Deletion */}
-      <section style={{ background: "#fff", border: "1px solid #fca5a5", borderRadius: 10, padding: "1.5rem" }}>
-        <h2 style={{ fontWeight: 600, fontSize: "1.1rem", marginBottom: "0.5rem", color: "#dc2626" }}>
-          Delete Account
-        </h2>
-        <p style={{ fontSize: "0.875rem", color: "#6b7280", marginBottom: "1rem" }}>
-          This action is permanent. All your data, connections, and published portfolio will be deleted immediately.
-        </p>
-        {!showDeleteSection ? (
-          <button
-            onClick={() => setShowDeleteSection(true)}
-            style={{ ...buttonStyle, background: "#fee2e2", color: "#dc2626", border: "1px solid #fca5a5" }}
-          >
-            Delete My Account
-          </button>
-        ) : (
-          <form onSubmit={handleDeleteAccount} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-            <p style={{ fontSize: "0.875rem", color: "#374151" }}>
-              To confirm, type your account email address below:
-            </p>
-            <input
-              type="email"
-              placeholder="Your account email"
-              value={confirmEmail}
-              onChange={e => setConfirmEmail(e.target.value)}
-              required
-              style={{ ...inputStyle, borderColor: "#fca5a5" }}
-            />
-            {deleteStatus && (
-              <p style={{ color: deleteStatus.type === "error" ? "#dc2626" : "#16a34a", fontSize: "0.875rem" }}>
-                {deleteStatus.msg}
+          <Button asChild variant="outline" className="flex items-center gap-2 w-fit">
+            <a href="/api/v1/account/export">
+              <Download className="w-4 h-4" />
+              Download JSON Export
+            </a>
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Danger Zone - Account Deletion */}
+      <Card className="border-error bg-background rounded-none">
+        <CardHeader className="border-b border-error/40 bg-error/5 pb-4">
+          <div className="flex items-center gap-2 text-error">
+            <Trash2 className="w-5 h-5" />
+            <CardTitle className="text-xl font-bold text-error">Danger Zone: Delete Account</CardTitle>
+          </div>
+          <CardDescription className="text-xs text-error/80 mt-1">
+            Permanently erase your Provia profile, Cloudinary assets, resumes, and portfolios.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="pt-6 space-y-4">
+          <p className="text-sm text-text-secondary">
+            Once deleted, your account cannot be recovered. All published portfolios will be taken offline immediately.
+          </p>
+
+          {!showDeleteSection ? (
+            <Button
+              onClick={() => setShowDeleteSection(true)}
+              variant="destructive"
+              className="flex items-center gap-2"
+            >
+              <Trash2 className="w-4 h-4" />
+              Delete Account...
+            </Button>
+          ) : (
+            <form onSubmit={handleDeleteAccount} className="space-y-4 max-w-md border p-4 border-error/40 bg-error/5">
+              <p className="text-xs font-bold text-text-primary">
+                To confirm permanent deletion, type your account email address below:
               </p>
-            )}
-            <div style={{ display: "flex", gap: "0.75rem" }}>
-              <button
-                type="button"
-                onClick={() => setShowDeleteSection(false)}
-                style={{ ...buttonStyle, background: "#f3f4f6", color: "#374151" }}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={deleteLoading}
-                style={{ ...buttonStyle, background: "#dc2626", color: "#fff", opacity: deleteLoading ? 0.6 : 1 }}
-              >
-                {deleteLoading ? "Deleting…" : "Permanently Delete"}
-              </button>
-            </div>
-          </form>
-        )}
-      </section>
+              <Input
+                type="email"
+                placeholder="Account email address"
+                value={confirmEmail}
+                onChange={(e) => setConfirmEmail(e.target.value)}
+                required
+                className="border-error/40"
+              />
+
+              {deleteStatus && (
+                <div
+                  className={`p-3 text-xs font-bold border flex items-center gap-2 ${
+                    deleteStatus.type === "error"
+                      ? "border-error bg-error/10 text-error"
+                      : "border-success bg-success/10 text-success"
+                  }`}
+                >
+                  {deleteStatus.type === "error" ? <AlertCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
+                  <span>{deleteStatus.msg}</span>
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <Button
+                  type="button"
+                  onClick={() => setShowDeleteSection(false)}
+                  variant="outline"
+                  size="sm"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={deleteLoading}
+                  variant="destructive"
+                  size="sm"
+                >
+                  {deleteLoading ? "Deleting..." : "Permanently Delete Account"}
+                </Button>
+              </div>
+            </form>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
-
-const inputStyle: React.CSSProperties = {
-  padding: "0.625rem 0.875rem",
-  border: "1px solid #d1d5db",
-  borderRadius: 6,
-  fontSize: "0.9rem",
-  outline: "none",
-  width: "100%",
-  boxSizing: "border-box",
-};
-
-const buttonStyle: React.CSSProperties = {
-  padding: "0.625rem 1.25rem",
-  border: "none",
-  borderRadius: 6,
-  fontWeight: 500,
-  cursor: "pointer",
-  fontSize: "0.9rem",
-};
