@@ -14,18 +14,18 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         className={cn(
-          "inline-flex items-center justify-center whitespace-nowrap rounded-none text-sm font-semibold tracking-wide ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+          "inline-flex items-center justify-center whitespace-nowrap rounded-none text-sm font-semibold tracking-wide ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-40",
           {
             "bg-brand text-white hover:bg-brand-hover": variant === "default",
-            "bg-border-light text-text-primary hover:bg-taupe hover:text-white": variant === "secondary",
-            "border border-border-strong bg-transparent hover:bg-taupe hover:text-white": variant === "outline",
-            "hover:bg-background hover:text-text-primary": variant === "ghost",
+            "bg-surface-muted text-text-primary hover:bg-accent/40 border border-border": variant === "secondary",
+            "border border-border-strong bg-transparent text-text-primary hover:bg-surface-muted hover:border-brand": variant === "outline",
+            "hover:bg-surface-muted hover:text-text-primary text-text-secondary": variant === "ghost",
             "bg-error text-white hover:bg-error/90": variant === "destructive",
-            "text-brand underline-offset-4 hover:underline": variant === "link",
+            "text-brand underline-offset-4 hover:underline p-0": variant === "link",
             "h-10 px-6 py-2": size === "default",
-            "h-9 px-4": size === "sm",
-            "h-14 px-10 text-base": size === "lg",
-            "h-10 w-10": size === "icon",
+            "h-8 px-4 text-xs": size === "sm",
+            "h-12 px-10 text-base": size === "lg",
+            "h-10 w-10 p-0": size === "icon",
           },
           className
         )}

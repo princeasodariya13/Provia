@@ -1,87 +1,182 @@
 @import "tailwindcss";
 
+/* ============================================================
+   PROVIA DESIGN SYSTEM — PREMIUM SAAS TOKENS
+   
+   Surface Model: Sophisticated dark-neutral with crisp editorial
+   Brand: Crimson red on near-black surfaces
+   Typography: Inter — tight tracking, strong hierarchy
+   ============================================================ */
+
 :root {
-  /* Core Colors */
-  --background: #FFFFFF; /* White background */
-  --surface: #FFFFFF; /* White */
-  --surface-muted: #F5EFE8; /* Neutral */
+  /* === CORE SURFACES === */
+  --background: #0C0C0E;       /* Deep near-black — primary canvas */
+  --surface: #111115;          /* Elevated surface — cards, panels */
+  --surface-muted: #1A1A20;    /* Subtle muted — inner panels, inputs */
+  --surface-hover: #1F1F28;    /* Hover state surface */
 
-  /* Typography */
-  --text-primary: #000000; /* Dark text */
-  --text-secondary: #4D4D4D; /* Dark text secondary */
-  --text-muted: #937962;
+  /* === TYPOGRAPHY === */
+  --text-primary: #F0EDE8;     /* Warm white — primary headings/body */
+  --text-secondary: #8B8895;   /* Muted purple-gray — secondary text */
+  --text-muted: #55535F;       /* Deeply muted — placeholders, captions */
 
-  /* Editorial Borders */
-  --border: #4D4D4D; /* Thin dark borders */
-  --border-strong: #000000;
-  --border-light: #C9BEB9;
+  /* === BORDERS === */
+  --border: #2A2830;           /* Default border — subtle */
+  --border-strong: #3D3A48;    /* Strong border — active, important */
+  --border-light: #1E1C26;     /* Very subtle border — dividers */
 
-  /* Accents & Shapes */
-  --brand: #CC2936; /* Brand/action red */
-  --brand-hover: #A61F2A;
-  
-  --taupe: #937962; /* Warm taupe */
-  --beige: #BFAE9F; /* Soft beige */
-  --accent: #C9BEB9; /* Soft accent (lavender/beige feel) */
-  --warm-accent: #F1BF98; /* Secondary warm accent */
+  /* === BRAND === */
+  --brand: #E0323E;            /* Provia crimson — primary action */
+  --brand-hover: #C42630;      /* Brand hover — darkened */
+  --brand-muted: #3D1419;      /* Brand tint for backgrounds */
 
-  /* Status */
-  --success: #285943;
-  --warning: #D9822B;
-  --error: #CC2936;
-  --info: #2B6CB0;
-  
-  --focus: #CC2936;
+  /* === SEMANTIC PALETTE === */
+  --success: #34A870;          /* Emerald green */
+  --success-muted: #0D2E1C;    /* Success background tint */
+  --warning: #E09832;          /* Amber warning */
+  --warning-muted: #2E2008;    /* Warning background tint */
+  --error: #E0323E;            /* Error red (matches brand) */
+  --error-muted: #2E0C10;      /* Error background tint */
+  --info: #4F9FE8;             /* Sky blue */
+  --info-muted: #0D1E2E;       /* Info background tint */
+
+  /* === ACCENT TINTS (used sparingly) === */
+  --taupe: #6B5F52;
+  --beige: #2E2720;
+  --accent: #3D3848;
+  --warm-accent: #3A2C1A;
+
+  /* === FOCUS RING === */
+  --focus: #E0323E;
 }
 
-
-
+/* === TAILWIND THEME MAPPING === */
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
-  
+  --color-surface-hover: var(--surface-hover);
+
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
-  
+
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
   --color-border-light: var(--border-light);
-  
+
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
-  
+  --color-brand-muted: var(--brand-muted);
+
+  --color-success: var(--success);
+  --color-success-muted: var(--success-muted);
+  --color-warning: var(--warning);
+  --color-warning-muted: var(--warning-muted);
+  --color-error: var(--error);
+  --color-error-muted: var(--error-muted);
+  --color-info: var(--info);
+  --color-info-muted: var(--info-muted);
+
   --color-taupe: var(--taupe);
   --color-beige: var(--beige);
   --color-accent: var(--accent);
   --color-warm-accent: var(--warm-accent);
 
-  /* Fallbacks */
+  /* Shadcn/UI compat aliases */
   --color-foreground: var(--text-primary);
   --color-muted-foreground: var(--text-secondary);
   --color-ring: var(--focus);
+  --color-input: var(--border);
 
+  /* Typography */
   --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 
-  /* Controlled Radius */
-  --radius-sm: 0; /* Sharp for editorial */
+  /* Border Radius */
+  --radius-sm: 0;
   --radius-md: 0.125rem;
   --radius-lg: 0.25rem;
   --radius-xl: 0.5rem;
 }
 
+/* === BASE STYLES === */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 body {
   background-color: var(--background);
   color: var(--text-primary);
-  font-family: var(--font-sans), sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.6;
 }
 
+/* === TYPOGRAPHY SCALE === */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  letter-spacing: -0.03em;
   color: var(--text-primary);
+  line-height: 1.15;
+}
+
+/* === SCROLLBAR STYLING === */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface-muted);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand);
+}
+
+/* === SELECTION === */
+::selection {
+  background: color-mix(in srgb, var(--brand) 30%, transparent);
+  color: var(--text-primary);
+}
+
+/* === FOCUS VISIBLE === */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* === INPUT BASE === */
+input, textarea, select {
+  background-color: var(--surface-muted);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* === SMOOTH TRANSITIONS === */
+a, button {
+  transition-property: color, background-color, border-color, opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 120ms;
+}
+
+/* === MOTION PREFERENCES === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

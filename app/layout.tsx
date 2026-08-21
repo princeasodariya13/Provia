@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { AuthProvider } from "@/hooks/useAuth";
 
 const inter = Inter({
@@ -16,8 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Provia - Professional Portfolio Generation Platform",
-  description: "Create stunning professional portfolios from your existing online profiles.",
+  title: "Provia — Professional Portfolio Generation Platform",
+  description:
+    "Create stunning professional portfolios from your existing online profiles and resume. AI-powered identity platform for ambitious professionals.",
 };
 
 export default function RootLayout({
@@ -26,15 +25,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-sans">
-        <AuthProvider>
-          <Navbar />
-          <main className="flex-1">
-            {children}
-          </main>
-          <Footer />
-        </AuthProvider>
+    <html
+      lang="en"
+      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col font-sans bg-background text-text-primary">
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
