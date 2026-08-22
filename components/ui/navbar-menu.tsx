@@ -31,7 +31,7 @@ export const MenuItem = ({
       {active === item && (
         <motion.div
           layoutId="hovered"
-          className="absolute inset-0 h-full w-full rounded-full bg-gray-100 dark:bg-neutral-800 z-0"
+          className="absolute inset-0 h-full w-full rounded-full bg-gray-100 z-0"
           transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -42,7 +42,7 @@ export const MenuItem = ({
         <Link href={href} className="relative z-10 block">
           <motion.p
             transition={{ duration: 0.3 }}
-            className="cursor-pointer px-4 py-2 text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100 font-bold text-sm relative z-10"
+            className="cursor-pointer px-4 py-2 text-neutral-600 hover:text-neutral-800 font-bold text-sm relative z-10"
           >
             {item}
           </motion.p>
@@ -50,7 +50,7 @@ export const MenuItem = ({
       ) : (
         <motion.p
           transition={{ duration: 0.3 }}
-          className="cursor-pointer px-4 py-2 text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100 font-bold text-sm relative z-10"
+          className="cursor-pointer px-4 py-2 text-neutral-600 hover:text-neutral-800 font-bold text-sm relative z-10"
         >
           {item}
         </motion.p>
@@ -66,7 +66,7 @@ export const MenuItem = ({
               <motion.div
                 transition={transition}
                 layoutId="active"
-                className="bg-white dark:bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-border-light shadow-xl"
+                className="bg-white backdrop-blur-sm rounded-2xl overflow-hidden border border-border-light shadow-xl"
               >
                 <motion.div
                   layout

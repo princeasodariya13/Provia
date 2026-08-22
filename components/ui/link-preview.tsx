@@ -19,7 +19,6 @@ type LinkPreviewProps = {
   width?: number;
   height?: number;
   quality?: number;
-  layout?: string;
 } & (
   | { isStatic: true; imageSrc: string }
   | { isStatic?: false; imageSrc?: never }
@@ -31,8 +30,7 @@ export const LinkPreview = ({
   className,
   width = 200,
   height = 125,
-  quality = 50,
-  layout = "fixed",
+  quality = 75,
   isStatic = false,
   imageSrc = "",
 }: LinkPreviewProps) => {
@@ -82,7 +80,6 @@ export const LinkPreview = ({
             width={width}
             height={height}
             quality={quality}
-            layout={layout}
             priority={true}
             alt="hidden image"
           />
@@ -98,7 +95,7 @@ export const LinkPreview = ({
       >
         <HoverCardPrimitive.Trigger
           onMouseMove={handleMouseMove}
-          className={cn("text-black dark:text-white", className)}
+          className={cn("text-black", className)}
           href={url}
           target="_blank"
           rel="noopener noreferrer"
@@ -134,7 +131,7 @@ export const LinkPreview = ({
               >
                 <Link
                   href={url}
-                  className="block p-1 bg-white border-2 border-transparent shadow rounded-xl hover:border-neutral-200 dark:hover:border-neutral-800"
+                  className="block p-1 bg-white border-2 border-transparent shadow rounded-xl hover:border-neutral-200"
                   style={{ fontSize: 0 }}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -144,7 +141,6 @@ export const LinkPreview = ({
                     width={width}
                     height={height}
                     quality={quality}
-                    layout={layout}
                     priority={true}
                     className="rounded-lg"
                     alt="preview image"

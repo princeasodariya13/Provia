@@ -105,8 +105,8 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
         minWidth: visible ? "800px" : "auto",
       }}
       className={cn(
-        "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-2 lg:flex dark:bg-transparent",
-        visible && "bg-white/80 dark:bg-neutral-950/80 border border-border-light",
+        "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-2 lg:flex",
+        visible && "bg-white/80 border border-border-light",
         className,
       )}
     >
@@ -210,7 +210,7 @@ export const MobileNavMenu = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className={cn(
-            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-xl border border-border-light bg-white px-6 py-8 shadow-lg dark:bg-neutral-950",
+            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-xl border border-border-light bg-white px-6 py-8 shadow-lg",
             className,
           )}
         >
@@ -284,7 +284,7 @@ export const NavbarButton = ({
       <HoverBorderGradient
         as={passAs}
         href={as !== "button" ? (href || "#") : undefined}
-        containerClassName="border-0 bg-transparent"
+        containerClassName="border-0 bg-transparent p-[2px]"
         className={cn("bg-brand text-white shadow-sm hover:bg-brand-hover", className)}
         {...(props as any)}
       >

@@ -10,12 +10,15 @@ import { Testimonials } from "@/components/landing/testimonials"
 import { IntegrationsPreview } from "@/components/landing/integrations-preview"
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect"
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient"
+import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card"
+
 
 export default function Home() {
   return (
     <>
       <Navbar />
       <div className="flex flex-col w-full overflow-hidden bg-background relative min-h-screen">
+
 
         {/* Background Geometric Identity - Abstract Editorial Composition */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -31,7 +34,7 @@ export default function Home() {
 
         {/* Hero Section - Asymmetrical & Editorial */}
         <section className="w-full relative z-10 pt-32 pb-24 md:pt-48 md:pb-32 px-4 md:px-12 xl:px-24">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start justify-between gap-12">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start justify-between gap-12 relative z-10">
 
             <div className="flex flex-col items-start max-w-2xl">
               <div className="mb-8 border border-border-strong px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-text-primary bg-surface inline-block">
@@ -64,19 +67,56 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right side abstract/typographic composition */}
-            <div className="hidden lg:flex w-1/3 flex-col items-end relative pt-12">
-              <div className="w-full aspect-[3/4] border border-border-strong relative bg-surface/50 p-8 flex flex-col justify-between">
-                <div className="w-8 h-8 rounded-full bg-taupe absolute -top-4 -left-4" />
-                <div>
-                  <p className="text-sm font-bold uppercase tracking-widest text-text-secondary mb-2">Automated</p>
-                  <p className="text-sm font-bold uppercase tracking-widest text-text-secondary">Editorial</p>
-                </div>
-                <div className="text-right">
-                  <span className="text-6xl font-bold text-brand block mb-2">01</span>
-                  <div className="w-16 h-1 bg-border-strong ml-auto" />
-                </div>
-              </div>
+            {/* Right side 3D Card showcase */}
+            <div className="hidden lg:flex w-[45%] flex-col items-end relative z-20">
+              <CardContainer className="inter-var w-full pb-0 pt-0" containerClassName="py-0">
+                <CardBody className="bg-surface/90 backdrop-blur-md relative group/card border-border-strong w-full aspect-[4/5] rounded-none p-6 border shadow-[0_20px_40px_rgba(0,0,0,0.08)] flex flex-col">
+                  
+                  {/* Top Taupe Accent Dot */}
+                  <CardItem translateZ="30" className="w-6 h-6 rounded-full bg-taupe absolute -top-3 -left-3 shadow-sm" />
+
+                  <CardItem
+                    translateZ="50"
+                    className="text-sm font-bold text-text-primary uppercase tracking-widest"
+                  >
+                    Automated Editorial
+                  </CardItem>
+                  
+                  <CardItem
+                    as="p"
+                    translateZ="60"
+                    className="text-text-secondary text-sm mt-3"
+                  >
+                    Interactive, typography-first portfolios generated instantly.
+                  </CardItem>
+                  
+                  <CardItem translateZ="100" className="w-full mt-6 flex-1 relative">
+                    <img
+                      src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2672&auto=format&fit=crop"
+                      className="absolute inset-0 h-full w-full object-cover group-hover/card:shadow-xl border border-border-light filter grayscale-[20%] contrast-125 rounded-lg"
+                      alt="Provia Portfolio Preview"
+                    />
+                  </CardItem>
+                  
+                  <div className="flex justify-between items-end mt-6 w-full">
+                    <CardItem
+                      translateZ={40}
+                      className="text-[10px] font-bold text-text-secondary uppercase tracking-widest border-b border-border-strong pb-1"
+                    >
+                      Hover to interact
+                    </CardItem>
+                    <div className="text-right flex flex-col items-end">
+                      <CardItem
+                        translateZ={50}
+                        className="text-6xl font-bold text-brand leading-none mb-2"
+                      >
+                        01
+                      </CardItem>
+                      <CardItem translateZ={40} className="w-16 h-1 bg-border-strong" />
+                    </div>
+                  </div>
+                </CardBody>
+              </CardContainer>
             </div>
           </div>
         </section>

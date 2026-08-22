@@ -9,6 +9,9 @@ import {
   IconFileBroken,
   IconSignature,
   IconTableColumn,
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconFileCv,
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
 
@@ -143,7 +146,7 @@ const SkeletonFour = () => {
         className="h-[80%] w-1/3 rounded-2xl bg-background p-4 border border-border-light flex flex-col items-center justify-center shadow-sm"
       >
         <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center mb-3">
-          <IconClipboardCopy className="w-5 h-5 text-white" />
+          <IconFileCv className="w-5 h-5 text-white" />
         </div>
         <p className="sm:text-sm text-xs text-center font-bold text-text-primary">
           Resume Parser
@@ -153,8 +156,8 @@ const SkeletonFour = () => {
         </p>
       </motion.div>
       <motion.div className="h-full relative z-20 w-1/3 rounded-2xl bg-background p-4 border border-border-light flex flex-col items-center justify-center shadow-md">
-        <div className="w-12 h-12 rounded-full bg-text-primary flex items-center justify-center mb-4">
-          <div className="w-4 h-4 bg-white rounded-sm" />
+        <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-4">
+          <IconBrandGithub className="w-6 h-6 text-white" />
         </div>
         <p className="sm:text-sm text-xs text-center font-bold text-text-primary">
           GitHub Integration
@@ -168,7 +171,7 @@ const SkeletonFour = () => {
         className="h-[80%] w-1/3 rounded-2xl bg-background p-4 border border-border-light flex flex-col items-center justify-center shadow-sm"
       >
         <div className="w-10 h-10 rounded-full bg-[#0077b5] flex items-center justify-center mb-3">
-          <IconSignature className="w-5 h-5 text-white" />
+          <IconBrandLinkedin className="w-5 h-5 text-white" />
         </div>
         <p className="sm:text-sm text-xs text-center font-bold text-text-primary">
           LinkedIn Data

@@ -105,7 +105,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen bg-surface-muted flex flex-col md:flex-row text-text-primary selection:bg-brand/20">
+    <div className="min-h-screen w-full bg-background flex flex-col md:flex-row text-text-primary selection:bg-brand/20 relative overflow-hidden">
+
+      {/* Background Geometric Identity - Abstract Editorial Composition */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute -top-[10%] -right-[5%] w-[40vw] h-[40vw] rounded-full bg-slate-100 opacity-50" />
+        <div className="absolute top-[30%] -left-[10%] w-[30vw] h-[60vh] bg-slate-100 opacity-50 transform -rotate-12" />
+        <div className="absolute bottom-[-10%] right-[20%] w-[50vw] h-[30vh] bg-slate-100 opacity-50 transform rotate-6" />
+      </div>
 
       {/* ── MOBILE TOP BAR ── */}
       <header className="md:hidden sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-border-light flex items-center justify-between px-4 h-16 shadow-sm">
@@ -194,11 +201,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                     key={item.title + item.href}
                     href={item.href}
                     title={collapsed ? item.title : undefined}
-                    className={`flex items-center gap-3 px-3 py-2 text-[13px] font-bold transition-all rounded-xl ${
-                      active
+                    className={`flex items-center gap-3 px-3 py-2 text-[13px] font-bold transition-all rounded-xl ${active
                         ? "bg-brand/10 text-brand"
                         : "text-text-secondary hover:text-text-primary hover:bg-surface-muted"
-                    } ${collapsed ? "justify-center px-0 py-2.5 mx-auto w-10 h-10" : ""}`}
+                      } ${collapsed ? "justify-center px-0 py-2.5 mx-auto w-10 h-10" : ""}`}
                   >
                     <Icon className={`w-4 h-4 shrink-0 transition-colors ${active ? "text-brand" : "text-text-muted group-hover:text-text-secondary"}`} />
                     {!collapsed && <span>{item.title}</span>}
@@ -292,11 +298,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                         key={item.title + item.href}
                         href={item.href}
                         onClick={() => setMobileOpen(false)}
-                        className={`flex items-center gap-3 px-3 py-3 text-sm font-bold transition-all rounded-xl ${
-                          active
+                        className={`flex items-center gap-3 px-3 py-3 text-sm font-bold transition-all rounded-xl ${active
                             ? "bg-brand/10 text-brand"
                             : "text-text-secondary hover:text-text-primary hover:bg-surface-muted"
-                        }`}
+                          }`}
                       >
                         <Icon className={`w-5 h-5 ${active ? "text-brand" : "text-text-muted"}`} />
                         <span>{item.title}</span>
@@ -321,7 +326,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       )}
 
       {/* ── MAIN CONTENT AREA ── */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden relative">
+      <div className="flex-1 flex flex-col min-w-0 relative z-10">
 
         {/* Desktop Header */}
         <header className="hidden md:flex sticky top-0 z-20 bg-background/80 backdrop-blur-xl border-b border-border-light h-16 items-center justify-between px-8">
