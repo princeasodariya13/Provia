@@ -2,14 +2,14 @@ import Link from "next/link";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen bg-background flex flex-col justify-center py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background accents */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 right-10 w-72 h-72 bg-taupe/10 rounded-full blur-2xl" />
+      <div className="absolute inset-0 pointer-events-none z-0" aria-hidden="true">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(500px,90vw)] h-[min(500px,90vw)] bg-brand/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-48 md:w-72 h-48 md:h-72 bg-taupe/10 rounded-full blur-2xl" />
       </div>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 text-center mb-6">
+      <div className="w-full max-w-md mx-auto relative z-10 text-center mb-6">
         <Link href="/" className="inline-flex items-center gap-2 group">
           <div className="w-9 h-9 bg-brand text-white font-bold flex items-center justify-center text-xl tracking-tighter">
             P
@@ -23,7 +23,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </p>
       </div>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+      <div className="w-full max-w-md mx-auto relative z-10">
         <div className="bg-surface border border-border-strong px-4 py-8 shadow-xl sm:px-10">
           {children}
         </div>

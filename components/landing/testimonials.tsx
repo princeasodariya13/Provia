@@ -5,9 +5,9 @@ import { InfiniteMovingCards } from "../ui/infinite-moving-cards";
 
 export function Testimonials() {
   return (
-    <div className="py-20 flex flex-col items-center justify-center relative overflow-hidden bg-background">
-      <div className="text-center mb-10 max-w-2xl mx-auto px-4">
-        <h2 className="text-3xl md:text-5xl font-bold text-text-primary tracking-tight mb-4">
+    <div className="py-14 md:py-20 flex flex-col items-center justify-center relative overflow-hidden bg-background">
+      <div className="text-center mb-8 md:mb-10 max-w-2xl mx-auto px-4">
+        <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-text-primary tracking-tight mb-3 md:mb-4">
           Trusted by Professionals
         </h2>
         <p className="text-text-secondary text-sm md:text-base">

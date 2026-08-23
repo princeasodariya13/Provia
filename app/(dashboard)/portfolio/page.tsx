@@ -150,10 +150,10 @@ export default function PortfolioPage() {
 
       {/* ── TOP STUDIO CONTROLS ── */}
       <section className="bg-surface border border-border-light rounded-2xl overflow-hidden shadow-sm">
-        <div className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-4">
+        <div className="p-5 md:p-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-3 md:space-y-4">
             <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-bold tracking-tight text-text-primary">Publishing Status</h2>
+              <h2 className="text-xl md:text-2xl font-bold tracking-tight text-text-primary">Publishing Status</h2>
               {isPublished ? (
                 <Badge variant="success" className="px-3 py-1 font-bold tracking-widest uppercase text-[10px]">
                   Live
@@ -169,7 +169,7 @@ export default function PortfolioPage() {
               <div className="flex flex-col gap-2">
                 <p className="text-sm font-semibold text-text-secondary">Your portfolio is live at:</p>
                 <div className="flex items-center gap-2 max-w-md">
-                  <div className="flex-1 bg-surface-muted border border-border-light px-4 py-2.5 rounded-lg text-sm text-text-primary truncate select-all font-mono">
+                  <div className="flex-1 bg-surface-muted border border-border-light px-3 py-2 rounded-lg text-xs sm:text-sm text-text-primary truncate select-all font-mono min-w-0">
                     {publicUrl}
                   </div>
                   <Button variant="outline" size="icon" onClick={copyPublicUrl} className="shrink-0 rounded-lg hover:border-brand transition-colors" title="Copy link">
@@ -189,20 +189,20 @@ export default function PortfolioPage() {
             )}
           </div>
           
-          <div className="flex flex-col gap-3 shrink-0">
+          <div className="flex flex-col sm:flex-row md:flex-col gap-3 shrink-0">
             {data ? (
               isPublished ? (
-                <Button variant="outline" size="lg" onClick={() => handlePublish("unpublish")} disabled={publishing} className="rounded-full font-bold">
+                <Button variant="outline" size="lg" onClick={() => handlePublish("unpublish")} disabled={publishing} className="rounded-full font-bold w-full md:w-auto">
                   {publishing ? "Unpublishing..." : "Unpublish Portfolio"}
                 </Button>
               ) : (
-                <Button variant="default" size="lg" onClick={() => handlePublish("publish")} disabled={publishing} className="rounded-full shadow-sm font-bold bg-success hover:bg-success">
+                <Button variant="default" size="lg" onClick={() => handlePublish("publish")} disabled={publishing} className="rounded-full shadow-sm font-bold bg-success hover:bg-success w-full md:w-auto">
                   <Globe className="w-4 h-4 mr-2" />
                   {publishing ? "Publishing..." : "Publish to Web"}
                 </Button>
               )
             ) : null}
-            <Button variant={data ? "outline" : "default"} size="lg" onClick={handleGenerate} disabled={generating} className="rounded-full font-bold shadow-sm">
+            <Button variant={data ? "outline" : "default"} size="lg" onClick={handleGenerate} disabled={generating} className="rounded-full font-bold shadow-sm w-full md:w-auto">
               <Zap className="w-4 h-4 mr-2" />
               {generating ? "Generating..." : (data ? "Generate New Version" : "Generate Portfolio")}
             </Button>
@@ -213,9 +213,9 @@ export default function PortfolioPage() {
       {/* ── CURRENT PORTFOLIO PREVIEW ── */}
       {data ? (
         <section className="bg-surface border border-border-light rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
-          <div className="md:w-1/3 border-r border-border-light p-6 md:p-8 bg-surface-muted/30 flex flex-col justify-between">
+          <div className="md:w-1/3 border-b md:border-b-0 md:border-r border-border-light p-5 md:p-8 bg-surface-muted/30 flex flex-col justify-between">
             <div>
-              <h3 className="text-lg font-bold text-text-primary mb-2">Current Working Version</h3>
+              <h3 className="text-base md:text-lg font-bold text-text-primary mb-2">Current Working Version</h3>
               <p className="text-sm text-text-secondary mb-6">
                 Version {data.version} • Generated {new Date(data.createdAt).toLocaleDateString()}
               </p>

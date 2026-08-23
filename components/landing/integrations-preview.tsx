@@ -4,9 +4,9 @@ import { LinkPreview } from "../ui/link-preview";
 
 export function IntegrationsPreview() {
   return (
-    <div className="flex justify-center items-center py-24 flex-col px-4 bg-background border-t border-border-light">
-      <div className="text-center mb-12 max-w-2xl mx-auto px-4">
-        <h2 className="text-3xl md:text-5xl font-bold text-text-primary tracking-tight mb-4">
+    <div className="flex justify-center items-center py-16 md:py-24 flex-col px-4 bg-background border-t border-border-light">
+      <div className="text-center mb-8 md:mb-12 max-w-2xl mx-auto px-4">
+        <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-text-primary tracking-tight mb-3 md:mb-4">
           Seamless Integrations
         </h2>
         <p className="text-text-secondary text-sm md:text-base">
@@ -14,7 +14,7 @@ export function IntegrationsPreview() {
         </p>
       </div>
 
-      <div className="text-text-secondary text-xl md:text-3xl max-w-3xl mx-auto mb-10 text-center leading-relaxed">
+      <div className="text-text-secondary text-lg sm:text-xl md:text-3xl max-w-3xl mx-auto mb-8 md:mb-10 text-center leading-relaxed px-2">
         Sync your entire contribution history from{" "}
         <LinkPreview url="https://github.com" className="font-bold text-text-primary">
           GitHub
@@ -29,7 +29,7 @@ export function IntegrationsPreview() {
         </LinkPreview>.
       </div>
       
-      <div className="text-text-secondary text-xl md:text-3xl max-w-3xl mx-auto text-center leading-relaxed">
+      <div className="text-text-secondary text-lg sm:text-xl md:text-3xl max-w-3xl mx-auto text-center leading-relaxed px-2">
         Instantly publish your editorial-grade portfolio to a custom{" "}
         <LinkPreview
           url="https://vercel.com"

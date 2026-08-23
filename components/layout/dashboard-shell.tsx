@@ -352,7 +352,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-5 sm:p-8 lg:p-12 w-full mx-auto">
+        <main className="flex-1 p-4 sm:p-8 lg:p-12 w-full mx-auto overflow-x-hidden">
           {children}
         </main>
       </div>

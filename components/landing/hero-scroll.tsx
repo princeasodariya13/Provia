@@ -17,10 +17,10 @@ export function HeroScroll() {
                 duration: 0.8,
                 ease: "easeInOut",
               }}
-              className="text-4xl md:text-[3.5rem] font-bold text-text-primary mb-0 tracking-tight text-center leading-[1.1]"
+              className="text-2xl sm:text-4xl md:text-[3.5rem] font-bold text-text-primary mb-0 tracking-tight text-center leading-[1.1] px-4"
             >
               A command center for your <br />
-              <span className="text-[5rem] md:text-[8rem] font-black mt-0 leading-none text-brand inline-block">
+              <span className="text-[3.5rem] sm:text-[5rem] md:text-[8rem] font-black mt-0 leading-none text-brand inline-block">
                 Career
               </span>
             </motion.h1>

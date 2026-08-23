@@ -306,20 +306,20 @@ export function ProfileForm() {
       </div>
 
       {/* Sticky Save Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-surface/90 backdrop-blur-md border-t border-border shadow-[0_-4px_24px_rgba(0,0,0,0.02)] md:left-60 transition-all duration-300">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-brand-muted text-brand">
-              {success ? <CheckCircle2 className="w-5 h-5 text-success" /> : <User className="w-5 h-5" />}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-md border-t border-border shadow-[0_-4px_24px_rgba(0,0,0,0.04)] md:left-60 transition-all duration-300">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="hidden sm:flex items-center justify-center w-9 h-9 rounded-full bg-brand-muted text-brand shrink-0">
+              {success ? <CheckCircle2 className="w-4 h-4 text-success" /> : <User className="w-4 h-4" />}
             </div>
-            <div>
-              <p className="text-sm font-bold text-text-primary">
-                {success ? "Changes saved successfully" : "Unsaved changes"}
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-text-primary truncate">
+                {success ? "Changes saved!" : "Unsaved changes"}
               </p>
-              {error && <p className="text-xs text-error font-medium">{error}</p>}
+              {error && <p className="text-xs text-error font-medium truncate">{error}</p>}
             </div>
           </div>
-          <Button onClick={handleSave} disabled={saving} size="lg" className="rounded-full shadow-sm px-8">
+          <Button onClick={handleSave} disabled={saving} size="lg" className="rounded-full shadow-sm px-6 sm:px-8 shrink-0">
             {saving ? "Saving..." : "Save Profile"}
           </Button>
         </div>

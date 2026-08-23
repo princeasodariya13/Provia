@@ -24,7 +24,7 @@ export function FeaturesBento() {
           title={item.title}
           description={item.description}
           header={item.header}
-          className={item.className}
+          className={cn(item.className, "min-h-[280px] sm:min-h-0")}
           icon={item.icon}
         />
       ))}
@@ -46,7 +46,7 @@ const SkeletonOne = () => {
     <motion.div
       initial="initial"
       whileHover="animate"
-      className="flex flex-1 w-full h-full min-h-[6rem] bg-surface-muted rounded-lg flex-col space-y-3 p-4 justify-center"
+      className="flex flex-1 w-full h-full min-h-[8rem] bg-surface-muted rounded-lg flex-col space-y-3 p-4 justify-center"
     >
       <motion.div
         variants={variants}
@@ -86,7 +86,7 @@ const SkeletonTwo = () => {
       initial="initial"
       animate="animate"
       whileHover="hover"
-      className="flex flex-1 w-full h-full min-h-[6rem] bg-surface-muted rounded-lg flex-col space-y-2 p-6 justify-center"
+      className="flex flex-1 w-full h-full min-h-[8rem] bg-surface-muted rounded-lg flex-col space-y-2 p-6 justify-center"
     >
       {arr.map((_, i) => (
         <motion.div
@@ -111,7 +111,7 @@ const SkeletonThree = () => {
       animate="animate"
       variants={variants}
       transition={{ duration: 5, repeat: Infinity, repeatType: "reverse" }}
-      className="flex flex-1 w-full h-full min-h-[6rem] rounded-lg flex-col space-y-2 relative overflow-hidden"
+      className="flex flex-1 w-full h-full min-h-[8rem] rounded-lg flex-col space-y-2 relative overflow-hidden gpu-layer"
       style={{
         background: "linear-gradient(-45deg, #CC2936, #080708, #EBF5EE, #283044)",
         backgroundSize: "400% 400%",
@@ -139,7 +139,7 @@ const SkeletonFour = () => {
       initial="initial"
       animate="animate"
       whileHover="hover"
-      className="flex flex-1 w-full h-full min-h-[6rem] bg-surface-muted rounded-lg flex-row space-x-2 p-4 items-center justify-center overflow-hidden"
+      className="flex flex-1 w-full h-full min-h-[8rem] bg-surface-muted rounded-lg flex-row space-x-2 p-4 items-center justify-center overflow-hidden"
     >
       <motion.div
         variants={first}
@@ -198,7 +198,7 @@ const SkeletonFive = () => {
     <motion.div
       initial="initial"
       whileHover="animate"
-      className="flex flex-1 w-full h-full min-h-[6rem] bg-surface-muted rounded-lg flex-col space-y-2 p-4 justify-center"
+      className="flex flex-1 w-full h-full min-h-[8rem] bg-surface-muted rounded-lg flex-col space-y-2 p-4 justify-center"
     >
       <motion.div
         variants={variants}

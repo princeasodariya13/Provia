@@ -136,31 +136,31 @@ export default function DashboardPage() {
   return (
     <div className="space-y-12 max-w-7xl mx-auto">
       {/* ── HERO / WELCOME SECTION ── */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border-light pb-8">
+      <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between border-b border-border-light pb-6 md:pb-8">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-text-primary mb-3">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-text-primary mb-2 md:mb-3">
             {getGreeting()}, {user?.fullName?.split(" ")[0] || "Professional"}
           </h1>
-          <p className="text-text-secondary text-lg max-w-2xl leading-relaxed">
+          <p className="text-text-secondary text-base md:text-lg max-w-2xl leading-relaxed">
             Your professional identity is <span className="font-semibold text-text-primary">{completeness}% complete</span>. 
             Build, refine, and publish your career story seamlessly.
           </p>
         </div>
-        <div className="flex gap-3 shrink-0">
-          <Button variant="outline" size="lg" asChild className="rounded-full">
+        <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+          <Button variant="outline" size="lg" asChild className="rounded-full w-full sm:w-auto">
             <Link href="/profile">Edit Profile</Link>
           </Button>
           {isPortfolioPublished ? (
-            <Button variant="default" size="lg" asChild className="rounded-full shadow-sm">
-              <a href={publicUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+            <Button variant="default" size="lg" asChild className="rounded-full shadow-sm w-full sm:w-auto">
+              <a href={publicUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
                 <Globe className="w-4 h-4" />
                 Live Portfolio
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </Button>
           ) : (
-            <Button variant="default" size="lg" asChild className="rounded-full shadow-sm">
-              <Link href="/portfolio" className="flex items-center gap-2">
+            <Button variant="default" size="lg" asChild className="rounded-full shadow-sm w-full sm:w-auto">
+              <Link href="/portfolio" className="flex items-center justify-center gap-2">
                 <Zap className="w-4 h-4" />
                 Publish Portfolio
               </Link>
@@ -170,7 +170,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ── TOP METRICS ROW ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         <MetricCard
           title="Profile Completeness"
           value={`${completeness}%`}
@@ -211,7 +211,7 @@ export default function DashboardPage() {
             </div>
             
             {recommendations.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {recommendations.slice(0, 4).map((rec, i) => (
                   <Link
                     key={i}
@@ -254,8 +254,8 @@ export default function DashboardPage() {
             <Card className="rounded-xl overflow-hidden border-border-light shadow-sm">
               <CardContent className="p-0">
                 {resumeData ? (
-                  <div className="flex flex-col md:flex-row md:items-center justify-between p-6 gap-6">
-                    <div className="flex items-start gap-4">
+                  <div className="flex flex-col sm:flex-row md:items-center justify-between p-5 sm:p-6 gap-4">
+                    <div className="flex items-start gap-3 sm:gap-4">
                       <div className="p-3 bg-brand-muted text-brand rounded-lg shrink-0">
                         <FileText className="w-6 h-6" />
                       </div>
@@ -355,14 +355,14 @@ export default function DashboardPage() {
 
 function MetricCard({ title, value, subtext, icon }: { title: string; value: string; subtext: string; icon: React.ReactNode }) {
   return (
-    <div className="p-5 bg-surface border border-border-light rounded-xl flex flex-col justify-between h-32">
+    <div className="p-4 sm:p-5 bg-surface border border-border-light rounded-xl flex flex-col justify-between min-h-[100px] sm:h-32">
       <div className="flex justify-between items-start">
-        <span className="text-xs font-bold text-text-secondary">{title}</span>
+        <span className="text-[10px] sm:text-xs font-bold text-text-secondary leading-tight">{title}</span>
         {icon}
       </div>
       <div>
-        <div className="text-2xl font-bold tracking-tight text-text-primary mb-1">{value}</div>
-        <div className="text-xs text-text-muted">{subtext}</div>
+        <div className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary mb-1">{value}</div>
+        <div className="text-[10px] sm:text-xs text-text-muted">{subtext}</div>
       </div>
     </div>
   );

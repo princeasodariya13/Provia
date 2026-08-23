@@ -109,23 +109,23 @@ export default function AnalyticsPage() {
       />
 
       {/* ── METRICS ROW ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-3 gap-3 sm:gap-6">
         <MetricCard
           title="Total Lifetime Views"
           value={data.summary.totalViews.toLocaleString()}
-          subtext="Across all portfolio versions"
+          subtext="All versions"
           icon={<Eye className="w-4 h-4 text-text-muted" />}
         />
         <MetricCard
           title="Recent Views"
           value={data.summary.recentViews.toLocaleString()}
-          subtext="Traffic in the last 30 days"
+          subtext="Last 30 days"
           icon={<Activity className="w-4 h-4 text-text-muted" />}
         />
         <MetricCard
           title="Active Portfolios"
           value={data.summary.publishedPortfolios.toLocaleString()}
-          subtext="Currently live on the web"
+          subtext="Live now"
           icon={<Globe className="w-4 h-4 text-text-muted" />}
         />
       </div>
@@ -140,8 +140,8 @@ export default function AnalyticsPage() {
                 <h3 className="text-lg font-bold text-text-primary">30-Day Traffic Trend</h3>
                 <p className="text-sm text-text-secondary mt-1">Daily view count across all your published portfolios.</p>
               </div>
-              <CardContent className="p-8">
-                <div className="h-64 flex items-end gap-1.5 md:gap-3 justify-between">
+              <CardContent className="p-4 sm:p-8">
+                <div className="h-48 sm:h-64 flex items-end gap-0.5 sm:gap-1.5 md:gap-3 justify-between">
                   {data.trend.map((point, index) => {
                     const heightPercent = maxViews > 0 ? (point.views / maxViews) * 100 : 0;
                     return (
@@ -160,7 +160,7 @@ export default function AnalyticsPage() {
                     );
                   })}
                 </div>
-                <div className="flex justify-between mt-4 text-[10px] font-bold uppercase tracking-widest text-text-muted">
+                <div className="flex justify-between mt-3 sm:mt-4 text-[10px] font-bold uppercase tracking-widest text-text-muted">
                   <span>{data.trend[0]?.date}</span>
                   <span>{data.trend[data.trend.length - 1]?.date}</span>
                 </div>
@@ -227,14 +227,14 @@ export default function AnalyticsPage() {
 
 function MetricCard({ title, value, subtext, icon }: { title: string; value: string; subtext: string; icon: React.ReactNode }) {
   return (
-    <div className="p-6 bg-surface border border-border-light rounded-2xl flex flex-col justify-between h-36 shadow-sm">
+    <div className="p-3 sm:p-6 bg-surface border border-border-light rounded-2xl flex flex-col justify-between min-h-[90px] sm:h-36 shadow-sm">
       <div className="flex justify-between items-start">
-        <span className="text-xs font-bold text-text-secondary">{title}</span>
-        {icon}
+        <span className="text-[10px] sm:text-xs font-bold text-text-secondary leading-tight">{title}</span>
+        <span className="hidden sm:block">{icon}</span>
       </div>
       <div>
-        <div className="text-3xl font-bold tracking-tight text-text-primary mb-1">{value}</div>
-        <div className="text-xs text-text-muted">{subtext}</div>
+        <div className="text-xl sm:text-3xl font-bold tracking-tight text-text-primary mb-0.5 sm:mb-1">{value}</div>
+        <div className="text-[10px] sm:text-xs text-text-muted">{subtext}</div>
       </div>
     </div>
   );
