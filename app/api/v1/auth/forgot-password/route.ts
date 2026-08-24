@@ -8,7 +8,7 @@ import { getClientIp } from "@/lib/ip";
 import { env } from "@/lib/env";
 import { APIError } from "@/lib/errors";
 import { AnalyticsService } from "@/lib/analytics/service";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email(),

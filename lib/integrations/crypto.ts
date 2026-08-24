@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import * as crypto from "crypto";
 import { env } from "../env";
 
 // 32-byte key is required for aes-256-gcm

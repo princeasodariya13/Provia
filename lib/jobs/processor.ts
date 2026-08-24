@@ -4,7 +4,8 @@ import { AnalyticsService } from "../analytics/service";
 import { getJobHandler } from "./registry";
 import { JobService } from "./service";
 import { JobType } from "./types";
-import crypto from "crypto";
+import * as crypto from "crypto";
+import { JobStatus } from "@prisma/client";
 
 export const JobProcessor = {
   /**
@@ -79,7 +80,7 @@ export const JobProcessor = {
         await prisma.job.updateMany({
           where: { id: job.id, status: "PROCESSING" },
           data: {
-            status: "QUEUED",
+            status: JobStatus.QUEUED,
             lockedAt: null,
             workerId: null,
             availableAt: new Date(Date.now() + 5000) // Small delay
@@ -90,7 +91,7 @@ export const JobProcessor = {
         await prisma.job.updateMany({
           where: { id: job.id, status: "PROCESSING" },
           data: {
-            status: "FAILED",
+            status: JobStatus.FAILED,
             failedAt: new Date(),
             deadLetteredAt: new Date(),
             errorCode: "TIMEOUT",
@@ -144,7 +145,7 @@ export const JobProcessor = {
       await prisma.job.updateMany({
         where: { id: job.id, status: "PROCESSING" },
         data: {
-          status: "COMPLETED",
+          status: JobStatus.COMPLETED,
           completedAt: new Date(),
           result: result ? JSON.stringify(result) : null,
           durationMs
@@ -179,7 +180,7 @@ export const JobProcessor = {
         await prisma.job.updateMany({
           where: { id: job.id, status: "PROCESSING" },
           data: {
-            status: "QUEUED",
+            status: JobStatus.QUEUED,
             errorCode: "RETRYABLE_ERROR",
             errorMessage: errMessage,
             lockedAt: null,
@@ -209,7 +210,7 @@ export const JobProcessor = {
         await prisma.job.updateMany({
           where: { id: job.id, status: "PROCESSING" },
           data: {
-            status: "FAILED",
+            status: JobStatus.FAILED,
             failedAt: new Date(),
             deadLetteredAt: new Date(),
             errorCode: "PERMANENT_ERROR",

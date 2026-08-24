@@ -8,7 +8,7 @@ import { getClientIp } from "@/lib/ip";
 import { env } from "@/lib/env";
 import { APIError } from "@/lib/errors";
 import { AnalyticsService } from "@/lib/analytics/service";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 export const POST = withAPIHandler(async (request: Request) => {
   const body = await request.json();

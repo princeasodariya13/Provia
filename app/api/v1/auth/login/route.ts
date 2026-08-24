@@ -9,7 +9,7 @@ import { AnalyticsService } from "@/lib/analytics/service";
 import { RateLimiterService } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 import { env } from "@/lib/env";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 export const POST = withAPIHandler(async (req) => {
   const body = await req.json();

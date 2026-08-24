@@ -3,7 +3,7 @@ import { z } from "zod";
 import { logger } from "./logger";
 import { APIError } from "./errors";
 import { AnalyticsService } from "./analytics/service";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 type HandlerFunc = (req: Request, ...args: unknown[]) => Promise<NextResponse | void> | NextResponse | void;
 

@@ -6,7 +6,7 @@ import { RateLimiterService } from "@/lib/rate-limit";
 import { CloudinaryService } from "@/lib/cloudinary/service";
 import { APIError } from "@/lib/errors";
 import { AnalyticsService } from "@/lib/analytics/service";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 export const POST = withAPIHandler(async (req) => {
   const user = await requireAuth();

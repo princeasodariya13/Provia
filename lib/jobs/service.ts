@@ -26,7 +26,7 @@ export const JobService = {
     if (existingActive) {
       // Just return the existing job if one is already active to prevent duplicate execution
       logger.info({ jobId: existingActive.id, type: params.type }, "Job idempotent return");
-      return this.mapToEntity<T>(existingActive);
+      return JobService.mapToEntity<T>(existingActive);
     }
 
     try {
@@ -42,7 +42,7 @@ export const JobService = {
 
       logger.info({ jobId: job.id, type: job.type, userId: job.userId }, "job.created");
 
-      return this.mapToEntity<T>(job);
+      return JobService.mapToEntity<T>(job);
     } catch (error: unknown) {
       const err = error as { code?: string };
       // Prisma P2002 is unique constraint violation
@@ -52,7 +52,7 @@ export const JobService = {
         });
         if (existingJob) {
           logger.info({ jobId: existingJob.id, type: params.type }, "Job idempotent DB-level return");
-          return this.mapToEntity<T>(existingJob);
+          return JobService.mapToEntity<T>(existingJob);
         }
       }
       throw error;
@@ -67,7 +67,7 @@ export const JobService = {
     if (!job) return null;
     if (userId && job.userId !== userId) return null;
 
-    return this.mapToEntity(job);
+    return JobService.mapToEntity(job);
   },
 
   async retryJob(id: string, userId: string) {
@@ -93,7 +93,7 @@ export const JobService = {
 
     logger.info({ jobId: job.id, type: job.type, userId: job.userId }, "job.retry_scheduled");
 
-    return this.mapToEntity(updated);
+    return JobService.mapToEntity(updated);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

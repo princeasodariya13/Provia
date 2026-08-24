@@ -1,5 +1,5 @@
 import { prisma } from "../lib/db";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 function generatePublicCode() {
   return crypto.randomBytes(16).toString("hex"); // 32 characters

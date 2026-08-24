@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { withAPIHandler } from "@/lib/api-handler";
 import { env } from "@/lib/env";
 import { APIError } from "@/lib/errors";
-import crypto from "crypto";
+import * as crypto from "crypto";
 import { cookies } from "next/headers";
 import { RateLimiterService } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";

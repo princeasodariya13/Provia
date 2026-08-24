@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { withAPIHandler } from "@/lib/api-handler";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 export const POST = withAPIHandler(async () => {
   const user = await requireAuth();
