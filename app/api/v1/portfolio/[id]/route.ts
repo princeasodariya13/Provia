@@ -9,7 +9,7 @@ export const GET = withAPIHandler(async (request: Request, { params }: any) => {
   const user = await requireAuth();
   const { id } = await params;
 
-  const document = await prisma.portfolioDocument.findUnique({
+  const document = await prisma.portfolioDocument.findFirst({
     where: { 
       id,
       userId: user.id

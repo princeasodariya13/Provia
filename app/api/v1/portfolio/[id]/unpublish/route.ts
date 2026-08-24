@@ -12,7 +12,7 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
   const { id: portfolioDocumentId } = await params;
 
   // We only allow unpublishing if they own the document
-  const document = await prisma.portfolioDocument.findUnique({
+  const document = await prisma.portfolioDocument.findFirst({
     where: { 
       id: portfolioDocumentId,
       userId: user.id
@@ -23,7 +23,7 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
     throw new APIError("Portfolio document not found", 404);
   }
 
-  const pub = await prisma.portfolioPublication.findUnique({
+  const pub = await prisma.portfolioPublication.findFirst({
     where: { userId: user.id }
   });
 

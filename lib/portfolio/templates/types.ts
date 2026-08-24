@@ -7,6 +7,11 @@ export interface TemplateMetadata {
   version: string;
   description: string;
   supportedSections: string[];
+  category?: string;
+  tags?: string[];
+  audience?: string[];
+  style?: string;
+  recommended?: boolean;
 }
 
 export interface TemplateProps {

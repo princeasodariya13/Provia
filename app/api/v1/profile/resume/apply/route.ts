@@ -41,7 +41,7 @@ export const POST = withAPIHandler(async (req) => {
   const structuredData: ResumeExtractionData = JSON.parse(resume.structuredData);
 
   // Upsert Profile
-  let profile = await prisma.professionalProfile.findUnique({
+  let profile = await prisma.professionalProfile.findFirst({
     where: { userId: user.id }
   });
 

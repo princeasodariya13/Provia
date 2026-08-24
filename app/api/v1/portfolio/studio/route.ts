@@ -7,17 +7,12 @@ import { PortfolioContentService } from "@/lib/portfolio/service";
 export const GET = withAPIHandler(async () => {
   const user = await requireAuth();
   
-  let record = await prisma.portfolioDocument.findFirst({
+  const record = await prisma.portfolioDocument.findFirst({
     where: { userId: user.id },
     orderBy: { version: 'desc' }
   });
 
-  // If no portfolio yet, generate one
-  if (!record) {
-    record = await PortfolioContentService.generatePortfolio(user.id);
-  }
-
-  const publication = await prisma.portfolioPublication.findUnique({
+  const publication = await prisma.portfolioPublication.findFirst({
     where: { userId: user.id },
     include: { user: { select: { username: true } } }
   });
@@ -28,13 +23,39 @@ export const GET = withAPIHandler(async () => {
     select: { id: true, version: true, createdAt: true, status: true, templateId: true }
   });
 
+  if (!record) {
+    return NextResponse.json({
+      success: true,
+      data: {
+        id: null,
+        version: 0,
+        status: "DRAFT",
+        content: null,
+        templateId: "editorial-v1", // Default selected template
+        createdAt: null,
+        publication: publication ? {
+          isActive: publication.isActive,
+          publicCode: publication.publicCode,
+          portfolioDocumentId: publication.portfolioDocumentId,
+          publicUrl: publication.publicCode && publication.user?.username 
+            ? `/${publication.user.username}/${publication.publicCode}`
+            : null
+        } : null,
+        versions
+      }
+    });
+  }
+
+  // Treat "{}" as a stub document (ungenerated)
+  const isStub = record.content === "{}";
+
   return NextResponse.json({
     success: true,
     data: {
       id: record.id,
       version: record.version,
       status: record.status,
-      content: JSON.parse(record.content),
+      content: isStub ? null : JSON.parse(record.content),
       templateId: record.templateId,
       createdAt: record.createdAt,
       publication: publication ? {
@@ -56,8 +77,8 @@ export const POST = withAPIHandler(async (req) => {
 
   const { content, templateId } = body;
   
-  if (!content) {
-    return NextResponse.json({ success: false, error: "Content is required" }, { status: 400 });
+  if (!content && !templateId) {
+    return NextResponse.json({ success: false, error: "Content or templateId is required" }, { status: 400 });
   }
 
   // Find latest document
@@ -66,8 +87,27 @@ export const POST = withAPIHandler(async (req) => {
     orderBy: { version: 'desc' }
   });
 
+  // If no portfolio found, create a stub document to store the templateId
   if (!lastDoc) {
-    return NextResponse.json({ success: false, error: "No portfolio found" }, { status: 404 });
+    // We need a sourceProfileId to create a PortfolioDocument, try to find one
+    const profile = await prisma.professionalProfile.findFirst({ where: { userId: user.id } });
+    if (!profile) {
+      return NextResponse.json({ success: false, error: "Profile not found. Cannot save template." }, { status: 400 });
+    }
+    const newDoc = await prisma.portfolioDocument.create({
+      data: {
+        userId: user.id,
+        version: 1,
+        status: "DRAFT",
+        content: content ? JSON.stringify(content) : "{}",
+        templateId: templateId || "editorial-v1",
+        sourceProfileId: profile.id,
+      }
+    });
+    return NextResponse.json({
+      success: true,
+      data: { id: newDoc.id, version: newDoc.version }
+    });
   }
 
   // If the last document is published, we MUST create a new version (draft)
@@ -84,7 +124,7 @@ export const POST = withAPIHandler(async (req) => {
         userId: user.id,
         version: lastDoc.version + 1,
         status: "DRAFT",
-        content: JSON.stringify(content),
+        content: content ? JSON.stringify(content) : lastDoc.content,
         templateId: templateId || lastDoc.templateId,
         sourceProfileId: lastDoc.sourceProfileId,
         sourceAiGenerationId: lastDoc.sourceAiGenerationId,
@@ -94,7 +134,7 @@ export const POST = withAPIHandler(async (req) => {
     updatedDoc = await prisma.portfolioDocument.update({
       where: { id: lastDoc.id },
       data: {
-        content: JSON.stringify(content),
+        content: content ? JSON.stringify(content) : lastDoc.content,
         templateId: templateId || lastDoc.templateId,
         updatedAt: new Date()
       }

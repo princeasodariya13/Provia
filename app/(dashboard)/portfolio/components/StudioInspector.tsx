@@ -178,10 +178,40 @@ export function StudioInspector({
               <div 
                 key={t.id} 
                 onClick={() => setTemplateId(t.id)}
-                className={`p-3 border rounded-xl cursor-pointer transition-all ${templateId === t.id ? 'border-brand bg-brand/5 ring-1 ring-brand' : 'border-border-light hover:border-border-strong'}`}
+                className={`relative p-4 border rounded-xl cursor-pointer transition-all bg-surface ${templateId === t.id ? 'border-brand ring-1 ring-brand shadow-[0_4px_12px_rgba(204,41,54,0.1)]' : 'border-border-light hover:border-border-strong hover:shadow-sm'}`}
               >
-                <div className="font-bold text-sm text-text-primary capitalize">{t.name}</div>
-                <div className="text-xs text-text-secondary mt-1">{t.description}</div>
+                {t.recommended && (
+                  <span className="absolute top-4 right-4 bg-success/10 text-success text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm">
+                    Recommended
+                  </span>
+                )}
+                
+                <div className="font-bold text-base text-text-primary mb-1">{t.name}</div>
+                
+                {t.tags && t.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mb-2.5">
+                    {t.tags.map((tag: string) => (
+                      <span key={tag} className="text-[10px] font-medium text-text-secondary bg-surface-muted px-1.5 py-0.5 rounded-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                
+                <div className="text-xs text-text-secondary leading-relaxed mb-3">{t.description}</div>
+                
+                {t.audience && t.audience.length > 0 && (
+                  <div className="pt-2 border-t border-border-light/50">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted block mb-1">Best For</span>
+                    <span className="text-[11px] text-text-secondary">{t.audience.join(" · ")}</span>
+                  </div>
+                )}
+
+                {templateId === t.id && (
+                  <div className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-md bg-brand/10 text-brand px-3 py-1.5 text-xs font-bold">
+                    Currently Previewing
+                  </div>
+                )}
               </div>
             ))}
           </div>

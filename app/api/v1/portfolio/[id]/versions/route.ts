@@ -13,7 +13,7 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
   const body = await request.json();
 
   // 1. Verify ownership of the base PortfolioDocument
-  const baseDocument = await prisma.portfolioDocument.findUnique({
+  const baseDocument = await prisma.portfolioDocument.findFirst({
     where: { 
       id: sourceDocumentId,
       userId: user.id

@@ -32,7 +32,7 @@ export const GET = withAPIHandler(async () => {
   const user = await requireAuth();
   
   const record = await PortfolioContentService.getLatestPortfolio(user.id);
-  const publication = await prisma.portfolioPublication.findUnique({
+  const publication = await prisma.portfolioPublication.findFirst({
     where: { userId: user.id },
     include: { user: { select: { username: true } } }
   });

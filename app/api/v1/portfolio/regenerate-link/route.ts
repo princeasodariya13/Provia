@@ -7,7 +7,7 @@ import crypto from "crypto";
 export const POST = withAPIHandler(async () => {
   const user = await requireAuth();
 
-  const publication = await prisma.portfolioPublication.findUnique({
+  const publication = await prisma.portfolioPublication.findFirst({
     where: { userId: user.id }
   });
 

@@ -1,0 +1,42 @@
+// @ts-nocheck
+"use client";
+import Image from "next/image";
+import { useTemplateData } from "../context";
+import { Reveal, SectionHeading } from "./Reveal";
+
+export default function About() {
+  const templateData = useTemplateData();
+  // @ts-ignore
+  const { profile, projects, experience, skills, stats, stack, faq, about, milestones, capabilities, globals, steps, header, social, education, services } = templateData || {};
+
+  return (
+    <section id="about" className="py-28">
+      <div className="max-w-6xl mx-auto px-6">
+        <SectionHeading eyebrow="Get to know me" title="About & Vision" />
+
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <Reveal>
+            <blockquote className="font-display font-semibold text-2xl leading-snug mb-6">
+              &ldquo;{about.quote}&rdquo;
+            </blockquote>
+            <div className="space-y-4">
+              {about.paragraphs.map((p, i) => (
+                <p key={i} className="text-muted-light dark:text-muted-dark leading-relaxed">
+                  {p}
+                </p>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <div className="relative aspect-[4/3] rounded-3xl overflow-hidden glass p-2">
+              <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden">
+                <Image src={about.image} alt="Workstation" fill className="object-cover" />
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}

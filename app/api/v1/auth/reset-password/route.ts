@@ -30,7 +30,7 @@ export const POST = withAPIHandler(async (request: Request) => {
     }
 
     const userId = unverifiedPayload.userId;
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: { id: userId },
     });
 

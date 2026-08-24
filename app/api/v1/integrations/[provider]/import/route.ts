@@ -86,7 +86,7 @@ export const POST = withAPIHandler(async (req, args: unknown) => {
     const normalized = normalizeProfileData(providerEnum, profile.rawData as Record<string, unknown>);
 
     // 6. Save Canonical Profile
-    const existingProfile = await prisma.professionalProfile.findUnique({
+    const existingProfile = await prisma.professionalProfile.findFirst({
       where: { userId: user.id }
     });
 

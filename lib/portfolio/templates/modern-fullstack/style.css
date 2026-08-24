@@ -1,0 +1,57 @@
+.modern-fullstack-theme {
+  background-color: #f7f5ef;
+  color: #1e2419;
+}
+
+::selection {
+  background-color: #3f7d58;
+  color: #ffffff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f7f5ef;
+}
+::-webkit-scrollbar-thumb {
+  background: #dfdacb;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f7d58;
+}
+
+:focus-visible {
+  outline: 2px solid #3f7d58;
+  outline-offset: 3px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6e6a5c;
+}
+
+.section-pad {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .section-pad {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

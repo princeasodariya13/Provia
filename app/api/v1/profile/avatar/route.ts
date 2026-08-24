@@ -45,7 +45,7 @@ export const POST = withAPIHandler(async (req) => {
     throw new APIError("File exceeds 2MB limit", 400);
   }
 
-  let profile = await prisma.professionalProfile.findUnique({
+  let profile = await prisma.professionalProfile.findFirst({
     where: { userId: user.id }
   });
 

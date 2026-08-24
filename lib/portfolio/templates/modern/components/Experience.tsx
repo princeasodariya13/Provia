@@ -1,0 +1,50 @@
+// @ts-nocheck
+"use client";
+import { useTemplateData } from "../context";
+import { Reveal, SectionHeading } from "./Reveal";
+
+export default function Experience() {
+  const templateData = useTemplateData();
+  // @ts-ignore
+  const { profile, projects, experience, skills, stats, stack, faq, about, milestones, capabilities, globals, steps, header, social, education, services } = templateData || {};
+
+  if (true) {
+  const isMissing = (!experience || experience.length === 0);
+  if (isMissing) {
+    return (
+      <section className="py-24 px-6 md:px-12 w-full max-w-7xl mx-auto opacity-80">
+        <EmptyState type="experience" />
+      </section>
+    );
+  }
+}
+  return (
+    <section id="experience" className="py-28 border-t border-border">
+      <div className="max-w-6xl mx-auto px-6">
+        <SectionHeading index="04" label="Experience" title="Where I've worked." />
+
+        <div className="relative pl-8 space-y-10 before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-px before:bg-border">
+          {experience.map((e, i) => (
+            <Reveal key={e.role + i} delay={i * 0.1} className="relative">
+              <span className="absolute -left-8 top-1.5 w-3.5 h-3.5 rounded-full bg-base border-2 border-accent" />
+              <div className="flex flex-wrap items-baseline justify-between gap-2 mb-2">
+                <h3 className="font-display text-xl font-semibold">{e.role}</h3>
+                <span className="font-mono text-xs text-muted">{e.duration}</span>
+              </div>
+              <div className="text-accent text-sm mb-1">{e.org}</div>
+              <div className="text-muted text-sm mb-4">{e.location}</div>
+              <ul className="space-y-2">
+                {e.points.map((pt, j) => (
+                  <li key={j} className="flex gap-3 text-muted text-sm leading-relaxed">
+                    <span className="mt-2 w-1 h-1 rounded-full bg-accent shrink-0" />
+                    {pt}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

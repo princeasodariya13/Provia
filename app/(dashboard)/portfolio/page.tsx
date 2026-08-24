@@ -25,6 +25,7 @@ const toast = {
 import { StudioSidebar } from "./components/StudioSidebar";
 import { StudioInspector } from "./components/StudioInspector";
 import { StudioPreview } from "./components/StudioPreview";
+import { ReadinessModal } from "./components/ReadinessModal";
 
 export type StudioTab = "content" | "design" | "sections" | "seo" | "history" | "publish" | "settings";
 export type ContentSection = "hero" | "about" | "experience" | "education" | "skills" | "projects" | "certifications" | "contact";
@@ -56,6 +57,10 @@ export default function PortfolioStudioPage() {
   const [saveTimeout, setSaveTimeout] = useState<NodeJS.Timeout | null>(null);
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
 
+  // Readiness State
+  const [readinessOpen, setReadinessOpen] = useState(false);
+  const [readinessChecks, setReadinessChecks] = useState<any[]>([]);
+
   useEffect(() => {
     async function loadStudio() {
       if (!user) return;
@@ -68,6 +73,7 @@ export default function PortfolioStudioPage() {
           setTemplateId(res.data.templateId || "editorial-v1");
           setPublication(res.data.publication);
           setVersions(res.data.versions || []);
+          if (!res.data.content) setActiveTab("design");
         } else {
           // Attempt to fetch normal if studio endpoint is missing
           const pRes = await apiClient.get<any>("/api/v1/portfolio");
@@ -77,6 +83,7 @@ export default function PortfolioStudioPage() {
             setDocument(pRes.data.content);
             setTemplateId(pRes.data.templateId || "editorial-v1");
             setPublication(pRes.data.publication);
+            if (!pRes.data.content) setActiveTab("design");
             
             const vRes = await apiClient.get<any>("/api/v1/portfolio/versions");
             if (vRes.success) setVersions(vRes.data || []);
@@ -182,6 +189,18 @@ export default function PortfolioStudioPage() {
     
     setGenerating(true);
     try {
+      // 1. Check readiness
+      const readyRes = await apiClient.get<any>("/api/v1/portfolio/readiness");
+      if (readyRes.success && readyRes.data) {
+        if (!readyRes.data.isReady) {
+          setReadinessChecks(readyRes.data.checks);
+          setReadinessOpen(true);
+          setGenerating(false);
+          return;
+        }
+      }
+
+      // 2. Proceed to generate
       const res = await apiClient.post<any>("/api/v1/portfolio", {});
       if (res.success) {
         toast.success("New AI portfolio draft generated!");
@@ -289,7 +308,12 @@ export default function PortfolioStudioPage() {
         <StudioPreview 
           document={document} 
           templateId={templateId} 
-          previewDevice={previewDevice} 
+          previewDevice={previewDevice}
+          activeTab={activeTab}
+          onSelectTemplate={(tid) => {
+            setTemplateId(tid);
+            handleSave(document, tid);
+          }}
         />
 
         {/* Right Sidebar - Inspector */}
@@ -317,6 +341,12 @@ export default function PortfolioStudioPage() {
           onUnpublish={handleUnpublish}
         />
       </div>
+
+      <ReadinessModal 
+        isOpen={readinessOpen} 
+        onClose={() => setReadinessOpen(false)} 
+        checks={readinessChecks} 
+      />
     </div>
   );
 }

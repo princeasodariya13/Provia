@@ -7,7 +7,7 @@ import { profileUpdateSchema } from "@/lib/schemas/profile";
 export const GET = withAPIHandler(async () => {
   const user = await requireAuth();
 
-  let profile = await prisma.professionalProfile.findUnique({
+  let profile = await prisma.professionalProfile.findFirst({
     where: { userId: user.id },
     include: {
       experiences: true,
@@ -45,7 +45,7 @@ export const PUT = withAPIHandler(async (req: Request) => {
 
   const data = profileUpdateSchema.parse(body);
 
-  let existingProfile = await prisma.professionalProfile.findUnique({
+  let existingProfile = await prisma.professionalProfile.findFirst({
     where: { userId: user.id },
   });
 

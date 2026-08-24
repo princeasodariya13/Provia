@@ -13,7 +13,7 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
   const { id: portfolioDocumentId } = await params;
 
   // 1. Verify ownership of the PortfolioDocument
-  const document = await prisma.portfolioDocument.findUnique({
+  const document = await prisma.portfolioDocument.findFirst({
     where: { 
       id: portfolioDocumentId,
       userId: user.id
@@ -38,7 +38,7 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
   
   // 3. Upsert Publication
   // We check if the user already has a publication
-  const existingPub = await prisma.portfolioPublication.findUnique({
+  const existingPub = await prisma.portfolioPublication.findFirst({
     where: { userId: user.id },
     include: { user: { select: { username: true } } }
   });
