@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
 import { withAPIHandler } from "@/lib/api-handler";
-import { requireAuth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { AnalyticsService } from "@/lib/analytics/service";
 import { clearSession } from "@/lib/auth";
 
 export const POST = withAPIHandler(async () => {
-  const user = await requireAuth().catch(() => null);
+  const session = await getSession();
 
   await clearSession();
 
-  if (user) {
-    AnalyticsService.record({ eventName: "auth.logout", userId: user.id });
+  if (session) {
+    AnalyticsService.record({ eventName: "auth.logout", userId: session.userId });
   }
   
   return NextResponse.json({

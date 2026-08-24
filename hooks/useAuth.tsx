@@ -59,8 +59,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    await apiClient.post("/api/v1/auth/logout", {});
     setUser(null);
+    apiClient.post("/api/v1/auth/logout", {}).catch(() => {});
     router.push("/login");
   };
 
