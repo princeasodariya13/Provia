@@ -1,51 +1,47 @@
 // @ts-nocheck
 "use client";
-import { ArrowUpRight } from "lucide-react";
 import { useTemplateData } from "../context";
 import { Reveal, SectionHeading } from "./Reveal";
 
+// Blog posts come from actual user data (projects used as articles placeholder).
+// If there are no projects, this section is hidden gracefully.
 export default function Blog() {
   const templateData = useTemplateData();
-  // @ts-ignore
-  const { profile, projects, experience, skills, stats, stack, faq, about, milestones, capabilities, globals, steps, header, social, education, services } = templateData || {};
+  const { projects = [] } = templateData || {};
+
+  // Only render this section if there's something to show
+  if (!projects || projects.length === 0) {
+    return null;
+  }
 
   return (
-    <section id="blog" className="py-28">
+    <section id="work" className="py-28">
       <div className="max-w-6xl mx-auto px-6">
-        <SectionHeading eyebrow="My engineering articles" title="Latest Articles" />
+        <SectionHeading eyebrow="My Work" title="Featured Projects" />
 
         <div className="grid md:grid-cols-3 gap-6 mb-10">
-          {blogPosts.map((post, i) => (
-            <Reveal key={post.title} delay={i * 0.08}>
+          {projects.slice(0, 3).map((project, i) => (
+            <Reveal key={project.title + i} delay={i * 0.08}>
               <a
-                href={post.url}
+                href={project.url || "#"}
+                target={project.url && project.url !== "#" ? "_blank" : undefined}
+                rel="noopener noreferrer"
                 className="glass rounded-2xl p-6 h-full flex flex-col hover:border-accent transition-colors group"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <span className="eyebrow">{post.category}</span>
-                  <span className="text-xs text-muted-light dark:text-muted-dark">{post.readTime}</span>
+                  <span className="eyebrow">{project.role || "Project"}</span>
+                  <span className="text-xs text-muted-light dark:text-muted-dark">{project.year || ""}</span>
                 </div>
-                <h3 className="font-display font-semibold text-lg mb-2 leading-snug">{post.title}</h3>
-                <p className="text-muted-light dark:text-muted-dark text-sm leading-relaxed flex-1">
-                  {post.excerpt}
-                </p>
-                <div className="mt-4 inline-flex items-center gap-1 text-sm text-accent">
-                  Read Article
-                  <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </div>
+                <h3 className="font-display font-semibold text-lg mb-2 leading-snug">{project.title}</h3>
+                {project.description && (
+                  <p className="text-muted-light dark:text-muted-dark text-sm leading-relaxed flex-1 line-clamp-3">
+                    {project.description}
+                  </p>
+                )}
               </a>
             </Reveal>
           ))}
         </div>
-
-        <Reveal className="text-center">
-          <a
-            href="#"
-            className="inline-flex items-center gap-2 rounded-full glass px-6 py-3 text-sm font-medium hover:border-accent transition-colors"
-          >
-            View All Articles
-          </a>
-        </Reveal>
       </div>
     </section>
   );

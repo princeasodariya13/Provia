@@ -5,16 +5,25 @@ import { PortfolioContentService } from "@/lib/portfolio/service";
 import { prisma } from "@/lib/db";
 import { AnalyticsService } from "@/lib/analytics/service";
 
-export const POST = withAPIHandler(async () => {
+export const POST = withAPIHandler(async (req) => {
   const user = await requireAuth();
-  
-  const record = await PortfolioContentService.generatePortfolio(user.id);
+
+  // Accept optional templateId from the request body
+  let requestedTemplateId: string | undefined;
+  try {
+    const body = await req.json();
+    requestedTemplateId = body?.templateId;
+  } catch {
+    // No body — fine
+  }
+
+  const record = await PortfolioContentService.generatePortfolio(user.id, requestedTemplateId);
 
   AnalyticsService.record({
     eventName: "portfolio.generated",
     userId: user.id,
     entityId: record.id,
-    metadata: { version: record.version }
+    metadata: { version: record.version, templateId: record.templateId }
   });
 
   return NextResponse.json({
@@ -23,6 +32,7 @@ export const POST = withAPIHandler(async () => {
       id: record.id,
       version: record.version,
       status: record.status,
+      templateId: record.templateId,
       content: JSON.parse(record.content),
     }
   });
@@ -43,12 +53,14 @@ export const GET = withAPIHandler(async () => {
       id: record.id,
       version: record.version,
       status: record.status,
+      templateId: record.templateId,
       content: JSON.parse(record.content),
       createdAt: record.createdAt,
       publication: publication ? {
         isActive: publication.isActive,
         publicSlug: publication.publicSlug,
         publicCode: publication.publicCode,
+        portfolioDocumentId: publication.portfolioDocumentId,
         publicUrl: publication.publicCode && publication.user?.username 
           ? `/${publication.user.username}/${publication.publicCode}`
           : `/p/${publication.publicSlug}`

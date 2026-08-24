@@ -7,8 +7,8 @@ import { env } from "@/lib/env";
 import { ShareButton } from "@/components/ShareButton";
 import { AnalyticsService } from "@/lib/analytics/service";
 
-// Ensure username format is valid
-const USERNAME_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+// Ensure username format is valid (lowercase, hyphens)
+const USERNAME_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i;
 // Ensure public code is exactly 32 hex chars
 const PUBLIC_CODE_REGEX = /^[a-f0-9]{32}$/;
 
@@ -20,34 +20,34 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
     return { title: "Portfolio Not Found" };
   }
 
-  const publication = await prisma.portfolioPublication.findUnique({
+  const publication = await prisma.portfolioPublication.findFirst({
     where: { publicCode, isActive: true },
     include: {
-      user: {
-        select: { username: true }
-      },
-      portfolioDocument: true 
+      user: { select: { username: true } },
+      portfolioDocument: true
     }
   });
 
-  if (!publication || publication.user.username !== username || publication.portfolioDocument.status !== "PUBLISHED") {
+  if (
+    !publication ||
+    !publication.user.username ||
+    publication.user.username.toLowerCase() !== username.toLowerCase() ||
+    publication.portfolioDocument.status !== "PUBLISHED"
+  ) {
     return { title: "Portfolio Not Found" };
   }
 
   const document = JSON.parse(publication.portfolioDocument.content) as PortfolioDocumentDTO;
   const canonicalUrl = `${env.NEXT_PUBLIC_APP_URL}/${username}/${publicCode}`;
-  const title = document.metadata.title || `${document.hero.name}'s Portfolio`;
-  const description = document.hero.shortIntroduction || "Professional Portfolio";
-  
-  // Use fallback URL
+  const title = document.metadata?.title || `${document.hero?.name || "Professional"}'s Portfolio`;
+  const description = document.hero?.shortIntroduction || document.about?.summary?.substring(0, 160) || "Professional Portfolio";
+
   const imageUrl = `${env.NEXT_PUBLIC_APP_URL}/api/og?title=${encodeURIComponent(title)}`;
 
   return {
     title,
     description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
+    alternates: { canonical: canonicalUrl },
     openGraph: {
       title,
       description,
@@ -72,25 +72,34 @@ export default async function PublicPortfolioURLPage({ params }: { params: Promi
   if (!USERNAME_REGEX.test(username) || !PUBLIC_CODE_REGEX.test(publicCode)) {
     return notFound();
   }
-  
-  const publication = await prisma.portfolioPublication.findUnique({
+
+  const publication = await prisma.portfolioPublication.findFirst({
     where: { publicCode, isActive: true },
-    include: { 
-      user: {
-        select: { username: true }
-      },
-      portfolioDocument: true 
+    include: {
+      user: { select: { username: true } },
+      portfolioDocument: true
     }
   });
 
-  if (!publication || publication.user.username !== username || publication.portfolioDocument.status !== "PUBLISHED") {
+  if (
+    !publication ||
+    !publication.user.username ||
+    publication.user.username.toLowerCase() !== username.toLowerCase() ||
+    publication.portfolioDocument.status !== "PUBLISHED"
+  ) {
     return notFound();
   }
 
-  const document = JSON.parse(publication.portfolioDocument.content) as PortfolioDocumentDTO;
+  let document: PortfolioDocumentDTO;
+  try {
+    document = JSON.parse(publication.portfolioDocument.content) as PortfolioDocumentDTO;
+  } catch {
+    return notFound();
+  }
+
   const templateId = publication.portfolioDocument.templateId || TemplateRegistry.getDefaultTemplateId();
-  
-  const templateDef = TemplateRegistry.getTemplate(templateId);
+  const templateDef = TemplateRegistry.getTemplate(templateId) || TemplateRegistry.getTemplate(TemplateRegistry.getDefaultTemplateId());
+
   if (!templateDef) {
     return notFound();
   }
@@ -104,23 +113,20 @@ export default async function PublicPortfolioURLPage({ params }: { params: Promi
     userId: publication.userId,
     entityId: publication.id,
     entityType: "PortfolioPublication",
-    metadata: {
-      templateId,
-      publicCode,
-    }
-  }).catch((err) => {
-    // Silence analytics failures to ensure portfolio still renders
-    console.error("Failed to record view analytics", err);
+    metadata: { templateId, publicCode }
+  }).catch(() => {
+    // Silence analytics failures — portfolio still renders
   });
 
+  const publicUrl = `${env.NEXT_PUBLIC_APP_URL}/${username}/${publicCode}`;
+
   return (
-    <div className="w-full min-h-screen bg-background">
+    <div className="w-full min-h-screen">
       <TemplateComponent document={document} />
-      
-      <ShareButton 
-        title={document.metadata.title || `${document.hero.name}'s Portfolio`}
-        text={`Check out ${document.hero.name}'s professional portfolio!`}
-        url={`${env.NEXT_PUBLIC_APP_URL}/${username}/${publicCode}`}
+      <ShareButton
+        title={document.metadata?.title || `${document.hero?.name || "Professional"}'s Portfolio`}
+        text={`Check out ${document.hero?.name || "this professional"}'s portfolio on Provia!`}
+        url={publicUrl}
       />
     </div>
   );

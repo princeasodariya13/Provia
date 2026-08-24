@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/hooks/useAuth";
+import { ToastProvider } from "@/components/ui/toast";
 import { SmoothScroll } from "@/components/layout/smooth-scroll";
 
 const inter = Inter({
@@ -32,7 +33,11 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans bg-background text-text-primary">
         <SmoothScroll>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <ToastProvider>
+              {children}
+            </ToastProvider>
+          </AuthProvider>
         </SmoothScroll>
       </body>
     </html>

@@ -27,8 +27,30 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
     throw new APIError("Portfolio document not found", 404);
   }
 
-  // 2. Generate slug based on user's name or fallback
-  const baseSlug = (document.sourceProfile.fullName || "portfolio")
+  // Guard: don't publish a stub/empty document
+  if (!document.content || document.content === "{}") {
+    throw new APIError("Portfolio content is empty. Please generate your portfolio first.", 400);
+  }
+
+  // 2. Mark this document as PUBLISHED
+  await prisma.portfolioDocument.update({
+    where: { id: portfolioDocumentId },
+    data: { status: "PUBLISHED" }
+  });
+
+  // 2b. Mark any previous PUBLISHED doc as ARCHIVED (only one live doc at a time)
+  await prisma.portfolioDocument.updateMany({
+    where: {
+      userId: user.id,
+      status: "PUBLISHED",
+      id: { not: portfolioDocumentId }
+    },
+    data: { status: "ARCHIVED" }
+  });
+
+  // 3. Generate slug based on user's name or fallback
+  const baseName = document.sourceProfile.fullName || user.email.split("@")[0] || "portfolio";
+  const baseSlug = baseName
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9]+/g, '-')
@@ -36,25 +58,27 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
 
   let uniqueSlug = baseSlug;
   
-  // 3. Upsert Publication
-  // We check if the user already has a publication
+  // 4. Upsert Publication — check if the user already has a publication
   const existingPub = await prisma.portfolioPublication.findFirst({
     where: { userId: user.id },
     include: { user: { select: { username: true } } }
   });
 
   if (existingPub) {
-    // Just update the pointer
     uniqueSlug = existingPub.publicSlug; // preserve existing slug
     const pub = await prisma.portfolioPublication.update({
       where: { userId: user.id },
       data: {
         portfolioDocumentId,
         isActive: true,
+        updatedAt: new Date(),
       }
     });
 
-    revalidatePath(`/p/${pub.publicSlug}`);
+    if (pub.publicSlug) revalidatePath(`/p/${pub.publicSlug}`);
+    if (existingPub.user?.username && pub.publicCode) {
+      revalidatePath(`/${existingPub.user.username}/${pub.publicCode}`);
+    }
 
     AnalyticsService.record({
       eventName: "portfolio.published",
@@ -77,8 +101,9 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
     });
   }
 
-  // New publication: ensure slug uniqueness across the whole system
+  // 5. New publication: ensure slug uniqueness
   let counter = 1;
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const collision = await prisma.portfolioPublication.findUnique({
       where: { publicSlug: uniqueSlug }
@@ -88,7 +113,7 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
     uniqueSlug = `${baseSlug}-${counter}`;
   }
 
-  // Generate publicCode if needed
+  // 6. Generate publicCode
   let newPublicCode = "";
   let isUniqueCode = false;
 
@@ -114,6 +139,9 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
   });
 
   revalidatePath(`/p/${pub.publicSlug}`);
+  if (pub.user?.username && pub.publicCode) {
+    revalidatePath(`/${pub.user.username}/${pub.publicCode}`);
+  }
 
   AnalyticsService.record({
     eventName: "portfolio.published",

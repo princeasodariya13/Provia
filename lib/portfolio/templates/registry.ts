@@ -19,18 +19,22 @@ const templates: Record<string, TemplateDefinition> = {
   [modernfullstackMetadata.id]: { metadata: modernfullstackMetadata, component: modernfullstackTemplate },
 };
 
+// Legacy ID aliases for backward compatibility with stored templateIds
+const ALIASES: Record<string, string> = {
+  // Old developer-named IDs → stable canonical IDs
+  "engineer": "classic-professional",
+  "ai-developer": "ai-technology",
+  "motion-engineer": "motion-creative",
+  "modern": "modern-minimal",
+  "madhukar": "creative-editorial",
+  "immersive-3d": "immersive-3d", // Self-alias (stable)
+  "modern-fullstack": "modern-fullstack", // Self-alias (stable)
+  "editorial-v1": "editorial-v1", // Self-alias (stable)
+};
+
 export const TemplateRegistry = {
   getTemplate(id: string): TemplateDefinition | undefined {
-    // Backward compatibility for templates stored during initial development
-    const aliases: Record<string, string> = {
-      "engineer": "classic-professional",
-      "ai-developer": "ai-technology",
-      "motion-engineer": "motion-creative",
-      "modern": "modern-minimal",
-      "madhukar": "creative-editorial"
-    };
-    
-    return templates[id] || templates[aliases[id]];
+    return templates[id] || templates[ALIASES[id]];
   },
 
   getAllMetadata() {
@@ -38,6 +42,10 @@ export const TemplateRegistry = {
   },
 
   getDefaultTemplateId() {
-    return editorialV1.metadata.id;
+    return "editorial-v1";
+  },
+
+  isValidTemplateId(id: string): boolean {
+    return !!(templates[id] || templates[ALIASES[id]]);
   }
 };
