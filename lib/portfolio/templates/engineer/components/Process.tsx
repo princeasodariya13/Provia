@@ -9,6 +9,8 @@ export default function Process() {
   // @ts-ignore
   const { profile, projects, experience, skills, stats, stack, faq, about, milestones, capabilities, globals, steps, header, social, education, services } = templateData || {};
 
+  const processList = templateData?.process || [];
+
   return (
     <section id="process" className="section-pad py-24 border-t border-border">
       <p className="eyebrow mb-4">[04] Process / How I work</p>
@@ -17,7 +19,7 @@ export default function Process() {
       </h2>
 
       <div className="flex flex-col gap-4">
-        {process.map((step, i) => (
+        {processList.map((step: any, i: number) => (
           <motion.div
             key={step.title}
             initial={{ opacity: 0, y: 30 }}

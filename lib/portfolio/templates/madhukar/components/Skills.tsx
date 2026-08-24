@@ -5,8 +5,13 @@ import { Reveal, SectionHeading } from "./Reveal";
 
 export default function Skills() {
   const templateData = useTemplateData();
-  // @ts-ignore
   const { profile, projects, experience, skills, stats, stack, faq, about, milestones, capabilities, globals, steps, header, social, education, services } = templateData || {};
+
+  const skillGroups = Array.isArray(skills) ? skills.map((s: any) => ({
+    title: s.category || "Skills",
+    note: "",
+    items: s.skills || []
+  })) : [];
 
   if (true) {
   const isMissing = (!skills || skills.length === 0) && (!stack || stack.length === 0);

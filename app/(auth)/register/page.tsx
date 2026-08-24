@@ -36,7 +36,7 @@ export default function RegisterPage() {
 
     const res = await register({ name, email, password });
     if (res.success) {
-      router.push("/dashboard"); // Future step
+      router.push("/login?registered=true");
     } else {
       // Basic handling of Zod validation details array or string error
       if (res.details && Array.isArray(res.details) && res.details.length > 0) {

@@ -11,6 +11,7 @@ export default function FAQ() {
   // @ts-ignore
   const { profile, projects, experience, skills, stats, stack, faq, about, milestones, capabilities, globals, steps, header, social, education, services } = templateData || {};
 
+  const faqs = templateData?.faqs || [];
   const [open, setOpen] = useState<number | null>(0);
 
   return (

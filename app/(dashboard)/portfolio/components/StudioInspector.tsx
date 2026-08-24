@@ -88,6 +88,13 @@ export function StudioInspector({
                 placeholder="e.g. Senior Software Engineer"
               />
             </Field>
+            <Field label="Profile Image URL">
+              <Input
+                value={document.hero.avatarUrl || ""}
+                onChange={(e) => onChange(doc => ({ ...doc, hero: { ...doc.hero, avatarUrl: e.target.value } }))}
+                placeholder="https://..."
+              />
+            </Field>
             <Field label="Short Introduction">
               <Textarea
                 value={document.hero.shortIntroduction}

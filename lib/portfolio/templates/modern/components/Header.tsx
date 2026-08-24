@@ -10,6 +10,8 @@ export default function Header() {
   // @ts-ignore
   const { profile, projects, experience, skills, stats, stack, faq, about, milestones, capabilities, globals, steps, header, social, education, services } = templateData || {};
 
+  const nav = ["Home", "About", "Experience", "Projects", "Contact"];
+
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 

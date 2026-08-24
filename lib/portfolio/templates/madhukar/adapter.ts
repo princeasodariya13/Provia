@@ -51,6 +51,7 @@ export function mapProviaToTemplate(doc: PortfolioDocumentDTO) {
     about: {
       summary: doc.about?.summary || "",
       themes: doc.about?.careerThemes || [],
+      image: doc.hero?.avatarUrl || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070",
     },
   };
 }

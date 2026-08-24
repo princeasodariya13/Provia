@@ -49,12 +49,8 @@ export const POST = withAPIHandler(async (req) => {
     select: { id: true, name: true, email: true, role: true, sessionVersion: true, createdAt: true, updatedAt: true },
   });
 
-  await createSession({
-    id: user.id,
-    role: user.role,
-    email: user.email!,
-    sessionVersion: user.sessionVersion,
-  });
+  // We intentionally do not call createSession here. 
+  // User must explicitly log in after registration for a proper auth flow.
 
   // Queue email verification (non-blocking — registration succeeds regardless)
   JobService.createJob({

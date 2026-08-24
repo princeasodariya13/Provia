@@ -56,6 +56,7 @@ export const portfolioDocumentSchema = z.object({
     name: z.string(),
     headline: z.string(),
     shortIntroduction: z.string(),
+    avatarUrl: z.string().nullable().optional(),
     primaryLinks: z.array(portfolioLinkSchema),
   }),
   about: z.object({

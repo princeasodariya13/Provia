@@ -6,7 +6,7 @@ export function mapProviaToTemplate(doc: PortfolioDocumentDTO) {
       name: doc.hero?.name || "Professional",
       title: doc.hero?.headline || "",
       bio: doc.about?.summary || doc.hero?.shortIntroduction || "",
-      avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=200&h=200&fit=crop",
+      avatar: doc.hero?.avatarUrl || "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=200&h=200&fit=crop",
       email: doc.contact?.email || ""
     },
     projects: (doc.projects || []).map(p => ({

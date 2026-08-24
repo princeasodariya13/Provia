@@ -18,7 +18,12 @@ export default function LoginPage() {
   const initialError = typeof window !== "undefined" 
     ? new URLSearchParams(window.location.search).get("error") || "" 
     : "";
+  const isNewlyRegistered = typeof window !== "undefined" 
+    ? new URLSearchParams(window.location.search).get("registered") === "true" 
+    : false;
+  
   const [error, setError] = useState(initialError);
+  const [successMsg, setSuccessMsg] = useState(isNewlyRegistered ? "Account created successfully! Please sign in." : "");
   
   const [isLoading, setIsLoading] = useState(false);
   const [isUnverified, setIsUnverified] = useState(false);
@@ -89,6 +94,11 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
+            {successMsg && (
+              <div className="p-3 bg-brand/10 border border-brand text-brand text-sm font-medium rounded-md">
+                {successMsg}
+              </div>
+            )}
             {error && (
               <div className="p-3 bg-error/10 border border-error text-error text-sm font-medium flex flex-col gap-2">
                 <p>{error}</p>

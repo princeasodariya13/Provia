@@ -14,10 +14,12 @@ import {
   MobileNavMenu,
 } from "@/components/ui/resizable-navbar";
 import { Menu, MenuItem, HoveredLink } from "@/components/ui/navbar-menu";
+import { useAuth } from "@/hooks/useAuth";
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
+  const { user, isLoading } = useAuth();
 
   const navItems = [
     { name: "Home", link: "/" },
@@ -45,12 +47,20 @@ export function Navbar() {
             </Menu>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/login" className="text-sm font-bold tracking-wide text-text-primary hover:text-brand transition-colors">
-              Sign In
-            </Link>
-            <NavbarButton variant="primary" href="/register">
-              Get Started
-            </NavbarButton>
+            {!isLoading && user ? (
+              <NavbarButton variant="primary" href="/dashboard">
+                Go to Dashboard
+              </NavbarButton>
+            ) : (
+              <>
+                <Link href="/login" className="text-sm font-bold tracking-wide text-text-primary hover:text-brand transition-colors">
+                  Sign In
+                </Link>
+                <NavbarButton variant="primary" href="/register">
+                  Get Started
+                </NavbarButton>
+              </>
+            )}
           </div>
         </NavBody>
 
@@ -78,22 +88,35 @@ export function Navbar() {
               </Link>
             ))}
             <div className="flex w-full flex-col gap-4 mt-4">
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="secondary"
-                href="/login"
-                className="w-full text-center"
-              >
-                Sign In
-              </NavbarButton>
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                href="/register"
-                className="w-full text-center"
-              >
-                Get Started
-              </NavbarButton>
+              {!isLoading && user ? (
+                <NavbarButton
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  href="/dashboard"
+                  className="w-full text-center"
+                >
+                  Go to Dashboard
+                </NavbarButton>
+              ) : (
+                <>
+                  <NavbarButton
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    variant="secondary"
+                    href="/login"
+                    className="w-full text-center"
+                  >
+                    Sign In
+                  </NavbarButton>
+                  <NavbarButton
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    variant="primary"
+                    href="/register"
+                    className="w-full text-center"
+                  >
+                    Get Started
+                  </NavbarButton>
+                </>
+              )}
             </div>
           </MobileNavMenu>
         </MobileNav>

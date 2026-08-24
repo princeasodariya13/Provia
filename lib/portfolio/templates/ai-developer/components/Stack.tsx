@@ -6,8 +6,13 @@ import { useTemplateData } from "../context";
 
 export default function Stack() {
   const templateData = useTemplateData();
-  // @ts-ignore
   const { profile, projects, experience, skills, stats, stack, faq, about, milestones, capabilities, globals, steps, header, social, education, services } = templateData || {};
+
+  const skillGroups = Array.isArray(skills) ? skills.map((s: any, i: number) => ({
+    index: `0${i + 1}`,
+    title: s.category || "Skills",
+    skills: s.skills || []
+  })) : [];
 
   return (
     <section id="stack" className="section-pad py-24 border-b border-border">
