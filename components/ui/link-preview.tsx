@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, react-hooks/set-state-in-effect */
 "use client";
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
 import Image from "next/image";

@@ -1,0 +1,224 @@
+﻿
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\(auth)\login\page.tsx
+  154:15  error  Do not use an `<a>` element to navigate to `/api/v1/auth/google/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\(auth)\register\page.tsx
+  123:15  error  Do not use an `<a>` element to navigate to `/api/v1/auth/google/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\(dashboard)\analytics\page.tsx
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  5:8  warning  'Link' is defined but never used                                                                       @typescript-eslint/no-unused-vars
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\(dashboard)\dashboard\page.tsx
+   11:10  warning  'PageHeader' is defined but never used                                                                 @typescript-eslint/no-unused-vars
+   28:3   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   30:3   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   32:3   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   34:3   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   36:3   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  371:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\(dashboard)\integrations\page.tsx
+   11:32  warning  'CheckCircle2' is defined but never used                                                               @typescript-eslint/no-unused-vars
+   11:70  warning  'Plus' is defined but never used                                                                       @typescript-eslint/no-unused-vars
+  149:3   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\(dashboard)\operations\jobs\[id]\client.tsx
+   9:34  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-explicit-any
+  26:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\(dashboard)\operations\jobs\[id]\client.tsx:26:5
+  24 |
+  25 |   useEffect(() => {
+> 26 |     fetchJob();
+     |     ^^^^^^^^ Avoid calling setState() directly within an effect
+  27 |   }, [jobId]);
+  28 |
+  29 |   const handleRetry = async () => {  react-hooks/set-state-in-effect
+  27:6   warning  React Hook useEffect has a missing dependency: 'fetchJob'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/exhaustive-deps
+  39:14  warning  'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\(dashboard)\operations\jobs\[id]\page.tsx
+  6:10  warning  'notFound' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\(dashboard)\operations\jobs\client.tsx
+   7:23  warning  'IconArrowRight' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   7:53  warning  'IconAlertTriangle' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  11:42  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+  12:42  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+  13:36  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+  44:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\(dashboard)\operations\jobs\client.tsx:44:5
+  42 |
+  43 |   useEffect(() => {
+> 44 |     fetchData();
+     |     ^^^^^^^^^ Avoid calling setState() directly within an effect
+  45 |     const interval = setInterval(fetchData, 15000); // Auto-refresh every 15s
+  46 |     return () => clearInterval(interval);
+  47 |   }, [page, statusFilter, dlqOnly, timeFilter]);  react-hooks/set-state-in-effect
+  47:6   warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/exhaustive-deps
+  59:14  warning  'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\(dashboard)\portfolio\page.tsx
+    9:10  warning  'Card' is defined but never used                                                                       @typescript-eslint/no-unused-vars
+    9:16  warning  'CardContent' is defined but never used                                                                @typescript-eslint/no-unused-vars
+   15:3   warning  'FileText' is defined but never used                                                                   @typescript-eslint/no-unused-vars
+   29:3   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   31:3   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   44:9   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   50:9   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   68:5   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   73:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   93:5   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   97:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  101:7   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  125:14  warning  'err' is defined but never used                                                                        @typescript-eslint/no-unused-vars
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\(dashboard)\profile\AvatarUploader.tsx
+  20:7  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\(dashboard)\profile\ProfileForm.tsx
+  14:3  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  24:7  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  52:3  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  57:3  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  66:3  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\[username]\[publicCode]\page.tsx
+  102:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\about\page.tsx
+  29:86  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\api\v1\operations\jobs\[id]\retry\route.ts
+  8:70  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\api\v1\operations\jobs\[id]\route.ts
+   7:69  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  27:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  38:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\api\v1\operations\jobs\metrics\route.ts
+  12:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\api\v1\operations\jobs\route.ts
+  20:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\api\v1\operations\workers\route.ts
+  14:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\blog\page.tsx
+  35:25  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\contact\page.tsx
+  26:76  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\app\page.tsx
+  94:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\components\landing\hero-scroll.tsx
+  30:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\components\layout\navbar.tsx
+  8:3  warning  'NavItems' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\components\ui\3d-card.tsx
+   38:29  warning  'e' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+   43:29  warning  'e' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  126:5   error    Error: Cannot access variable before it is declared
+
+`handleAnimations` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\components\ui\3d-card.tsx:126:5
+  124 |
+  125 |   useEffect(() => {
+> 126 |     handleAnimations();
+      |     ^^^^^^^^^^^^^^^^ `handleAnimations` accessed before it is declared
+  127 |   // eslint-disable-next-line react-hooks/exhaustive-deps
+  128 |   }, [isMouseEntered]);
+  129 |
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\components\ui\3d-card.tsx:130:3
+  128 |   }, [isMouseEntered]);
+  129 |
+> 130 |   const handleAnimations = () => {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 131 |     if (!ref.current) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 132 |     if (isMouseEntered) {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 133 |       ref.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 134 |     } else {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 135 |       ref.current.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)`;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 136 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 137 |   };
+      | ^^^^^ `handleAnimations` is declared here
+  138 |
+  139 |   const Component = Tag as any;
+  140 |  react-hooks/immutability
+  139:28  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\components\ui\3d-marquee.tsx
+   68:7  warning  'GridLineHorizontal' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  103:7  warning  'GridLineVertical' is assigned a value but never used    @typescript-eslint/no-unused-vars
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\components\ui\globe.tsx
+  75:7  warning  'numbersOfRings' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\components\ui\hover-border-gradient.tsx
+  20:39  error    Unexpected any. Specify a different type                                                                            @typescript-eslint/no-explicit-any
+  60:6   warning  React Hook useEffect has a missing dependency: 'rotateDirection'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\components\ui\infinite-moving-cards.tsx
+  74:5   warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  93:27  warning  'idx' is defined but never used                                                                 @typescript-eslint/no-unused-vars
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\components\ui\link-preview.tsx
+  59:5   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\components\ui\link-preview.tsx:59:5
+  57 |
+  58 |   useEffect(() => {
+> 59 |     setIsMounted(true);
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  60 |   }, []);
+  61 |
+  62 |   const springConfig = { stiffness: 100, damping: 15 };  react-hooks/set-state-in-effect
+  67:35  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\components\ui\navbar-menu.tsx
+  135:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\components\ui\resizable-navbar.tsx
+  243:3  warning  'visible' is defined but never used                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+  262:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Prince\Desktop\Provia\Provia\my-app\lib\jobs\registry.ts
+  6:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+Γ£û 77 problems (25 errors, 52 warnings)
+  0 errors and 25 warnings potentially fixable with the `--fix` option.
+

@@ -117,6 +117,17 @@ export const PortfolioContentService = {
         contact: {
           email: profile.user?.email || null,
           location: profile.location || null,
+        },
+        configuration: {
+          sectionOrder: ["hero", "about", "experience", "projects", "skills", "education", "certifications", "contact"],
+          hiddenSections: [],
+          theme: "light",
+          colors: {},
+          typography: "inter",
+        },
+        seo: {
+          title: `${profile.fullName || "Professional"} - Portfolio`,
+          description: aiData.professionalSummary?.substring(0, 160) || profile.bio?.substring(0, 160) || "",
         }
       };
 

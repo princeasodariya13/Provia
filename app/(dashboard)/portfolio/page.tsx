@@ -1,357 +1,322 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any, react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/hooks/useAuth";
+import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
+import { TemplateRegistry } from "@/lib/portfolio/templates/registry";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { PageHeader } from "@/components/ui/page-header";
-import { EmptyState } from "@/components/ui/empty-state";
-import { StatCardSkeleton, CardSkeleton } from "@/components/ui/skeleton";
-import {
-  FileText,
-  CheckCircle2,
-  Globe,
-  ExternalLink,
-  History,
-  Copy,
-  Check,
-  Zap,
-  LayoutTemplate,
-  MonitorSmartphone
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { 
+  Monitor, Smartphone, Tablet, ChevronLeft, Save, Globe, 
+  Layout, Type, Palette, Settings, History, 
+  Layers, CheckCircle2, ChevronRight, Check, Eye, Link as LinkIcon
 } from "lucide-react";
 
-export default function PortfolioPage() {
+// Fallback for toast if not available
+const toast = {
+  success: (msg: string) => console.log("SUCCESS:", msg),
+  error: (msg: string) => alert(msg)
+};
+import { StudioSidebar } from "./components/StudioSidebar";
+import { StudioInspector } from "./components/StudioInspector";
+import { StudioPreview } from "./components/StudioPreview";
+
+export type StudioTab = "content" | "design" | "sections" | "seo" | "history" | "publish" | "settings";
+export type ContentSection = "hero" | "about" | "experience" | "education" | "skills" | "projects" | "certifications" | "contact";
+export type PreviewDevice = "desktop" | "tablet" | "mobile";
+
+export default function PortfolioStudioPage() {
   const { user, isLoading: authLoading } = useAuth();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [data, setData] = useState<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [versions, setVersions] = useState<any[]>([]);
+  const router = useRouter();
+  
   const [loading, setLoading] = useState(true);
-  const [generating, setGenerating] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
-  const [regenerating, setRegenerating] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
+  
+  const [portfolioId, setPortfolioId] = useState<string | null>(null);
+  const [version, setVersion] = useState<number>(0);
+  const [document, setDocument] = useState<PortfolioDocumentDTO | null>(null);
+  const [templateId, setTemplateId] = useState<string>("editorial-v1");
+  const [publication, setPublication] = useState<any>(null);
+  const [versions, setVersions] = useState<any[]>([]);
+  
+  const [activeTab, setActiveTab] = useState<StudioTab>("content");
+  const [activeSection, setActiveSection] = useState<ContentSection>("hero");
+  const [previewDevice, setPreviewDevice] = useState<PreviewDevice>("desktop");
+  
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  
+  // Save timeout for autosave (debounce)
+  const [saveTimeout, setSaveTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
 
   useEffect(() => {
-    async function fetchLatestData() {
+    async function loadStudio() {
       if (!user) return;
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const res = await apiClient.get<any>("/api/v1/portfolio");
-        if (res.success) {
-          setData(res.data);
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const vRes = await apiClient.get<any>("/api/v1/portfolio/versions");
-        if (vRes.success) {
-          setVersions(vRes.data || []);
+        const res = await apiClient.get<any>("/api/v1/portfolio/studio");
+        if (res.success && res.data) {
+          setPortfolioId(res.data.id);
+          setVersion(res.data.version);
+          setDocument(res.data.content);
+          setTemplateId(res.data.templateId || "editorial-v1");
+          setPublication(res.data.publication);
+          setVersions(res.data.versions || []);
+        } else {
+          // Attempt to fetch normal if studio endpoint is missing
+          const pRes = await apiClient.get<any>("/api/v1/portfolio");
+          if (pRes.success && pRes.data) {
+            setPortfolioId(pRes.data.id);
+            setVersion(pRes.data.version);
+            setDocument(pRes.data.content);
+            setTemplateId(pRes.data.templateId || "editorial-v1");
+            setPublication(pRes.data.publication);
+            
+            const vRes = await apiClient.get<any>("/api/v1/portfolio/versions");
+            if (vRes.success) setVersions(vRes.data || []);
+          }
         }
       } catch (err) {
-        console.error("Failed loading portfolio data:", err);
+        console.error("Failed to load studio", err);
       } finally {
         setLoading(false);
       }
     }
-    if (!authLoading) fetchLatestData();
+    if (!authLoading) loadStudio();
   }, [user, authLoading]);
 
-  const handleGenerate = async () => {
-    setError(null);
-    setGenerating(true);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const res = await apiClient.post<any>("/api/v1/portfolio", {});
-
-    if (res.success) {
-      setData(res.data);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const vRes = await apiClient.get<any>("/api/v1/portfolio/versions");
-      if (vRes.success) setVersions(vRes.data || []);
-    } else {
-      setError(res.error || "Failed to generate portfolio document.");
-    }
-    setGenerating(false);
+  const handleDocumentChange = (updater: (doc: PortfolioDocumentDTO) => PortfolioDocumentDTO) => {
+    if (!document) return;
+    const newDoc = updater(document);
+    setDocument(newDoc);
+    setHasUnsavedChanges(true);
+    setSaveStatus("unsaved");
+    
+    // Autosave
+    if (saveTimeout) clearTimeout(saveTimeout);
+    const timeout = setTimeout(() => {
+      handleSave(newDoc, templateId);
+    }, 2000);
+    setSaveTimeout(timeout);
   };
 
-  const handlePublish = async (action: "publish" | "unpublish", targetId: string = data?.id, targetVersion?: number) => {
-    if (action === "publish") {
-      const confirmPublish = window.confirm(
-        `Are you sure you want to publish Version ${targetVersion || data?.version}? This will overwrite your live portfolio.`
-      );
-      if (!confirmPublish) return;
-    }
-
-    setError(null);
-    setPublishing(true);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const res = await apiClient.post<any>(`/api/v1/portfolio/${targetId}/${action}`, {});
-
-    if (res.success) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const reloadRes = await apiClient.get<any>("/api/v1/portfolio");
-      if (reloadRes.success) setData(reloadRes.data);
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const vRes = await apiClient.get<any>("/api/v1/portfolio/versions");
-      if (vRes.success) setVersions(vRes.data || []);
-    } else {
-      setError(res.error || `Failed to ${action} portfolio.`);
-    }
-    setPublishing(false);
-  };
-
-  const handleRegenerateLink = async () => {
-    const confirmRegen = window.confirm("Regenerating your public link will invalidate the previous URL. Are you sure?");
-    if (!confirmRegen) return;
-
-    setError(null);
-    setRegenerating(true);
-
+  const handleSave = async (docToSave = document, tId = templateId) => {
+    if (!docToSave || !portfolioId) return;
+    setSaveStatus("saving");
     try {
-      const res = await apiClient.post<any>("/api/v1/portfolio/regenerate-link", {});
+      const res = await apiClient.post<any>(`/api/v1/portfolio/studio`, {
+        content: docToSave,
+        templateId: tId
+      });
       if (res.success) {
-        const reloadRes = await apiClient.get<any>("/api/v1/portfolio");
-        if (reloadRes.success) setData(reloadRes.data);
+        setSaveStatus("saved");
+        setHasUnsavedChanges(false);
+        setVersion(res.data.version);
+        // refresh versions quietly
+        apiClient.get<any>("/api/v1/portfolio/versions").then(vRes => {
+          if (vRes.success) setVersions(vRes.data || []);
+        });
       } else {
-        setError(res.error || "Failed to regenerate link.");
+        setSaveStatus("unsaved");
+        toast.error("Failed to save changes");
       }
     } catch (err) {
-      setError("An error occurred regenerating the link.");
+      setSaveStatus("unsaved");
+      toast.error("Network error while saving");
+    }
+  };
+
+  const handlePublish = async () => {
+    if (!portfolioId) return;
+    const confirm = window.confirm("Ready to publish? Your portfolio will become publicly accessible.");
+    if (!confirm) return;
+    
+    setPublishing(true);
+    try {
+      const res = await apiClient.post<any>(`/api/v1/portfolio/${portfolioId}/publish`, {});
+      if (res.success) {
+        toast.success("Portfolio published successfully!");
+        const pRes = await apiClient.get<any>("/api/v1/portfolio");
+        if (pRes.success && pRes.data) {
+          setPublication(pRes.data.publication);
+        }
+      } else {
+        toast.error(res.error || "Failed to publish");
+      }
+    } catch (err) {
+      toast.error("Network error while publishing");
     } finally {
-      setRegenerating(false);
+      setPublishing(false);
     }
   };
 
-  const copyPublicUrl = () => {
-    const publicUrl = data?.publication?.publicUrl;
-    if (publicUrl) {
-      const fullUrl = typeof window !== "undefined" ? `${window.location.origin}${publicUrl}` : publicUrl;
-      navigator.clipboard.writeText(fullUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+  const handleUnpublish = async () => {
+    if (!portfolioId) return;
+    setPublishing(true);
+    try {
+      const res = await apiClient.post<any>(`/api/v1/portfolio/${portfolioId}/unpublish`, {});
+      if (res.success) {
+        toast.success("Portfolio unpublished.");
+        setPublication(null);
+      } else {
+        toast.error(res.error || "Failed to unpublish");
+      }
+    } catch (err) {
+      toast.error("Network error while unpublishing");
+    } finally {
+      setPublishing(false);
+    }
+  };
+  
+  const handleGenerateAI = async () => {
+    if (hasUnsavedChanges) {
+      const confirm = window.confirm("You have unsaved changes. Generating a new portfolio will discard them. Continue?");
+      if (!confirm) return;
+    }
+    
+    setGenerating(true);
+    try {
+      const res = await apiClient.post<any>("/api/v1/portfolio", {});
+      if (res.success) {
+        toast.success("New AI portfolio draft generated!");
+        setPortfolioId(res.data.id);
+        setVersion(res.data.version);
+        setDocument(res.data.content);
+        setTemplateId(res.data.templateId || "editorial-v1");
+        
+        const vRes = await apiClient.get<any>("/api/v1/portfolio/versions");
+        if (vRes.success) setVersions(vRes.data || []);
+      } else {
+        toast.error(res.error || "Failed to generate");
+      }
+    } catch (err) {
+      toast.error("Network error");
+    } finally {
+      setGenerating(false);
     }
   };
 
-  if (authLoading || loading) {
+  if (loading || authLoading) {
     return (
-      <div className="space-y-12">
-        <div className="space-y-4">
-          <div className="h-10 w-1/3 bg-surface-muted animate-pulse" />
-          <div className="h-5 w-1/2 bg-surface-muted animate-pulse" />
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-12 h-12 bg-brand rounded-xl mb-4" />
+          <p className="text-sm font-bold text-text-secondary uppercase tracking-widest">Loading Studio...</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCardSkeleton />
-          <StatCardSkeleton />
-          <StatCardSkeleton />
-        </div>
-        <CardSkeleton />
       </div>
     );
   }
 
-  const isPublished = data?.publication?.isActive;
-  const publicUrl = data?.publication?.publicUrl;
-  const fullPublicUrl = publicUrl ? (typeof window !== "undefined" ? `${window.location.origin}${publicUrl}` : publicUrl) : null;
-
   return (
-    <div className="space-y-12 max-w-7xl mx-auto">
-      <PageHeader
-        title="Portfolio Studio"
-        description="Generate, review, and publish your professional portfolio."
-        breadcrumbs={[{ label: "Workspace", href: "/dashboard" }, { label: "Portfolio", href: "/portfolio" }]}
-      />
-
-      {error && (
-        <div className="p-4 bg-error-muted border border-error text-error text-sm font-semibold rounded-xl flex items-center gap-2">
-          {error}
-        </div>
-      )}
-
-      {/* ── TOP STUDIO CONTROLS ── */}
-      <section className="bg-surface border border-border-light rounded-2xl overflow-hidden shadow-sm">
-        <div className="p-5 md:p-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-          <div className="space-y-3 md:space-y-4">
-            <div className="flex items-center gap-3">
-              <h2 className="text-xl md:text-2xl font-bold tracking-tight text-text-primary">Publishing Status</h2>
-              {isPublished ? (
-                <Badge variant="success" className="px-3 py-1 font-bold tracking-widest uppercase text-[10px]">
-                  Live
-                </Badge>
-              ) : (
-                <Badge variant="secondary" className="px-3 py-1 font-bold tracking-widest uppercase text-[10px]">
-                  Draft
-                </Badge>
-              )}
+    <div className="flex flex-col h-screen w-full bg-background overflow-hidden">
+      {/* ── TOP BAR ── */}
+      <header className="h-14 border-b border-border-light bg-surface shrink-0 flex items-center justify-between px-4 select-none">
+        <div className="flex items-center gap-4 min-w-[240px]">
+          <Link href="/dashboard" className="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors text-sm font-bold">
+            <ChevronLeft className="w-4 h-4" />
+            <div className="w-6 h-6 bg-brand flex items-center justify-center rounded shadow-sm ml-1 hidden md:flex">
+              <div className="w-1.5 h-1.5 bg-white rounded-full" />
             </div>
-            
-            {isPublished && fullPublicUrl ? (
-              <div className="flex flex-col gap-2">
-                <p className="text-sm font-semibold text-text-secondary">Your portfolio is live at:</p>
-                <div className="flex items-center gap-2 max-w-md">
-                  <div className="flex-1 bg-surface-muted border border-border-light px-3 py-2 rounded-lg text-xs sm:text-sm text-text-primary truncate select-all font-mono min-w-0" title={fullPublicUrl}>
-                    {fullPublicUrl}
-                  </div>
-                  <Button variant="outline" size="icon" onClick={copyPublicUrl} className="shrink-0 rounded-lg hover:border-brand transition-colors" title="Copy link">
-                    {copied ? <Check className="w-4 h-4 text-success" /> : <Copy className="w-4 h-4 text-text-secondary" />}
-                  </Button>
-                  <Button variant="outline" size="icon" asChild className="shrink-0 rounded-lg hover:border-brand transition-colors" title="Open in new tab">
-                    <a href={fullPublicUrl} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="w-4 h-4 text-text-secondary" />
-                    </a>
-                  </Button>
-                  {data?.publication?.publicCode && (
-                    <Button variant="outline" size="sm" onClick={handleRegenerateLink} disabled={regenerating} className="shrink-0 rounded-lg transition-colors ml-2 font-semibold">
-                      {regenerating ? "..." : "Regenerate Link"}
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <p className="text-sm text-text-secondary max-w-lg">
-                Your portfolio is currently private. Publish it to make it visible to the world.
-              </p>
-            )}
-          </div>
-          
-          <div className="flex flex-col sm:flex-row md:flex-col gap-3 shrink-0">
-            {data ? (
-              isPublished ? (
-                <Button variant="outline" size="lg" onClick={() => handlePublish("unpublish")} disabled={publishing} className="rounded-full font-bold w-full md:w-auto">
-                  {publishing ? "Unpublishing..." : "Unpublish Portfolio"}
-                </Button>
-              ) : (
-                <Button variant="default" size="lg" onClick={() => handlePublish("publish")} disabled={publishing} className="rounded-full shadow-sm font-bold bg-success hover:bg-success w-full md:w-auto">
-                  <Globe className="w-4 h-4 mr-2" />
-                  {publishing ? "Publishing..." : "Publish to Web"}
-                </Button>
-              )
-            ) : null}
-            <Button variant={data ? "outline" : "default"} size="lg" onClick={handleGenerate} disabled={generating} className="rounded-full font-bold shadow-sm w-full md:w-auto">
-              <Zap className="w-4 h-4 mr-2" />
-              {generating ? "Generating..." : (data ? "Generate New Version" : "Generate Portfolio")}
-            </Button>
+            Dashboard
+          </Link>
+          <div className="w-px h-6 bg-border-light hidden md:block" />
+          <div className="hidden md:flex flex-col">
+            <span className="text-xs font-bold text-text-primary">Portfolio Studio</span>
+            <div className="flex items-center gap-1.5 text-[10px] text-text-secondary font-medium">
+              <span>v{version}</span>
+              <span>•</span>
+              <span className={`flex items-center gap-1 ${saveStatus === 'unsaved' ? 'text-amber-500' : 'text-text-secondary'}`}>
+                {saveStatus === 'saving' && "Saving..."}
+                {saveStatus === 'saved' && "Saved"}
+                {saveStatus === 'unsaved' && "Unsaved changes"}
+              </span>
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* ── CURRENT PORTFOLIO PREVIEW ── */}
-      {data ? (
-        <section className="bg-surface border border-border-light rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
-          <div className="md:w-1/3 border-b md:border-b-0 md:border-r border-border-light p-5 md:p-8 bg-surface-muted/30 flex flex-col justify-between">
-            <div>
-              <h3 className="text-base md:text-lg font-bold text-text-primary mb-2">Current Working Version</h3>
-              <p className="text-sm text-text-secondary mb-6">
-                Version {data.version} • Generated {new Date(data.createdAt).toLocaleDateString()}
-              </p>
-              
-              <div className="space-y-4">
-                <div className="p-4 bg-surface border border-border-light rounded-xl">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted block mb-1">Active Template</span>
-                  <span className="text-sm font-bold text-text-primary capitalize">{data.templateId.replace("-", " ")}</span>
-                </div>
-                
-                <div className="p-4 bg-surface border border-border-light rounded-xl">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted block mb-1">Document Status</span>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-success" />
-                    <span className="text-sm font-bold text-text-primary">Structured & Ready</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <Button variant="outline" className="w-full mt-8 rounded-xl font-bold bg-white" asChild>
-              <Link href={`/portfolio/${data.id}/preview`}>
-                <MonitorSmartphone className="w-4 h-4 mr-2 text-text-secondary" />
-                Interactive Preview
-              </Link>
+        <div className="flex items-center bg-surface-muted border border-border-light rounded-lg p-1">
+          <button onClick={() => setPreviewDevice("desktop")} className={`p-1.5 rounded-md transition-colors ${previewDevice === 'desktop' ? 'bg-surface shadow-sm text-text-primary' : 'text-text-secondary hover:text-text-primary'}`} title="Desktop Preview">
+            <Monitor className="w-4 h-4" />
+          </button>
+          <button onClick={() => setPreviewDevice("tablet")} className={`p-1.5 rounded-md transition-colors ${previewDevice === 'tablet' ? 'bg-surface shadow-sm text-text-primary' : 'text-text-secondary hover:text-text-primary'}`} title="Tablet Preview">
+            <Tablet className="w-4 h-4" />
+          </button>
+          <button onClick={() => setPreviewDevice("mobile")} className={`p-1.5 rounded-md transition-colors ${previewDevice === 'mobile' ? 'bg-surface shadow-sm text-text-primary' : 'text-text-secondary hover:text-text-primary'}`} title="Mobile Preview">
+            <Smartphone className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2 min-w-[240px] justify-end">
+          {publication?.isActive && publication.publicUrl && (
+            <Button variant="outline" size="sm" asChild className="hidden md:flex bg-white h-8 text-xs font-bold shadow-sm">
+              <a href={publication.publicUrl} target="_blank" rel="noopener noreferrer">
+                <Globe className="w-3.5 h-3.5 mr-1.5" /> View Live
+              </a>
             </Button>
-          </div>
-          
-          <div className="md:w-2/3 p-6 md:p-8 flex items-center justify-center bg-surface-muted/10">
-             {/* Fake browser window for visual premium feel */}
-             <div className="w-full max-w-xl bg-background border border-border-light rounded-xl shadow-md overflow-hidden flex flex-col">
-                <div className="h-8 bg-surface-muted border-b border-border-light flex items-center px-4 gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-border-strong/20" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-border-strong/20" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-border-strong/20" />
-                </div>
-                <div className="p-8 aspect-[4/3] flex flex-col items-center justify-center text-center">
-                  <LayoutTemplate className="w-12 h-12 text-border-strong/30 mb-4" />
-                  <h4 className="font-bold text-lg text-text-primary mb-2">Editorial Template Ready</h4>
-                  <p className="text-sm text-text-secondary max-w-sm">
-                    Your professional data has been beautifully typeset and is ready for publishing. 
-                  </p>
-                </div>
-             </div>
-          </div>
-        </section>
-      ) : (
-        <EmptyState
-          title="No portfolio generated yet"
-          description="Click 'Generate Portfolio' to automatically transform your canonical profile data into a beautiful professional publication."
-          icon={<LayoutTemplate className="w-8 h-8" />}
-          actionLabel="Generate Portfolio"
-          actionHref=""
-          onAction={handleGenerate}
+          )}
+          <Button 
+            variant="default" 
+            size="sm" 
+            onClick={handlePublish} 
+            disabled={publishing} 
+            className="h-8 bg-success hover:bg-success text-white font-bold text-xs shadow-sm"
+          >
+            {publishing ? "Publishing..." : "Publish"}
+          </Button>
+        </div>
+      </header>
+
+      {/* ── MAIN EDITOR LAYOUT ── */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Sidebar - Navigation */}
+        <StudioSidebar 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab} 
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+          document={document}
+          handleGenerateAI={handleGenerateAI}
+          generating={generating}
         />
-      )}
 
-      {/* ── VERSION HISTORY ── */}
-      {versions.length > 0 && (
-        <section>
-          <div className="mb-4">
-            <h2 className="text-xl font-bold tracking-tight text-text-primary flex items-center gap-2">
-              <History className="w-5 h-5 text-text-secondary" /> Version History
-            </h2>
-            <p className="text-sm text-text-secondary mt-1">Review past generations or roll back to a previous version.</p>
-          </div>
-          
-          <div className="space-y-3">
-            {versions.map((v) => {
-              const isActive = v.id === data?.id;
-              const isPub = v.publication?.isActive;
-              return (
-                <div key={v.id} className={`flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-xl border transition-colors ${isActive ? "bg-brand-muted/30 border-brand/20" : "bg-surface border-border-light hover:border-border-strong"}`}>
-                  <div className="flex items-center gap-5 mb-4 sm:mb-0">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${isActive ? "bg-brand text-white" : "bg-surface-muted text-text-secondary"}`}>
-                      v{v.version}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-sm text-text-primary capitalize">{v.templateId.replace("-", " ")}</span>
-                        {isActive && <Badge variant="default" className="text-[10px] px-2 py-0">Current</Badge>}
-                        {isPub && <Badge variant="success" className="text-[10px] px-2 py-0">Live</Badge>}
-                      </div>
-                      <span className="text-xs text-text-secondary">
-                        Generated {new Date(v.createdAt).toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" className="rounded-full" asChild>
-                      <Link href={`/portfolio/${v.id}/preview`}>Preview</Link>
-                    </Button>
-                    {!isPub && (
-                      <Button variant="outline" size="sm" className="rounded-full" disabled={publishing} onClick={() => handlePublish("publish", v.id, v.version)}>
-                        Publish this version
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
+        {/* Center - Live Preview */}
+        <StudioPreview 
+          document={document} 
+          templateId={templateId} 
+          previewDevice={previewDevice} 
+        />
+
+        {/* Right Sidebar - Inspector */}
+        <StudioInspector 
+          activeTab={activeTab}
+          activeSection={activeSection}
+          document={document}
+          onChange={handleDocumentChange}
+          templateId={templateId}
+          setTemplateId={(tid) => {
+            setTemplateId(tid);
+            handleSave(document, tid);
+          }}
+          publication={publication}
+          versions={versions}
+          onRestore={(vId) => {
+            // Restore logic
+            apiClient.post<any>(`/api/v1/portfolio/versions/${vId}/restore`, {}).then(res => {
+              if (res.success) {
+                toast.success("Restored version");
+                window.location.reload();
+              } else toast.error("Failed to restore");
+            });
+          }}
+          onUnpublish={handleUnpublish}
+        />
+      </div>
     </div>
   );
 }

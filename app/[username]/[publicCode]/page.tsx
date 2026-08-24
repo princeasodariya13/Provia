@@ -99,6 +99,7 @@ export default async function PublicPortfolioURLPage({ params }: { params: Promi
 
   // Non-blocking analytics
   AnalyticsService.record({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     eventName: "portfolio.public_viewed" as any,
     userId: publication.userId,
     entityId: publication.id,

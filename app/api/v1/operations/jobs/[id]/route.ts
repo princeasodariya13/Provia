@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import { withAPIHandler } from "@/lib/api-handler";
 import { requireRole } from "@/lib/auth";

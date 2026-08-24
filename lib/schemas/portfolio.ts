@@ -71,6 +71,22 @@ export const portfolioDocumentSchema = z.object({
     email: z.string().nullable().optional(),
     location: z.string().nullable().optional(),
   }),
+  configuration: z.object({
+    sectionOrder: z.array(z.string()).default(["hero", "about", "experience", "projects", "skills", "education", "certifications", "contact"]),
+    hiddenSections: z.array(z.string()).default([]),
+    theme: z.string().default("light"),
+    colors: z.object({
+      primary: z.string().optional(),
+      background: z.string().optional(),
+      text: z.string().optional(),
+      accent: z.string().optional(),
+    }).optional(),
+    typography: z.string().default("inter"),
+  }).optional(),
+  seo: z.object({
+    title: z.string().optional(),
+    description: z.string().optional(),
+  }).optional(),
 });
 
 export type PortfolioDocumentDTO = z.infer<typeof portfolioDocumentSchema>;

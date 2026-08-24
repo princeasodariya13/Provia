@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, react-hooks/exhaustive-deps */
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";

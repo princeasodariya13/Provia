@@ -5,6 +5,7 @@ import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { APIError } from "@/lib/errors";
 import { AnalyticsService } from "@/lib/analytics/service";
+import crypto from "crypto";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const POST = withAPIHandler(async (request: Request, { params }: any) => {
@@ -38,7 +39,8 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
   // 3. Upsert Publication
   // We check if the user already has a publication
   const existingPub = await prisma.portfolioPublication.findUnique({
-    where: { userId: user.id }
+    where: { userId: user.id },
+    include: { user: { select: { username: true } } }
   });
 
   if (existingPub) {
@@ -65,9 +67,12 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
       success: true,
       data: {
         publicSlug: pub.publicSlug,
+        publicCode: pub.publicCode,
         isActive: pub.isActive,
         publishedAt: pub.publishedAt,
-        publicUrl: `/p/${pub.publicSlug}`
+        publicUrl: pub.publicCode && existingPub.user?.username 
+          ? `/${existingPub.user.username}/${pub.publicCode}`
+          : `/p/${pub.publicSlug}`
       }
     });
   }
@@ -83,13 +88,29 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
     uniqueSlug = `${baseSlug}-${counter}`;
   }
 
+  // Generate publicCode if needed
+  let newPublicCode = "";
+  let isUniqueCode = false;
+
+  while (!isUniqueCode) {
+    newPublicCode = crypto.randomBytes(16).toString("hex");
+    const existing = await prisma.portfolioPublication.findUnique({
+      where: { publicCode: newPublicCode }
+    });
+    if (!existing) {
+      isUniqueCode = true;
+    }
+  }
+
   const pub = await prisma.portfolioPublication.create({
     data: {
       userId: user.id,
       portfolioDocumentId,
       publicSlug: uniqueSlug,
+      publicCode: newPublicCode,
       isActive: true,
-    }
+    },
+    include: { user: { select: { username: true } } }
   });
 
   revalidatePath(`/p/${pub.publicSlug}`);
@@ -105,9 +126,12 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
     success: true,
     data: {
       publicSlug: pub.publicSlug,
+      publicCode: pub.publicCode,
       isActive: pub.isActive,
       publishedAt: pub.publishedAt,
-      publicUrl: `/p/${pub.publicSlug}`
+      publicUrl: pub.publicCode && pub.user?.username 
+        ? `/${pub.user.username}/${pub.publicCode}`
+        : `/p/${pub.publicSlug}`
     }
   });
 });

@@ -114,7 +114,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <div className="absolute bottom-[-10%] right-[20%] w-[50vw] h-[30vh] bg-slate-100 opacity-50 transform rotate-6" />
       </div>
 
-      {/* ── MOBILE TOP BAR ── */}
+      {pathname === "/portfolio" ? (
+        <main className="flex-1 w-full relative z-10 overflow-hidden flex flex-col min-h-screen">
+          {children}
+        </main>
+      ) : (
+        <>
+          {/* ── MOBILE TOP BAR ── */}
       <header className="md:hidden sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-border-light flex items-center justify-between px-4 h-16 shadow-sm">
         <div className="flex items-center gap-3">
           <button
@@ -356,6 +362,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           {children}
         </main>
       </div>
+      </>
+      )}
 
       <CommandPalette isOpen={commandOpen} onClose={() => setCommandOpen(false)} />
     </div>

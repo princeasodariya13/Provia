@@ -151,6 +151,7 @@ export default function LoginPage() {
               className="w-full bg-white hover:bg-gray-50 text-gray-900 border-gray-300 shadow-sm p-0"
               size="lg"
             >
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
               <a href="/api/v1/auth/google" className="w-full h-full flex items-center justify-center gap-3">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>

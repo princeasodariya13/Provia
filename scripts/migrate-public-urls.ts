@@ -20,8 +20,8 @@ async function main() {
   console.log(`Found ${users.length} users missing username.`);
 
   for (const user of users) {
-    let baseName = user.name || user.email.split('@')[0];
-    let username = normalizeUsername(baseName);
+    const baseName = user.name || user.email.split('@')[0];
+    const username = normalizeUsername(baseName);
     
     // Ensure uniqueness
     let isUnique = false;
