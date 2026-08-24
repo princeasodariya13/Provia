@@ -5,73 +5,95 @@ import { jwtVerify } from "jose";
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1. Define Public vs Private Routes
-  const isPublicRoute = 
-    pathname === "/" || 
-    pathname.startsWith("/login") || 
-    pathname.startsWith("/register") || 
-    pathname.startsWith("/forgot-password") || 
-    pathname.startsWith("/reset-password") ||
-    pathname.startsWith("/api/v1/auth/login") ||
-    pathname.startsWith("/api/v1/auth/register") ||
-    pathname.startsWith("/api/v1/auth/google/callback") ||
-    pathname.startsWith("/api/v1/auth/linkedin/callback");
-
-  // Allow static assets and Next.js internals
+  // 1. Always allow static assets and Next.js internals first
   if (
-    pathname.startsWith("/_next") || 
-    pathname.startsWith("/favicon.ico") || 
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/favicon.ico") ||
     pathname.startsWith("/icon.png") ||
-    pathname.startsWith("/images")
+    pathname.startsWith("/images") ||
+    pathname.startsWith("/api/v1/auth/") // Let auth routes pass through to their own handlers
   ) {
     return NextResponse.next();
   }
 
-  // 2. Check Session Cookie
-  const token = request.cookies.get("provia_session")?.value;
-  let sessionValid = false;
-  let userRole = "USER";
+  // 2. Always allow public marketing & auth pages (unauthenticated)
+  const publicPages = ["/", "/login", "/register", "/forgot-password", "/reset-password", "/about", "/blog", "/contact", "/how-it-works", "/ai", "/analytics", "/verify-email", "/integrations/callback"];
+  const isPublicPage = publicPages.some(p => pathname === p || pathname.startsWith(p + "?"));
 
-  if (token) {
-    try {
-      const secret = new TextEncoder().encode(process.env.SESSION_SECRET);
-      const { payload } = await jwtVerify(token, secret);
-      if (payload.expiresAt && typeof payload.expiresAt === 'number' && payload.expiresAt * 1000 > Date.now()) {
-        sessionValid = true;
-        userRole = (payload.role as string) || "USER";
+  // 3. Public portfolio URL patterns - always accessible
+  const isPublicPortfolio = /^\/[a-zA-Z0-9_-]+\/[a-f0-9]{32}/.test(pathname) || pathname.startsWith("/p/");
+
+  if (isPublicPage || isPublicPortfolio) {
+    // If logged-in user tries to visit login/register, redirect to dashboard
+    if (pathname === "/login" || pathname === "/register") {
+      const token = request.cookies.get("provia_session")?.value;
+      if (token) {
+        try {
+          const secret = new TextEncoder().encode(process.env.SESSION_SECRET || "");
+          const { payload } = await jwtVerify(token, secret, { algorithms: ["HS256"] });
+          const expiresAt = payload.expiresAt as number | undefined;
+          if (expiresAt && expiresAt > Math.floor(Date.now() / 1000)) {
+            return NextResponse.redirect(new URL("/dashboard", request.url));
+          }
+        } catch {
+          // invalid token, let through
+        }
       }
-    } catch (err) {
-      // Invalid token
-      sessionValid = false;
     }
+    return NextResponse.next();
   }
 
-  // 3. Handle Admin Routes (/operations)
-  if (pathname.startsWith("/operations")) {
-    if (!sessionValid) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-    if (userRole !== "ADMIN") {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-  }
+  // 4. Protect private routes
+  const privatePrefixes = ["/dashboard", "/profile", "/portfolio", "/settings", "/operations"];
+  const isPrivateRoute = privatePrefixes.some(p => pathname === p || pathname.startsWith(p + "/"));
+  // Also protect private API routes
+  const isPrivateApi = pathname.startsWith("/api/v1/") && !pathname.startsWith("/api/v1/auth/");
 
-  // 4. Protect Private Frontend Routes
-  const privateFrontendRoutes = ["/dashboard", "/profile", "/portfolio", "/analytics", "/integrations", "/settings"];
-  const isPrivateFrontendRoute = privateFrontendRoutes.some(route => pathname === route || pathname.startsWith(`${route}/`));
+  if (isPrivateRoute || isPrivateApi) {
+    const token = request.cookies.get("provia_session")?.value;
 
-  if (isPrivateFrontendRoute) {
-    if (!sessionValid) {
-      // Redirect to login with redirect URL
+    if (!token) {
+      if (isPrivateApi) {
+        return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+      }
       const redirectUrl = new URL("/login", request.url);
       redirectUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(redirectUrl);
     }
-  }
 
-  // 5. Prevent logged-in users from seeing login/register pages
-  if ((pathname === "/login" || pathname === "/register") && sessionValid) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    try {
+      const secret = new TextEncoder().encode(process.env.SESSION_SECRET || "");
+      const { payload } = await jwtVerify(token, secret, { algorithms: ["HS256"] });
+      const expiresAt = payload.expiresAt as number | undefined;
+
+      if (!expiresAt || expiresAt <= Math.floor(Date.now() / 1000)) {
+        // Expired
+        if (isPrivateApi) {
+          return NextResponse.json({ success: false, error: "Session expired" }, { status: 401 });
+        }
+        const redirectUrl = new URL("/login", request.url);
+        redirectUrl.searchParams.set("redirect", pathname);
+        return NextResponse.redirect(redirectUrl);
+      }
+
+      // Admin-only routes
+      if (pathname.startsWith("/operations")) {
+        const role = payload.role as string | undefined;
+        if (role !== "ADMIN") {
+          return NextResponse.redirect(new URL("/dashboard", request.url));
+        }
+      }
+
+      return NextResponse.next();
+    } catch {
+      // Invalid/tampered token
+      if (isPrivateApi) {
+        return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+      }
+      const redirectUrl = new URL("/login", request.url);
+      redirectUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(redirectUrl);
+    }
   }
 
   return NextResponse.next();
@@ -79,12 +101,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };

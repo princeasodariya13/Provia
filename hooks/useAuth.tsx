@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { apiClient } from "@/lib/api-client";
 import type { User } from "@/types";
 
@@ -10,6 +11,7 @@ interface AuthContextType {
   login: (data: unknown) => Promise<{ success: boolean; error?: string; details?: unknown }>;
   register: (data: unknown) => Promise<{ success: boolean; error?: string; details?: unknown }>;
   logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -17,15 +19,24 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
-  useEffect(() => {
-    async function loadUser() {
+  async function loadUser() {
+    try {
       const res = await apiClient.get<User>("/api/v1/auth/me");
       if (res.success && res.data) {
         setUser(res.data);
+      } else {
+        setUser(null);
       }
+    } catch {
+      setUser(null);
+    } finally {
       setIsLoading(false);
     }
+  }
+
+  useEffect(() => {
     loadUser();
   }, []);
 
@@ -50,10 +61,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     await apiClient.post("/api/v1/auth/logout", {});
     setUser(null);
+    router.push("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, register, logout, refreshUser: loadUser }}>
       {children}
     </AuthContext.Provider>
   );

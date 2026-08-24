@@ -42,13 +42,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [commandOpen, setCommandOpen] = React.useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
 
-  // Auth boundary
-  React.useEffect(() => {
-    if (!isLoading && !user) {
-      router.push("/login");
-    }
-  }, [isLoading, user, router]);
-
+  // Auth boundary — block ALL content until auth resolves
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex flex-col justify-center items-center p-6">
@@ -62,7 +56,20 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!user) return null;
+  // If auth resolved but no user, redirect and show nothing (proxy should have already blocked this)
+  if (!user) {
+    router.replace("/login");
+    return (
+      <div className="min-h-screen bg-background flex flex-col justify-center items-center p-6">
+        <div className="w-8 h-8 bg-brand flex items-center justify-center rounded-lg shadow-sm mb-4">
+          <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse" />
+        </div>
+        <p className="text-[10px] font-bold tracking-widest text-text-muted uppercase">
+          Redirecting...
+        </p>
+      </div>
+    );
+  }
 
   const navigation: NavGroup[] = [
     {

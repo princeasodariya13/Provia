@@ -1,8 +1,35 @@
 import React, { useState } from "react";
 import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
 import { TemplateRegistry } from "@/lib/portfolio/templates/registry";
-import { CheckCircle2, Search, ArrowRight, Eye, LayoutTemplate } from "lucide-react";
+import { CheckCircle2, Search, LayoutTemplate, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+// Error boundary to isolate individual template preview failures
+class TemplateThumbnailBoundary extends React.Component<
+  { children: React.ReactNode; templateName: string },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode; templateName: string }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="w-full h-full flex items-center justify-center bg-surface-muted">
+          <div className="text-center p-4">
+            <LayoutTemplate className="w-8 h-8 text-border-strong mx-auto mb-2" />
+            <p className="text-xs text-text-muted">Preview unavailable</p>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 interface Props {
   document: PortfolioDocumentDTO;
@@ -54,7 +81,9 @@ export function TemplateGallery({ document, currentTemplateId, onSelectTemplate,
         {/* Live rendering */}
         <div className="flex-1 overflow-y-auto bg-surface-muted flex justify-center shadow-inner">
           <div className="w-full max-w-[1920px] bg-background shadow-2xl origin-top transition-all min-h-full">
-            <TemplateComponent document={document} />
+            <TemplateThumbnailBoundary templateName={activeDef.metadata.name}>
+              <TemplateComponent document={document} />
+            </TemplateThumbnailBoundary>
           </div>
         </div>
       </div>
@@ -102,7 +131,9 @@ export function TemplateGallery({ document, currentTemplateId, onSelectTemplate,
                 <div className="relative h-64 bg-surface-muted overflow-hidden border-b border-border-light">
                   <div className="absolute inset-0 pointer-events-none select-none flex justify-center">
                     <div className="w-[1280px] h-[1024px] origin-top-left transform scale-[0.25] lg:scale-[0.27] shadow-xl">
-                      {Comp && <Comp document={document} />}
+                      <TemplateThumbnailBoundary templateName={t.name}>
+                        {Comp && <Comp document={document} />}
+                      </TemplateThumbnailBoundary>
                     </div>
                   </div>
                   {/* Overlay on hover */}
