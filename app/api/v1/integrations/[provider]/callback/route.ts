@@ -19,5 +19,12 @@ export async function GET(
   if (state) redirectUrl.searchParams.set("state", state);
   if (error) redirectUrl.searchParams.set("error", error);
 
-  return NextResponse.redirect(redirectUrl);
+  return NextResponse.redirect(redirectUrl, {
+    status: 307,
+    headers: {
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      "Pragma": "no-cache",
+      "Expires": "0",
+    },
+  });
 }
