@@ -1,6 +1,7 @@
 // @ts-nocheck
 "use client";
 import Image from "next/image";
+import { EmptyState } from "@/lib/portfolio/templates/shared/EmptyState";
 import { ExternalLink } from "lucide-react";
 import { IconBrandGithub as Github } from "@tabler/icons-react";
 import { useTemplateData } from "../context";

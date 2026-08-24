@@ -2,6 +2,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { EmptyState } from "@/lib/portfolio/templates/shared/EmptyState";
 import { Award } from "lucide-react";
 import { useTemplateData } from "../context";
 

@@ -1,6 +1,7 @@
 // @ts-nocheck
 "use client";
 import { useTemplateData } from "../context";
+import { EmptyState } from "@/lib/portfolio/templates/shared/EmptyState";
 import { Reveal, SectionHeading } from "./Reveal";
 
 export default function Education() {

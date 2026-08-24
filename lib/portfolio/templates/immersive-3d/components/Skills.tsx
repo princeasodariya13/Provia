@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { useTemplateData } from "../context";
+import { EmptyState } from "@/lib/portfolio/templates/shared/EmptyState";
 import { Reveal, SectionHeading } from "./Reveal";
 
 export default function Skills() {

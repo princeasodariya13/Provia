@@ -8,20 +8,20 @@ export function mapProviaToTemplate(doc: PortfolioDocumentDTO) {
       bio: doc.hero.shortIntroduction || "",
       avatar: "", // Avatar not in standard DTO hero section
     },
-    projects: doc.projects.map(p => ({
+    projects: (doc.projects || []).map(p => ({
       title: p.name,
       description: p.description,
       image: "", // Image not in standard DTO
       link: p.url,
       tags: p.technologies || []
     })),
-    experience: doc.experience.map(e => ({
+    experience: (doc.experience || []).map(e => ({
       role: e.title,
       company: e.company,
       duration: `${e.startDate} - ${e.endDate || 'Present'}`,
       description: e.description
     })),
-    skills: doc.skills.flatMap(s => s.skills.map(name => ({
+    skills: (doc.skills || []).flatMap(s => s.skills.map(name => ({
       name: name,
       level: "Advanced"
     })))

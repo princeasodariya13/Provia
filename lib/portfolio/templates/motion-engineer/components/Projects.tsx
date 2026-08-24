@@ -2,6 +2,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { EmptyState } from "@/lib/portfolio/templates/shared/EmptyState";
 import { useTemplateData } from "../context";
 
 export default function Projects() {

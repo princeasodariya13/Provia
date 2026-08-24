@@ -2,6 +2,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { EmptyState } from "@/lib/portfolio/templates/shared/EmptyState";
 import { Star, GitFork, CircleDot } from "lucide-react";
 import { useTemplateData } from "../context";
 
