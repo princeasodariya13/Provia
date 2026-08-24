@@ -34,7 +34,21 @@ export type AnalyticsEventName =
   | "resume.parse_failed"
   | "resume.applied"
   | "asset.avatar_updated"
-  | "system.error";
+  | "system.error"
+  | "job.queued"
+  | "job.started"
+  | "job.completed"
+  | "job.failed"
+  | "job.retry"
+  | "job.dead_lettered"
+  | "job.cancelled"
+  | "job.stuck_detected"
+  | "domain.created"
+  | "domain.verification_started"
+  | "domain.verified"
+  | "domain.verification_failed"
+  | "domain.activated"
+  | "domain.disconnected";
 
 export interface AnalyticsEventPayload {
   eventName: AnalyticsEventName;

@@ -33,7 +33,8 @@ export const GET = withAPIHandler(async () => {
   
   const record = await PortfolioContentService.getLatestPortfolio(user.id);
   const publication = await prisma.portfolioPublication.findUnique({
-    where: { userId: user.id }
+    where: { userId: user.id },
+    include: { user: { select: { username: true } } }
   });
 
   return NextResponse.json({
@@ -47,7 +48,10 @@ export const GET = withAPIHandler(async () => {
       publication: publication ? {
         isActive: publication.isActive,
         publicSlug: publication.publicSlug,
-        publicUrl: `/p/${publication.publicSlug}`
+        publicCode: publication.publicCode,
+        publicUrl: publication.publicCode && publication.user?.username 
+          ? `/${publication.user.username}/${publication.publicCode}`
+          : `/p/${publication.publicSlug}`
       } : null
     } : null
   });

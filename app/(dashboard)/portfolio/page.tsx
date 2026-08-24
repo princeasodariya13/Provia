@@ -33,6 +33,7 @@ export default function PortfolioPage() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [publishing, setPublishing] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -106,9 +107,33 @@ export default function PortfolioPage() {
     setPublishing(false);
   };
 
+  const handleRegenerateLink = async () => {
+    const confirmRegen = window.confirm("Regenerating your public link will invalidate the previous URL. Are you sure?");
+    if (!confirmRegen) return;
+
+    setError(null);
+    setRegenerating(true);
+
+    try {
+      const res = await apiClient.post<any>("/api/v1/portfolio/regenerate-link", {});
+      if (res.success) {
+        const reloadRes = await apiClient.get<any>("/api/v1/portfolio");
+        if (reloadRes.success) setData(reloadRes.data);
+      } else {
+        setError(res.error || "Failed to regenerate link.");
+      }
+    } catch (err) {
+      setError("An error occurred regenerating the link.");
+    } finally {
+      setRegenerating(false);
+    }
+  };
+
   const copyPublicUrl = () => {
-    if (data?.publication?.publicUrl) {
-      navigator.clipboard.writeText(data.publication.publicUrl);
+    const publicUrl = data?.publication?.publicUrl;
+    if (publicUrl) {
+      const fullUrl = typeof window !== "undefined" ? `${window.location.origin}${publicUrl}` : publicUrl;
+      navigator.clipboard.writeText(fullUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -133,6 +158,7 @@ export default function PortfolioPage() {
 
   const isPublished = data?.publication?.isActive;
   const publicUrl = data?.publication?.publicUrl;
+  const fullPublicUrl = publicUrl ? (typeof window !== "undefined" ? `${window.location.origin}${publicUrl}` : publicUrl) : null;
 
   return (
     <div className="space-y-12 max-w-7xl mx-auto">
@@ -165,21 +191,26 @@ export default function PortfolioPage() {
               )}
             </div>
             
-            {isPublished && publicUrl ? (
+            {isPublished && fullPublicUrl ? (
               <div className="flex flex-col gap-2">
                 <p className="text-sm font-semibold text-text-secondary">Your portfolio is live at:</p>
                 <div className="flex items-center gap-2 max-w-md">
-                  <div className="flex-1 bg-surface-muted border border-border-light px-3 py-2 rounded-lg text-xs sm:text-sm text-text-primary truncate select-all font-mono min-w-0">
-                    {publicUrl}
+                  <div className="flex-1 bg-surface-muted border border-border-light px-3 py-2 rounded-lg text-xs sm:text-sm text-text-primary truncate select-all font-mono min-w-0" title={fullPublicUrl}>
+                    {fullPublicUrl}
                   </div>
                   <Button variant="outline" size="icon" onClick={copyPublicUrl} className="shrink-0 rounded-lg hover:border-brand transition-colors" title="Copy link">
                     {copied ? <Check className="w-4 h-4 text-success" /> : <Copy className="w-4 h-4 text-text-secondary" />}
                   </Button>
                   <Button variant="outline" size="icon" asChild className="shrink-0 rounded-lg hover:border-brand transition-colors" title="Open in new tab">
-                    <a href={publicUrl} target="_blank" rel="noopener noreferrer">
+                    <a href={fullPublicUrl} target="_blank" rel="noopener noreferrer">
                       <ExternalLink className="w-4 h-4 text-text-secondary" />
                     </a>
                   </Button>
+                  {data?.publication?.publicCode && (
+                    <Button variant="outline" size="sm" onClick={handleRegenerateLink} disabled={regenerating} className="shrink-0 rounded-lg transition-colors ml-2 font-semibold">
+                      {regenerating ? "..." : "Regenerate Link"}
+                    </Button>
+                  )}
                 </div>
               </div>
             ) : (

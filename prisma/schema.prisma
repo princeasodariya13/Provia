@@ -18,6 +18,7 @@ model User {
   image         String?
   role          Role      @default(USER)
   sessionVersion Int      @default(1)
+  username      String?   @unique
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -295,6 +296,7 @@ model PortfolioPublication {
   userId              String   @unique
   portfolioDocumentId String
   publicSlug          String   @unique
+  publicCode          String?  @unique
   isActive            Boolean  @default(true)
   
   publishedAt         DateTime @default(now())
@@ -347,6 +349,9 @@ model Job {
   startedAt    DateTime?
   completedAt  DateTime?
   failedAt     DateTime?
+  deadLetteredAt DateTime?
+  workerId     String?
+  durationMs   Int?
   
   idempotencyKey String?   @unique
 
@@ -358,4 +363,22 @@ model Job {
   @@index([status, availableAt])
   @@index([userId, createdAt])
   @@index([type, status])
+  @@index([deadLetteredAt])
+  @@index([workerId])
+}
+
+model WorkerStatus {
+  id              String   @id @default(cuid())
+  workerId        String   @unique
+  lastHeartbeatAt DateTime @default(now())
+  startedAt       DateTime @default(now())
+  currentJobId    String?
+  jobsProcessed   Int      @default(0)
+  jobsFailed      Int      @default(0)
+  status          String   @default("ONLINE")
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([lastHeartbeatAt])
 }

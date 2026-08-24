@@ -1,15 +1,17 @@
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { AnalyticsService } from "../analytics/service";
 import { getJobHandler } from "./registry";
 import { JobService } from "./service";
 import { JobType } from "./types";
+import crypto from "crypto";
 
 export const JobProcessor = {
   /**
    * Tries to claim exactly one job that is QUEUED and available.
    * Uses an atomic update with a condition.
    */
-  async claimNextJob() {
+  async claimNextJob(workerId?: string) {
     const now = new Date();
 
     try {
@@ -21,6 +23,7 @@ export const JobProcessor = {
         SET status = 'PROCESSING',
             "lockedAt" = $1,
             "startedAt" = $1,
+            "workerId" = $2,
             attempts = attempts + 1,
             "updatedAt" = $1
         WHERE id = (
@@ -33,15 +36,13 @@ export const JobProcessor = {
           FOR UPDATE SKIP LOCKED
         )
         RETURNING *;
-      `, now);
+      `, now, workerId || null);
 
       if (!claimedJobs || claimedJobs.length === 0) {
         return null;
       }
 
       const claimed = claimedJobs[0];
-      // Note: $queryRaw returns Dates correctly, but Prisma maps it to generic object.
-      // We pass it to mapToEntity which expects the general structure.
       return JobService.mapToEntity(claimed);
     } catch (error) {
       logger.error({ err: error }, "Failed to claim next job with SKIP LOCKED");
@@ -65,6 +66,14 @@ export const JobProcessor = {
     for (const job of staleJobs) {
       logger.warn({ jobId: job.id, type: job.type }, "Recovering stale job");
       
+      await AnalyticsService.record({
+        eventName: "job.stuck_detected",
+        userId: job.userId,
+        entityId: job.id,
+        entityType: "job",
+        metadata: { jobType: job.type, attempts: job.attempts }
+      });
+
       if (job.attempts < job.maxAttempts) {
         // Requeue
         await prisma.job.updateMany({
@@ -72,29 +81,47 @@ export const JobProcessor = {
           data: {
             status: "QUEUED",
             lockedAt: null,
+            workerId: null,
             availableAt: new Date(Date.now() + 5000) // Small delay
           }
         });
       } else {
-        // Mark failed
+        // Mark failed (DLQ)
         await prisma.job.updateMany({
           where: { id: job.id, status: "PROCESSING" },
           data: {
             status: "FAILED",
             failedAt: new Date(),
+            deadLetteredAt: new Date(),
             errorCode: "TIMEOUT",
             errorMessage: "Job stuck in processing and exceeded max attempts"
           }
+        });
+        
+        await AnalyticsService.record({
+          eventName: "job.dead_lettered",
+          userId: job.userId,
+          entityId: job.id,
+          entityType: "job",
+          metadata: { jobType: job.type, errorCode: "TIMEOUT" }
         });
       }
     }
   },
 
-  async processNextJob(): Promise<boolean> {
-    const job = await this.claimNextJob();
+  async processNextJob(workerId?: string): Promise<boolean> {
+    const job = await this.claimNextJob(workerId);
     if (!job) return false;
 
-    logger.info({ jobId: job.id, type: job.type, attempt: job.attempts }, "job.started");
+    logger.info({ jobId: job.id, type: job.type, attempt: job.attempts, workerId }, "job.started");
+    await AnalyticsService.record({
+      eventName: "job.started",
+      userId: job.userId,
+      entityId: job.id,
+      entityType: "job",
+      metadata: { jobType: job.type, attempt: job.attempts, workerId }
+    });
+
     const startMs = performance.now();
 
     try {
@@ -103,7 +130,15 @@ export const JobProcessor = {
         throw new Error(`Handler not found for type ${job.type}`);
       }
 
+      if (workerId) {
+        await prisma.workerStatus.updateMany({
+          where: { workerId },
+          data: { currentJobId: job.id }
+        });
+      }
+
       const result = await handler.handler(job);
+      const durationMs = Math.round(performance.now() - startMs);
 
       // Complete
       await prisma.job.updateMany({
@@ -112,18 +147,30 @@ export const JobProcessor = {
           status: "COMPLETED",
           completedAt: new Date(),
           result: result ? JSON.stringify(result) : null,
+          durationMs
         }
       });
 
-      logger.info({ 
-        jobId: job.id, 
-        type: job.type, 
-        durationMs: Math.round(performance.now() - startMs) 
-      }, "job.completed");
+      if (workerId) {
+        await prisma.workerStatus.updateMany({
+          where: { workerId },
+          data: { jobsProcessed: { increment: 1 }, currentJobId: null }
+        });
+      }
+
+      logger.info({ jobId: job.id, type: job.type, durationMs }, "job.completed");
+      await AnalyticsService.record({
+        eventName: "job.completed",
+        userId: job.userId,
+        entityId: job.id,
+        entityType: "job",
+        metadata: { jobType: job.type, durationMs, workerId }
+      });
 
     } catch (error) {
       // Fail
       const errMessage = error instanceof Error ? error.message : "Unknown error";
+      const durationMs = Math.round(performance.now() - startMs);
       
       if (job.attempts < job.maxAttempts) {
         // Backoff: 5s, 30s, etc.
@@ -136,16 +183,27 @@ export const JobProcessor = {
             errorCode: "RETRYABLE_ERROR",
             errorMessage: errMessage,
             lockedAt: null,
+            workerId: null,
+            durationMs,
             availableAt: new Date(Date.now() + backoffSeconds * 1000)
           }
         });
         
-        logger.warn({ 
-          jobId: job.id, 
-          type: job.type, 
-          err: errMessage,
-          durationMs: Math.round(performance.now() - startMs) 
-        }, "job.retry_scheduled");
+        if (workerId) {
+          await prisma.workerStatus.updateMany({
+            where: { workerId },
+            data: { currentJobId: null }
+          });
+        }
+        
+        logger.warn({ jobId: job.id, type: job.type, err: errMessage, durationMs }, "job.retry_scheduled");
+        await AnalyticsService.record({
+          eventName: "job.retry",
+          userId: job.userId,
+          entityId: job.id,
+          entityType: "job",
+          metadata: { jobType: job.type, durationMs, errorCode: "RETRYABLE_ERROR" }
+        });
 
       } else {
         await prisma.job.updateMany({
@@ -153,17 +211,35 @@ export const JobProcessor = {
           data: {
             status: "FAILED",
             failedAt: new Date(),
+            deadLetteredAt: new Date(),
             errorCode: "PERMANENT_ERROR",
             errorMessage: errMessage,
+            durationMs
           }
         });
 
-        logger.error({ 
-          jobId: job.id, 
-          type: job.type, 
-          err: errMessage,
-          durationMs: Math.round(performance.now() - startMs) 
-        }, "job.failed");
+        if (workerId) {
+          await prisma.workerStatus.updateMany({
+            where: { workerId },
+            data: { jobsFailed: { increment: 1 }, currentJobId: null }
+          });
+        }
+
+        logger.error({ jobId: job.id, type: job.type, err: errMessage, durationMs }, "job.failed");
+        await AnalyticsService.record({
+          eventName: "job.failed",
+          userId: job.userId,
+          entityId: job.id,
+          entityType: "job",
+          metadata: { jobType: job.type, durationMs, errorCode: "PERMANENT_ERROR" }
+        });
+        await AnalyticsService.record({
+          eventName: "job.dead_lettered",
+          userId: job.userId,
+          entityId: job.id,
+          entityType: "job",
+          metadata: { jobType: job.type, durationMs, errorCode: "PERMANENT_ERROR" }
+        });
       }
     }
 
@@ -171,21 +247,43 @@ export const JobProcessor = {
   },
 
   async poll(intervalMs: number = 3000) {
-    logger.info("Job processor started polling");
+    const workerId = crypto.randomUUID();
+    
+    await prisma.workerStatus.upsert({
+      where: { workerId },
+      update: { status: "ONLINE", lastHeartbeatAt: new Date() },
+      create: { workerId, status: "ONLINE" }
+    });
+
+    logger.info({ workerId }, "Job processor started polling");
     let isRunning = true;
 
+    let lastHeartbeat = Date.now();
+
     // Graceful shutdown
-    const stop = () => {
+    const stop = async () => {
       logger.info("Job processor stopping...");
       isRunning = false;
+      await prisma.workerStatus.updateMany({
+        where: { workerId },
+        data: { status: "OFFLINE", lastHeartbeatAt: new Date() }
+      });
     };
     process.on("SIGINT", stop);
     process.on("SIGTERM", stop);
 
     while (isRunning) {
       try {
+        if (Date.now() - lastHeartbeat > 10000) {
+          await prisma.workerStatus.updateMany({
+            where: { workerId },
+            data: { lastHeartbeatAt: new Date(), status: "ONLINE" }
+          });
+          lastHeartbeat = Date.now();
+        }
+
         await this.recoverStaleJobs();
-        const processed = await this.processNextJob();
+        const processed = await this.processNextJob(workerId);
         
         if (!processed && isRunning) {
           await new Promise(resolve => setTimeout(resolve, intervalMs));
