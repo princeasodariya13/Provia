@@ -51,7 +51,7 @@ export const POST = withAPIHandler(async (req) => {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  const uploadResult = await CloudinaryService.uploadBuffer(buffer, publicId, "raw");
+  const uploadResult = await CloudinaryService.uploadBuffer(buffer, publicId, "auto");
 
   // Soft deactivate existing active resumes for the user
   await prisma.resume.updateMany({

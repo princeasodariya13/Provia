@@ -4,7 +4,27 @@ import { useTemplateData } from "../context";
 export default function Footer() {
   const templateData = useTemplateData();
   // @ts-ignore
-  const { profile, projects, experience, skills, stats, stack, faq, about, milestones, capabilities, globals, steps, header, social, education, services } = templateData || {};
+  const { 
+  contact = {},
+  profile = {},
+  marqueeItems = [],
+  certifications = [],
+  header = {},
+  social = {},
+  services = [],
+  faq = [],
+  milestones = [],
+  globals = {},
+  steps = [],
+  about = {},
+  experience = [],
+  projects = [],
+  skills = [],
+  stats = [],
+  stack = [],
+  capabilities = [],
+  education = []
+ } = templateData || {};
 
   return (
     <footer className="border-t border-border py-10">

@@ -15,7 +15,7 @@ export const CloudinaryService = {
     return !!(env.CLOUDINARY_CLOUD_NAME && env.CLOUDINARY_API_KEY && env.CLOUDINARY_API_SECRET);
   },
 
-  async uploadBuffer(buffer: Buffer, publicId: string, resourceType: "raw" | "image" = "image"): Promise<{ secureUrl: string; publicId: string; bytes: number }> {
+  async uploadBuffer(buffer: Buffer, publicId: string, resourceType: "raw" | "image" | "auto" = "auto"): Promise<{ secureUrl: string; publicId: string; bytes: number }> {
     if (!this.isConfigured()) {
       throw new APIError("Cloudinary is not configured", 501);
     }
@@ -47,7 +47,7 @@ export const CloudinaryService = {
     });
   },
 
-  async destroyAsset(publicId: string, resourceType: "raw" | "image" = "image"): Promise<void> {
+  async destroyAsset(publicId: string, resourceType: "raw" | "image" | "auto" = "image"): Promise<void> {
     if (!this.isConfigured()) return;
     
     try {

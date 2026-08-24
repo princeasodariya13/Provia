@@ -8,7 +8,27 @@ import AnimatedCounter from "./AnimatedCounter";
 export default function GithubActivity() {
   const templateData = useTemplateData();
   // @ts-ignore
-  const { profile, projects, experience, skills, stats, stack, faq, about, milestones, capabilities, globals, steps, header, social, education, services } = templateData || {};
+  const { 
+  contact = {},
+  profile = {},
+  marqueeItems = [],
+  certifications = [],
+  header = {},
+  social = {},
+  services = [],
+  faq = [],
+  milestones = [],
+  globals = {},
+  steps = [],
+  about = {},
+  experience = [],
+  projects = [],
+  skills = [],
+  stats = [],
+  stack = [],
+  capabilities = [],
+  education = []
+ } = templateData || {};
 
   return (
     <section className="section-pad py-24 border-b border-border">

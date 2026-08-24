@@ -8,7 +8,27 @@ import { useTemplateData } from "../context";
 export default function Nav() {
   const templateData = useTemplateData();
   // @ts-ignore
-  const { profile, navLinks = [], socials = [] } = templateData || {};
+  const { 
+  contact = {},
+  profile = {},
+  marqueeItems = [],
+  certifications = [],
+  header = {},
+  social = {},
+  services = [],
+  faq = [],
+  milestones = [],
+  globals = {},
+  steps = [],
+  about = {},
+  experience = [],
+  projects = [],
+  skills = [],
+  stats = [],
+  stack = [],
+  capabilities = [],
+  education = []
+ } = templateData || {};
 
   const [scrolled, setScrolled] = useState(false);
 

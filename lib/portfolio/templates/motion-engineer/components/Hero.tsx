@@ -20,7 +20,27 @@ const word = {
 
 export default function Hero() {
   const templateData = useTemplateData();
-  const { profile, projects, experience, skills, stats, stack, faq, about, milestones, capabilities, globals, steps, header, social, education, services } = templateData || {};
+  const { 
+  contact = {},
+  profile = {},
+  marqueeItems = [],
+  certifications = [],
+  header = {},
+  social = {},
+  services = [],
+  faq = [],
+  milestones = [],
+  globals = {},
+  steps = [],
+  about = {},
+  experience = [],
+  projects = [],
+  skills = [],
+  stats = [],
+  stack = [],
+  capabilities = [],
+  education = []
+ } = templateData || {};
 
   const marqueeSkills = Array.isArray(skills) ? skills.flatMap((s: any) => s.skills || []) : [];
   if (marqueeSkills.length === 0) marqueeSkills.push("React", "TypeScript", "Next.js", "Node.js", "Tailwind");

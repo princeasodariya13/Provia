@@ -7,7 +7,27 @@ import { Reveal, SectionHeading } from "./Reveal";
 // If there are no projects, this section is hidden gracefully.
 export default function Blog() {
   const templateData = useTemplateData();
-  const { projects = [] } = templateData || {};
+  const { 
+  contact = {},
+  profile = {},
+  marqueeItems = [],
+  certifications = [],
+  header = {},
+  social = {},
+  services = [],
+  faq = [],
+  milestones = [],
+  globals = {},
+  steps = [],
+  about = {},
+  experience = [],
+  projects = [],
+  skills = [],
+  stats = [],
+  stack = [],
+  capabilities = [],
+  education = []
+ } = templateData || {};
 
   // Only render this section if there's something to show
   if (!projects || projects.length === 0) {

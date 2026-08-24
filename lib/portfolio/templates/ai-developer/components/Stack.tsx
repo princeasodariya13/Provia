@@ -6,7 +6,27 @@ import { useTemplateData } from "../context";
 
 export default function Stack() {
   const templateData = useTemplateData();
-  const { profile, projects, experience, skills, stats, stack, faq, about, milestones, capabilities, globals, steps, header, social, education, services } = templateData || {};
+  const { 
+  contact = {},
+  profile = {},
+  marqueeItems = [],
+  certifications = [],
+  header = {},
+  social = {},
+  services = [],
+  faq = [],
+  milestones = [],
+  globals = {},
+  steps = [],
+  about = {},
+  experience = [],
+  projects = [],
+  skills = [],
+  stats = [],
+  stack = [],
+  capabilities = [],
+  education = []
+ } = templateData || {};
 
   const skillGroups = Array.isArray(skills) ? skills.map((s: any, i: number) => ({
     index: `0${i + 1}`,

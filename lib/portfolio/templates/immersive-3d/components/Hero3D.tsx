@@ -2,6 +2,7 @@
 "use client";
 
 import { Suspense, useRef } from "react";
+import { useTemplateData } from "../context";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, MeshDistortMaterial, OrbitControls, Stars } from "@react-three/drei";
 import * as THREE from "three";
@@ -37,7 +38,27 @@ function FloatingShape() {
 export default function Hero3D() {
   const templateData = useTemplateData();
   // @ts-ignore
-  const { profile, projects, experience, skills, stats, stack, faq, about, milestones, capabilities, globals, steps, header, social, education, services } = templateData || {};
+  const { 
+  contact = {},
+  profile = {},
+  marqueeItems = [],
+  certifications = [],
+  header = {},
+  social = {},
+  services = [],
+  faq = [],
+  milestones = [],
+  globals = {},
+  steps = [],
+  about = {},
+  experience = [],
+  projects = [],
+  skills = [],
+  stats = [],
+  stack = [],
+  capabilities = [],
+  education = []
+ } = templateData || {};
 
   return (
     <div className="absolute inset-0">
