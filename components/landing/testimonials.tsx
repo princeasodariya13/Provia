@@ -29,31 +29,31 @@ const testimonials = [
   {
     quote:
       "Provia transformed my scattered GitHub commits and LinkedIn history into a cohesive, stunning portfolio in literally one click. The editorial templates are genuinely unmatched.",
-    name: "Alex Rivera",
+    name: "Rahul Sharma",
     title: "Senior Frontend Engineer",
   },
   {
     quote:
       "The AI resume extraction is flawless. I uploaded my outdated PDF, and Provia perfectly mapped my career history and generated a gorgeous, typography-first web presence.",
-    name: "Sarah Chen",
+    name: "Priya Patel",
     title: "Product Designer",
   },
   {
     quote:
       "I used to spend days tweaking my personal site. Now, my repositories sync automatically, and my portfolio is always up-to-date with my latest projects. Pure magic.",
-    name: "David Kim",
+    name: "Vikram Singh",
     title: "Full Stack Developer",
   },
   {
     quote:
       "Stand out to recruiters instantly? Absolutely. The Global Reach feature and custom Provia slug gave me the professional edge I needed to land my dream role.",
-    name: "Emily Watson",
+    name: "Anjali Desai",
     title: "Data Scientist",
   },
   {
     quote:
       "Finally, a platform that understands that a professional portfolio needs to look like a high-end editorial magazine, not just a generic template. Incredible aesthetic.",
-    name: "Marcus Johnson",
+    name: "Rohan Gupta",
     title: "UI/UX Architect",
   },
 ];

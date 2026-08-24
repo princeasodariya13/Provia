@@ -7,7 +7,7 @@ export function Footer() {
         <div className="flex flex-col gap-4 md:gap-6 max-w-sm">
           <Link href="/" className="flex items-center space-x-3">
             <div className="w-6 h-6 bg-brand flex items-center justify-center">
-               <div className="w-2 h-2 bg-white rounded-full" />
+              <div className="w-2 h-2 bg-white rounded-full" />
             </div>
             <span className="font-bold text-xl tracking-tight text-text-primary uppercase">Provia</span>
           </Link>
@@ -24,9 +24,9 @@ export function Footer() {
           </div>
           <div className="flex flex-col gap-3 md:gap-4">
             <h4 className="font-bold tracking-widest text-xs uppercase text-text-primary mb-1 md:mb-2 border-b border-border-light pb-2">Company</h4>
-            <Link href="#" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">About</Link>
-            <Link href="#" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Blog</Link>
-            <Link href="#" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Contact</Link>
+            <Link href="/about" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">About</Link>
+            <Link href="/blog" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Blog</Link>
+            <Link href="/contact" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Contact</Link>
           </div>
           <div className="flex flex-col gap-3 md:gap-4">
             <h4 className="font-bold tracking-widest text-xs uppercase text-text-primary mb-1 md:mb-2 border-b border-border-light pb-2">Legal</h4>
