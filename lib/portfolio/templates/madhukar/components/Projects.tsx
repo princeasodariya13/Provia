@@ -58,11 +58,11 @@ export default function Projects() {
                   <div className="eyebrow mb-2">{p.period}</div>
                   <h3 className="font-display font-bold text-2xl mb-1">{p.title}</h3>
                   <div className="text-accent text-sm mb-4">{p.subtitle}</div>
-                  <p className="text-muted-light dark:text-muted-dark text-sm leading-relaxed mb-5">
+                  <p className="text-muted text-sm leading-relaxed mb-5">
                     {p.description}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {p.tags.map((t) => (
+                    {(p.tags || []).map((t) => (
                       <span
                         key={t}
                         className="font-mono text-xs text-accent bg-accent/10 rounded-full px-2.5 py-1"
@@ -88,7 +88,7 @@ export default function Projects() {
                     </a>
                     <a
                       href={p.codeUrl}
-                      className="inline-flex items-center gap-1.5 text-muted-light dark:text-muted-dark hover:text-accent transition-colors"
+                      className="inline-flex items-center gap-1.5 text-muted hover:text-accent transition-colors"
                     >
                       Code <Github size={14} />
                     </a>

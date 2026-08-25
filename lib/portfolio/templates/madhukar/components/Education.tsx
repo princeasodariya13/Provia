@@ -51,7 +51,7 @@ export default function Education() {
               <div className="glass rounded-2xl p-6">
                 <div className="eyebrow mb-2">{e.years}</div>
                 <h3 className="font-display font-semibold text-lg mb-1">{e.degree}</h3>
-                <div className="text-sm text-muted-light dark:text-muted-dark mb-2">{e.school}</div>
+                <div className="text-sm text-muted mb-2">{e.school}</div>
                 <span className="text-xs text-accent">{e.note}</span>
               </div>
             </Reveal>

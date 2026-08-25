@@ -47,7 +47,7 @@ export default function Contact() {
         <div className="grid md:grid-cols-5 gap-12">
           <div className="md:col-span-2 space-y-3">
             <Reveal>
-              <p className="text-muted-light dark:text-muted-dark leading-relaxed mb-6">
+              <p className="text-muted leading-relaxed mb-6">
                 I&apos;m always open to discussing new projects and opportunities. Drop a message!
               </p>
             </Reveal>

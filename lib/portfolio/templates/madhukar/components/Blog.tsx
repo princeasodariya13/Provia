@@ -50,11 +50,11 @@ export default function Blog() {
               >
                 <div className="flex items-center justify-between mb-4">
                   <span className="eyebrow">{project.role || "Project"}</span>
-                  <span className="text-xs text-muted-light dark:text-muted-dark">{project.year || ""}</span>
+                  <span className="text-xs text-muted">{project.year || ""}</span>
                 </div>
                 <h3 className="font-display font-semibold text-lg mb-2 leading-snug">{project.title}</h3>
                 {project.description && (
-                  <p className="text-muted-light dark:text-muted-dark text-sm leading-relaxed flex-1 line-clamp-3">
+                  <p className="text-muted text-sm leading-relaxed flex-1 line-clamp-3">
                     {project.description}
                   </p>
                 )}

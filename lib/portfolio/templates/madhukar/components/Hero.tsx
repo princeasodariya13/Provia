@@ -80,7 +80,7 @@ export default function Hero() {
 
           <motion.p
             variants={item}
-            className="mt-6 max-w-lg text-muted-light dark:text-muted-dark text-lg leading-relaxed"
+            className="mt-6 max-w-lg text-muted text-lg leading-relaxed"
           >
             {profile.bio}
           </motion.p>

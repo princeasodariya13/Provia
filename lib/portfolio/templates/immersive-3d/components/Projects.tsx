@@ -69,7 +69,7 @@ export default function Projects() {
                   <p className="text-muted text-sm leading-relaxed mb-4 flex-1">{p.description}</p>
 
                   <div className="flex flex-wrap gap-2 mb-5">
-                    {p.tags.map((t) => (
+                    {(p.tags || []).map((t) => (
                       <span key={t} className="font-mono text-xs text-cyan bg-cyan/10 rounded-full px-2.5 py-1">
                         {t}
                       </span>

@@ -37,7 +37,7 @@ export default function Resume() {
         <Reveal className="glass rounded-3xl p-8 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6 max-w-3xl">
           <div>
             <h3 className="font-display font-semibold text-xl mb-1">{profile.name} — Resume</h3>
-            <p className="text-muted-light dark:text-muted-dark text-sm">
+            <p className="text-muted text-sm">
               A comprehensive overview of skills, education, and project experience.
             </p>
           </div>

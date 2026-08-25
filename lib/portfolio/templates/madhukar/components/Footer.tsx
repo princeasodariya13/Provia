@@ -30,7 +30,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-line-light dark:border-line-dark py-10">
       <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-sm text-muted-light dark:text-muted-dark text-center sm:text-left">
+        <p className="text-sm text-muted text-center sm:text-left">
           Building the future, one line at a time.
         </p>
         <div className="flex gap-5">
@@ -38,13 +38,13 @@ export default function Footer() {
             <a
               key={s.label}
               href={s.href || s.url}
-              className="text-sm text-muted-light dark:text-muted-dark hover:text-accent transition-colors"
+              className="text-sm text-muted hover:text-accent transition-colors"
             >
               {s.label}
             </a>
           ))}
         </div>
-        <div className="text-xs text-muted-light dark:text-muted-dark font-mono">
+        <div className="text-xs text-muted font-mono">
           © {new Date().getFullYear()} {profile.name}
         </div>
       </div>

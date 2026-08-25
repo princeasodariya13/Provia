@@ -39,7 +39,7 @@ export default function Services() {
               <div className="glass rounded-2xl p-7 h-full hover:border-accent transition-colors">
                 <div className="font-mono text-accent/50 text-4xl font-bold mb-4">{s.number}</div>
                 <h3 className="font-display font-semibold text-xl mb-2">{s.title}</h3>
-                <p className="text-muted-light dark:text-muted-dark text-sm leading-relaxed">
+                <p className="text-muted text-sm leading-relaxed">
                   {s.description}
                 </p>
               </div>

@@ -37,7 +37,8 @@ export function mapProviaToTemplate(doc: PortfolioDocumentDTO) {
       role: e.title,
       company: e.company,
       duration: `${e.startDate ? new Date(e.startDate).getFullYear() : ""} – ${e.isCurrent ? "Present" : (e.endDate ? new Date(e.endDate).getFullYear() : "")}`,
-      description: e.description || ""
+      description: e.description || "",
+      points: e.description ? e.description.split('\n').filter(Boolean) : []
     })),
     skills: (doc.skills || []).flatMap((s: any) => (s.skills || []).map((name: string) => ({
       name,

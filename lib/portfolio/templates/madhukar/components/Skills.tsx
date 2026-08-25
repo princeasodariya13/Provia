@@ -54,9 +54,9 @@ export default function Skills() {
             <Reveal key={g.title} delay={i * 0.06}>
               <div className="glass rounded-2xl p-6 h-full">
                 <h3 className="font-display font-semibold text-lg mb-1">{g.title}</h3>
-                <p className="text-xs text-muted-light dark:text-muted-dark mb-4">{g.note}</p>
+                <p className="text-xs text-muted mb-4">{g.note}</p>
                 <div className="flex flex-wrap gap-2">
-                  {g.items.map((item) => (
+                  {(g.items || []).map((item) => (
                     <span
                       key={item}
                       className="text-xs rounded-full border border-line-light dark:border-line-dark px-3 py-1.5"

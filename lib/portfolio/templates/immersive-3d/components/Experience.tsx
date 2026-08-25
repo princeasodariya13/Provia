@@ -53,7 +53,7 @@ export default function Experience() {
               </div>
               <div className="text-cyan text-sm mb-4">{e.org}</div>
               <ul className="space-y-2">
-                {e.points.map((pt, j) => (
+                {(e.points || []).map((pt, j) => (
                   <li key={j} className="flex gap-3 text-muted text-sm leading-relaxed">
                     <span className="mt-2 w-1 h-1 rounded-full bg-cyan shrink-0" />
                     {pt}

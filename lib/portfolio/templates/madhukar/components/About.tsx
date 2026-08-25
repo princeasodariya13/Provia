@@ -41,7 +41,7 @@ export default function About() {
             </blockquote>
             <div className="space-y-4">
               {(about.paragraphs || (about.summary ? [about.summary] : ["Passionate developer building elegant solutions."])).map((p: string, i: number) => (
-                <p key={i} className="text-muted-light dark:text-muted-dark leading-relaxed">
+                <p key={i} className="text-muted leading-relaxed">
                   {p}
                 </p>
               ))}

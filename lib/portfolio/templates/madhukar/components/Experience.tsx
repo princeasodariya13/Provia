@@ -28,10 +28,10 @@ export default function Experience() {
                 <div className="md:w-1/4 shrink-0">
                   <div className="eyebrow text-accent mb-2">{exp.year}</div>
                   <h3 className="font-display font-bold text-xl mb-1">{exp.company}</h3>
-                  <div className="text-muted-light dark:text-muted-dark text-sm">{exp.title}</div>
+                  <div className="text-muted text-sm">{exp.title}</div>
                 </div>
                 <div className="md:w-3/4">
-                  <p className="text-muted-light dark:text-muted-dark leading-relaxed">
+                  <p className="text-muted leading-relaxed">
                     {exp.description}
                   </p>
                 </div>

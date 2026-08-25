@@ -69,7 +69,7 @@ export default function Header() {
             <a
               key={item}
               href={`#${item.toLowerCase()}`}
-              className="text-sm text-muted-light dark:text-muted-dark hover:text-accent transition-colors"
+              className="text-sm text-muted hover:text-accent transition-colors"
             >
               {item}
             </a>
@@ -109,7 +109,7 @@ export default function Header() {
               key={item}
               href={`#${item.toLowerCase()}`}
               onClick={() => setOpen(false)}
-              className="text-sm text-muted-light dark:text-muted-dark hover:text-accent transition-colors"
+              className="text-sm text-muted hover:text-accent transition-colors"
             >
               {item}
             </a>

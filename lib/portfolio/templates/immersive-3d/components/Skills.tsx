@@ -53,7 +53,7 @@ export default function Skills() {
               <div className="glass rounded-2xl p-6 h-full hover:border-cyan transition-colors">
                 <div className="eyebrow mb-4">{g.title}</div>
                 <ul className="space-y-3">
-                  {g.items.map((s) => (
+                  {(g.items || []).map((s) => (
                     <li key={s} className="flex items-center gap-3 text-ink">
                       <span className="w-1.5 h-1.5 rounded-full bg-cyan" />
                       {s}
