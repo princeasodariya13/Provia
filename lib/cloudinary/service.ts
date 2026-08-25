@@ -10,7 +10,6 @@ if (env.CLOUDINARY_CLOUD_NAME && env.CLOUDINARY_API_KEY && env.CLOUDINARY_API_SE
   });
 }
 
-import { Readable } from "stream";
 
 export const CloudinaryService = {
   isConfigured() {
@@ -79,10 +78,11 @@ export const CloudinaryService = {
         publicId: result.public_id,
         bytes: result.bytes,
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (err instanceof APIError) throw err;
       console.error("Cloudinary Fetch Error:", err);
-      throw new APIError(`Cloudinary upload failed: ${err.message}`, 500);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      throw new APIError(`Cloudinary upload failed: ${errorMessage}`, 500);
     }
   },
 
