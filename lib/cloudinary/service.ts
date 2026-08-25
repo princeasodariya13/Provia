@@ -10,6 +10,8 @@ if (env.CLOUDINARY_CLOUD_NAME && env.CLOUDINARY_API_KEY && env.CLOUDINARY_API_SE
   });
 }
 
+import { Readable } from "stream";
+
 export const CloudinaryService = {
   isConfigured() {
     return !!(env.CLOUDINARY_CLOUD_NAME && env.CLOUDINARY_API_KEY && env.CLOUDINARY_API_SECRET);
@@ -20,25 +22,33 @@ export const CloudinaryService = {
       throw new APIError("Cloudinary is not configured", 501);
     }
 
-    try {
-      const b64 = buffer.toString("base64");
-      const dataURI = `data:${mimeType};base64,${b64}`;
+    return new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          public_id: publicId,
+          resource_type: resourceType,
+          overwrite: true,
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (error: any, result: any) => {
+          if (error) {
+            console.error("Cloudinary Stream Upload Error:", error);
+            reject(new APIError(`Cloudinary upload failed: ${error.message || "Unknown error"}`, 500));
+          } else if (result) {
+            resolve({
+              secureUrl: result.secure_url,
+              publicId: result.public_id,
+              bytes: result.bytes,
+            });
+          } else {
+            reject(new APIError("Unknown Cloudinary error", 500));
+          }
+        }
+      );
       
-      const result = await cloudinary.uploader.upload(dataURI, {
-        public_id: publicId,
-        resource_type: resourceType,
-        overwrite: true,
-      });
-
-      return {
-        secureUrl: result.secure_url,
-        publicId: result.public_id,
-        bytes: result.bytes,
-      };
-    } catch (error: any) {
-      console.error("Cloudinary Base64 Upload Error:", error);
-      throw new APIError(`Cloudinary upload failed: ${error.message || "Unknown error"}`, 500);
-    }
+      // Use Readable.from to prevent Vercel serverless hangs caused by uploadStream.end()
+      Readable.from(buffer).pipe(uploadStream);
+    });
   },
 
   async destroyAsset(publicId: string, resourceType: "raw" | "image" | "auto" = "image"): Promise<void> {

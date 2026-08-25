@@ -7,7 +7,7 @@ import { CloudinaryService } from "@/lib/cloudinary/service";
 import { JobService } from "@/lib/jobs";
 import { APIError } from "@/lib/errors";
 import { AnalyticsService } from "@/lib/analytics/service";
-import * as crypto from "crypto";
+
 
 export const POST = withAPIHandler(async (req) => {
   const user = await requireAuth();
@@ -46,12 +46,12 @@ export const POST = withAPIHandler(async (req) => {
     throw new APIError("File exceeds 5MB limit", 400);
   }
 
-  const randomId = crypto.randomBytes(16).toString("hex");
+  const randomId = crypto.randomUUID().replace(/-/g, "");
   const publicId = `provia/users/${user.id}/resume/${randomId}`;
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  const uploadResult = await CloudinaryService.uploadBuffer(buffer, publicId, "auto", file.type);
+  const uploadResult = await CloudinaryService.uploadBuffer(buffer, publicId, "raw", file.type);
 
   // Soft deactivate existing active resumes for the user
   await prisma.resume.updateMany({
