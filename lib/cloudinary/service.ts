@@ -43,6 +43,7 @@ export const CloudinaryService = {
               rawError: typeof error === "object" ? JSON.stringify(error) : String(error)
             };
             
+            
             console.error("CloudinaryUploadDiagnostic:", JSON.stringify(diagnosticError, null, 2));
             
             reject(new APIError(`Cloudinary upload failed: ${diagnosticError.message}`, diagnosticError.status));
