@@ -15,36 +15,30 @@ export const CloudinaryService = {
     return !!(env.CLOUDINARY_CLOUD_NAME && env.CLOUDINARY_API_KEY && env.CLOUDINARY_API_SECRET);
   },
 
-  async uploadBuffer(buffer: Buffer, publicId: string, resourceType: "raw" | "image" | "auto" = "auto"): Promise<{ secureUrl: string; publicId: string; bytes: number }> {
+  async uploadBuffer(buffer: Buffer, publicId: string, resourceType: "raw" | "image" | "auto" = "auto", mimeType: string = "application/octet-stream"): Promise<{ secureUrl: string; publicId: string; bytes: number }> {
     if (!this.isConfigured()) {
       throw new APIError("Cloudinary is not configured", 501);
     }
 
-    return new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          public_id: publicId,
-          resource_type: resourceType,
-          overwrite: true,
-        },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (error: any, result: any) => {
-          if (error) {
-            reject(new APIError(`Cloudinary upload failed: ${error.message}`, 500));
-          } else if (result) {
-            resolve({
-              secureUrl: result.secure_url,
-              publicId: result.public_id,
-              bytes: result.bytes,
-            });
-          } else {
-            reject(new APIError("Unknown Cloudinary error", 500));
-          }
-        }
-      );
+    try {
+      const b64 = buffer.toString("base64");
+      const dataURI = `data:${mimeType};base64,${b64}`;
       
-      uploadStream.end(buffer);
-    });
+      const result = await cloudinary.uploader.upload(dataURI, {
+        public_id: publicId,
+        resource_type: resourceType,
+        overwrite: true,
+      });
+
+      return {
+        secureUrl: result.secure_url,
+        publicId: result.public_id,
+        bytes: result.bytes,
+      };
+    } catch (error: any) {
+      console.error("Cloudinary Base64 Upload Error:", error);
+      throw new APIError(`Cloudinary upload failed: ${error.message || "Unknown error"}`, 500);
+    }
   },
 
   async destroyAsset(publicId: string, resourceType: "raw" | "image" | "auto" = "image"): Promise<void> {
