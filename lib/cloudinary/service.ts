@@ -22,46 +22,68 @@ export const CloudinaryService = {
       throw new APIError("Cloudinary is not configured", 501);
     }
 
-    return new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          public_id: publicId,
-          resource_type: resourceType,
-          overwrite: true,
-        },
-        (error: any, result: any) => {
-          if (error) {
-            const diagnosticError = {
-              status: error.http_code || error.statusCode || 403, // Fallback to 403 if it was rejected
-              message: error.message || "Unknown Cloudinary error",
-              resourceType,
-              mimeType,
-              fileSize: buffer.length,
-              cloudNameConfigured: !!env.CLOUDINARY_CLOUD_NAME,
-              apiKeyConfigured: !!env.CLOUDINARY_API_KEY,
-              apiSecretConfigured: !!env.CLOUDINARY_API_SECRET,
-              rawError: typeof error === "object" ? JSON.stringify(error) : String(error)
-            };
-            
-            
-            console.error("CloudinaryUploadDiagnostic:", JSON.stringify(diagnosticError, null, 2));
-            
-            reject(new APIError(`Cloudinary upload failed: ${diagnosticError.message}`, diagnosticError.status));
-          } else if (result) {
-            resolve({
-              secureUrl: result.secure_url,
-              publicId: result.public_id,
-              bytes: result.bytes,
-            });
-          } else {
-            reject(new APIError("Unknown Cloudinary error", 500));
-          }
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    const signature = cloudinary.utils.api_sign_request({
+      timestamp,
+      public_id: publicId,
+      overwrite: true,
+    }, env.CLOUDINARY_API_SECRET!);
+
+    const formData = new FormData();
+    // Use a native Blob for the file
+    formData.append("file", new Blob([new Uint8Array(buffer)], { type: mimeType }), "file");
+    formData.append("api_key", env.CLOUDINARY_API_KEY!);
+    formData.append("timestamp", timestamp.toString());
+    formData.append("signature", signature);
+    formData.append("public_id", publicId);
+    formData.append("overwrite", "true");
+
+    const endpoint = `https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME!}/${resourceType}/upload`;
+    
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: formData,
+      });
+
+      const responseText = await response.text();
+
+      if (!response.ok) {
+        let errorObj;
+        try {
+          errorObj = JSON.parse(responseText);
+        } catch {
+          errorObj = { message: responseText };
         }
-      );
-      
-      // Use Readable.from to prevent Vercel serverless hangs caused by uploadStream.end()
-      Readable.from(buffer).pipe(uploadStream);
-    });
+
+        const diagnosticError = {
+          status: response.status,
+          message: errorObj.error?.message || errorObj.message || "Unknown Cloudinary error",
+          resourceType,
+          mimeType,
+          fileSize: buffer.length,
+          cloudNameConfigured: !!env.CLOUDINARY_CLOUD_NAME,
+          apiKeyConfigured: !!env.CLOUDINARY_API_KEY,
+          apiSecretConfigured: !!env.CLOUDINARY_API_SECRET,
+          rawError: responseText,
+          endpoint
+        };
+        
+        console.error("CloudinaryUploadDiagnostic:", JSON.stringify(diagnosticError, null, 2));
+        throw new APIError(`Cloudinary upload failed: ${diagnosticError.message}`, response.status);
+      }
+
+      const result = JSON.parse(responseText);
+      return {
+        secureUrl: result.secure_url,
+        publicId: result.public_id,
+        bytes: result.bytes,
+      };
+    } catch (err: any) {
+      if (err instanceof APIError) throw err;
+      console.error("Cloudinary Fetch Error:", err);
+      throw new APIError(`Cloudinary upload failed: ${err.message}`, 500);
+    }
   },
 
   async destroyAsset(publicId: string, resourceType: "raw" | "image" | "auto" = "image"): Promise<void> {

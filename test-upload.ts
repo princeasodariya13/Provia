@@ -6,14 +6,14 @@ async function testUpload() {
   
   // Create a tiny valid PDF buffer
   // Standard minimum PDF signature: %PDF-1.4\n%EOF\n
-  const pdfBuffer = Buffer.from("%PDF-1.4\n1 0 obj\n<<>>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF", "utf-8");
+  const pngBuffer = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=", "base64");
   
   try {
     const result = await CloudinaryService.uploadBuffer(
-      pdfBuffer,
+      pngBuffer,
       `provia/test/resume_diagnostic_${Date.now()}`,
-      "auto",
-      "application/pdf"
+      "image",
+      "image/png"
     );
     console.log("Upload Success:", result);
   } catch (error) {
