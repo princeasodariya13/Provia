@@ -63,7 +63,9 @@ export default function Projects() {
       <div className="divide-y divide-border border-t border-border">
         {projects.map((p, i) => (
           <motion.a
-            href="#"
+            href={p.url}
+            target="_blank"
+            rel="noopener noreferrer"
             key={p.title}
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}

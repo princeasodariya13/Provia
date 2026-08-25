@@ -82,19 +82,22 @@ export function StudioPreview({ document, templateId, previewDevice, activeTab, 
   const deviceWidth = DEVICE_STYLES[previewDevice];
 
   return (
-    <div className="flex-1 bg-surface-muted overflow-y-auto flex justify-center relative">
+    <div className="flex-1 bg-surface-muted flex justify-center relative overflow-hidden">
       {/* Device frame indicator */}
       <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10 bg-surface border border-border-light rounded-full px-3 py-1 text-[10px] font-bold text-text-muted uppercase tracking-wider shadow-sm">
         {templateDef.metadata.name} · {previewDevice}
       </div>
 
-      <div
-        className={`${deviceWidth} min-h-full bg-background shadow-2xl transition-all duration-300 origin-top mt-10`}
-        style={previewDevice !== "desktop" ? { transform: previewDevice === "tablet" ? "scale(0.85)" : "scale(0.7)", transformOrigin: "top center" } : undefined}
-      >
-        <TemplateBoundary templateName={templateDef.metadata.name}>
-          <TemplateComponent document={document} />
-        </TemplateBoundary>
+      <div className="w-full h-full pt-12 pb-6 flex justify-center overflow-hidden">
+        <div
+          className={`${deviceWidth} h-full bg-background shadow-2xl transition-all duration-300 origin-top relative overflow-y-auto`}
+          style={previewDevice !== "desktop" ? { transform: previewDevice === "tablet" ? "scale(0.85)" : "scale(0.7)", transformOrigin: "top center" } : { transform: 'scale(1)', transformOrigin: "top center" }}
+          data-lenis-prevent
+        >
+          <TemplateBoundary templateName={templateDef.metadata.name}>
+            <TemplateComponent document={document} />
+          </TemplateBoundary>
+        </div>
       </div>
     </div>
   );

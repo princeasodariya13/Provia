@@ -67,7 +67,7 @@ export default function Hero() {
             variants={item}
             className="font-display font-bold text-[11vw] leading-[1.02] sm:text-5xl md:text-6xl tracking-tight"
           >
-            {profile.headline.split(" ").map((w, i) =>
+            {(profile.headline || profile.name || "Professional").split(" ").map((w: string, i: number) =>
               i === 1 ? (
                 <span key={i} className="gradient-text">
                   {w}{" "}
@@ -82,7 +82,7 @@ export default function Hero() {
             variants={item}
             className="mt-6 max-w-lg text-muted-light dark:text-muted-dark text-lg leading-relaxed"
           >
-            {profile.tagline}
+            {profile.bio}
           </motion.p>
 
           <motion.div variants={item} className="mt-8 flex flex-wrap items-center gap-4">
@@ -102,7 +102,7 @@ export default function Hero() {
           </motion.div>
 
           <motion.div variants={item} className="mt-12 flex gap-10">
-            {profile.stats.map((s) => (
+            {(profile.stats || []).map((s: any) => (
               <div key={s.label}>
                 <div className="font-display font-bold text-3xl">{s.value}</div>
                 <div className="eyebrow mt-1">{s.label}</div>
@@ -119,11 +119,11 @@ export default function Hero() {
         >
           <div className="relative aspect-[4/5] max-w-sm mx-auto rounded-[2rem] overflow-hidden glass p-2">
             <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden">
-              <Image src={profile.photoDark} alt={profile.name} fill className="object-cover" priority />
+              <Image src={about.image || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070"} alt={profile.name} fill className="object-cover" priority />
             </div>
           </div>
           <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 glass rounded-full px-5 py-2 whitespace-nowrap">
-            <span className="eyebrow">I am {profile.short}</span>
+            <span className="eyebrow">I am {profile.name}</span>
           </div>
         </motion.div>
       </div>

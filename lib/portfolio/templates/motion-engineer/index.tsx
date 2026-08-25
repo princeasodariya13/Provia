@@ -12,9 +12,8 @@ import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Projects from "./components/Projects";
-import Capabilities from "./components/Capabilities";
-import Process from "./components/Process";
-import Stats from "./components/Stats";
+import Experience from "./components/Experience";
+import Education from "./components/Education";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
@@ -28,9 +27,8 @@ export function motionengineerTemplate({ document }: TemplateProps) {
         <Hero />
         <About />
         <Projects />
-        <Capabilities />
-        <Process />
-        <Stats />
+        <Experience />
+        <Education />
         <Contact />
         <Footer />
       </TemplateProvider>
@@ -48,5 +46,5 @@ export const motionengineerMetadata = {
   audience: ["Creative Developers","Frontend Engineers","Designers"],
   style: "Dynamic",
   recommended: false,
-  supportedSections: ["hero", "about", "experience", "projects", "skills", "contact"],
+  supportedSections: ["hero", "about", "experience", "education", "projects", "skills", "contact"],
 };

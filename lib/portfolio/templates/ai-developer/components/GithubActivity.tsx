@@ -30,6 +30,8 @@ export default function GithubActivity() {
   education = []
  } = templateData || {};
 
+  const githubStats = { contributions: 0, longestStreak: 0, publicRepos: 0 };
+
   return (
     <section className="section-pad py-24 border-b border-border">
       <p className="hud mb-4">Live Activity</p>

@@ -1,6 +1,10 @@
 import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
 
 export function mapProviaToTemplate(doc: PortfolioDocumentDTO) {
+  const hero = (doc.hero || {}) as any;
+  const about = (doc.about || {}) as any;
+  const contact = (doc.contact || {}) as any;
+
   const toYear = (dateStr: string | null | undefined) => {
     if (!dateStr) return null;
     return new Date(dateStr).getFullYear().toString();
@@ -8,19 +12,34 @@ export function mapProviaToTemplate(doc: PortfolioDocumentDTO) {
 
   return {
     profile: {
-      name: doc.hero?.name || "Professional",
-      headline: doc.hero?.headline || "",
-      bio: doc.about?.summary || doc.hero?.shortIntroduction || "",
-      location: doc.contact?.location || "",
+      name: hero.name || "Professional",
+      headline: hero.headline || "Creative Developer & Engineer",
+      bio: about.summary || hero.shortIntroduction || "",
+      location: contact.location || "",
       available: true,
+      stats: [
+        { label: "Projects", value: `${(doc.projects || []).length}` },
+        { label: "Roles", value: `${(doc.experience || []).length}` }
+      ]
+    },
+    about: {
+      summary: about.summary || hero.shortIntroduction || "",
+      quote: about.summary?.split(".")[0] || "Building with purpose.",
+      paragraphs: about.summary
+        ? about.summary.split(/\n\n+/).filter(Boolean)
+        : (hero.shortIntroduction ? [hero.shortIntroduction] : ["Passionate developer building elegant solutions."]),
+      themes: about.careerThemes || [],
+      image: hero.avatarUrl || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070",
     },
     projects: (doc.projects || []).map(p => ({
       title: p.name,
       description: p.description || "",
-      client: "Personal / Open Source",
-      year: "Present",
-      role: p.technologies?.[0] || "Developer",
-      url: p.url || p.repositoryUrl || "#",
+      subtitle: p.technologies?.[0] || "Project",
+      period: "Present",
+      image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070",
+      tags: p.technologies?.slice(0, 3) || [],
+      liveUrl: p.url || "#",
+      codeUrl: p.repositoryUrl || "#",
     })),
     experience: (doc.experience || []).map(e => ({
       title: e.title,
@@ -28,30 +47,25 @@ export function mapProviaToTemplate(doc: PortfolioDocumentDTO) {
       year: `${toYear(e.startDate) || "—"} — ${e.isCurrent ? "Present" : toYear(e.endDate) || "—"}`,
       description: e.description || "",
     })),
-    services: (doc.skills || []).slice(0, 4).map((s, i) => ({
+    services: (doc.skills || []).slice(0, 4).map((s: any, i: number) => ({
       index: String(i + 1).padStart(2, "0"),
       title: s.category || "Skill Area",
-      description: s.skills?.join(", ") || "",
+      description: (s.skills || []).join(", "),
     })),
     education: (doc.education || []).map(e => ({
       institution: e.institution,
       degree: [e.degree, e.fieldOfStudy].filter(Boolean).join(" in "),
       year: `${toYear(e.startDate) || "—"} — ${toYear(e.endDate) || "Present"}`,
     })),
-    social: (doc.hero?.primaryLinks || []).map((l: { title: string; url: string }) => ({
+    social: (hero.primaryLinks || []).map((l: { title: string; url: string }) => ({
       label: l.title,
       href: l.url,
     })),
     contact: {
-      email: doc.contact?.email || "",
-      location: doc.contact?.location || "",
+      email: contact.email || "",
+      location: contact.location || "",
     },
     certifications: doc.certifications || [],
     skills: doc.skills || [],
-    about: {
-      summary: doc.about?.summary || "",
-      themes: doc.about?.careerThemes || [],
-      image: doc.hero?.avatarUrl || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070",
-    },
   };
 }

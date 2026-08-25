@@ -21,15 +21,17 @@ export function mapProviaToTemplate(doc: PortfolioDocumentDTO) {
       icon: "Code"
     })),
     milestones: (doc.experience || []).map(e => ({
-      year: e.startDate?.split(' ')?.[1] || e.startDate || "Past",
+      date: `${e.startDate ? new Date(e.startDate).getFullYear() : ""} - ${e.isCurrent ? "Present" : (e.endDate ? new Date(e.endDate).getFullYear() : "")}`,
+      tag: e.company || "Experience",
       title: e.title,
-      description: e.company,
+      description: e.description || "No description provided.",
       link: "#"
     })),
     social: (doc.hero?.primaryLinks || []).map((l: any) => ({
       platform: l.title,
       url: l.url
     })),
-    email: doc.contact?.email || ""
+    email: doc.contact?.email || "",
+    education: doc.education || []
   };
 }

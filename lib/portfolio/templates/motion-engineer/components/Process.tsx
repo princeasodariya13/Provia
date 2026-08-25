@@ -37,7 +37,7 @@ export default function Process() {
       </h2>
 
       <div className="grid md:grid-cols-4 gap-4">
-        {process.map((p, i) => (
+        {steps.map((p, i) => (
           <motion.div
             key={p.step}
             initial={{ opacity: 0, y: 24 }}

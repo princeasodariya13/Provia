@@ -25,11 +25,17 @@ export default function Contact() {
   experience = [],
   projects = [],
   skills = [],
+  socials = [],
   stats = [],
   stack = [],
   capabilities = [],
   education = []
  } = templateData || {};
+
+  const contactCards = [
+    { label: "Email", value: profile.email || "Contact me", href: `mailto:${profile.email}` },
+    ...(socials || []).map((s: any) => ({ label: s.platform, value: s.platform, href: s.url }))
+  ];
 
   const [sent, setSent] = useState(false);
 

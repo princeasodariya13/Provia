@@ -90,7 +90,7 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.2 }}
           className="grid grid-cols-3 gap-3"
         >
-          {heroStats.map((s) => (
+          {stats.map((s) => (
             <div
               key={s.label}
               className="rounded-2xl border border-border bg-surface p-5 text-center"
@@ -106,7 +106,7 @@ export default function Hero() {
 
       <div className="mt-16 border-t border-border py-4 overflow-hidden">
         <div className="flex whitespace-nowrap animate-marquee">
-          {[...marqueeTags, ...marqueeTags, ...marqueeTags].map((tag, i) => (
+          {[...marqueeItems, ...marqueeItems, ...marqueeItems].map((tag, i) => (
             <span key={i} className="hud px-6 text-ink/60">
               {tag} •
             </span>

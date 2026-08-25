@@ -62,10 +62,15 @@ export default function About() {
           transition={{ delay: 0.15 }}
           className="grid grid-cols-2 gap-4"
         >
-          <InfoCard value={profile.age} label="Age" />
-          <InfoCard value={profile.commute} label="Daily Commute" />
-          <InfoCard value="12+" label="Systems Shipped" />
-          <InfoCard value={profile.base} label="Base" />
+          {stats && stats.length > 0 && stats.map((stat, i) => (
+            <InfoCard key={i} value={`${stat.value}${stat.suffix || ""}`} label={stat.label} />
+          ))}
+          {profile.base && (
+            <InfoCard value={profile.base} label="Location" />
+          )}
+          {skills && skills.length > 0 && (
+            <InfoCard value={`${skills.reduce((acc, curr) => acc + curr.skills.length, 0)}+`} label="Technologies" />
+          )}
         </motion.div>
       </div>
     </section>

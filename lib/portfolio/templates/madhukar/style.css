@@ -1,3 +1,27 @@
-@theme {
-  /* Add custom tailwind variables here */
+.madhukar-theme {
+  --base: #f7f3ec; /* Warm off-white */
+  --base-dark: #e8e3da;
+  --ink: #1c1c1c;
+  --ink-light: #4a4a4a;
+  --accent: #d94a38; /* Editorial red/orange */
+  --border: #dcd7ce;
+
+  color-scheme: light;
+}
+
+.madhukar-theme .bg-background { background-color: var(--base); }
+.madhukar-theme .bg-card { background-color: var(--base-dark); }
+.madhukar-theme .text-foreground { color: var(--ink); }
+.madhukar-theme .text-muted { color: var(--ink-light); }
+.madhukar-theme .text-primary { color: var(--accent); }
+.madhukar-theme .border-border { border-color: var(--border); }
+
+/* Compatibility */
+.madhukar-theme .bg-surface { background-color: var(--base-dark); }
+.madhukar-theme .text-accent { color: var(--accent); }
+.madhukar-theme .border-accent { border-color: var(--accent); }
+
+/* Typography specific to editorial */
+.madhukar-theme .font-editorial {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 }

@@ -117,6 +117,7 @@ export const GET = withAPIHandler(async () => {
   return NextResponse.json({
     success: true,
     data: {
+      id: resume.id,
       resumeId: resume.id,
       status: resume.status,
       filename: resume.originalFileName,
@@ -124,7 +125,8 @@ export const GET = withAPIHandler(async () => {
       createdAt: resume.createdAt,
       updatedAt: resume.updatedAt,
       extractionError: resume.extractionError,
-      structuredData: resume.structuredData ? JSON.parse(resume.structuredData) : null,
+      // Use 'extractedData' key — matches what ResumeIntelligence.tsx reads
+      extractedData: resume.structuredData ? JSON.parse(resume.structuredData) : null,
     }
   });
 });

@@ -34,9 +34,9 @@ export default function Footer() {
           <div className="text-muted text-sm">{profile.role}</div>
         </div>
         <div className="flex gap-5">
-          {profile.socials.map((s) => (
-            <a key={s.label} href={s.url} className="text-sm text-muted hover:text-cyan transition-colors">
-              {s.label}
+          {(Array.isArray(social) ? social : []).map((s: any) => (
+            <a key={s.label || s.platform} href={s.url || s.href} className="text-sm text-muted hover:text-cyan transition-colors">
+              {s.label || s.platform}
             </a>
           ))}
         </div>

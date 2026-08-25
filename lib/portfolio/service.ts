@@ -89,18 +89,21 @@ export const PortfolioContentService = {
         }
       }
 
-      const skillsGrouped = profile.skills.length > 0
-        ? (() => {
-            const grouped: Record<string, string[]> = {};
-            profile.skills.forEach(s => {
-              // Group skills — use source as category if available
-              const cat = "Technical Skills";
-              if (!grouped[cat]) grouped[cat] = [];
-              grouped[cat].push(s.name);
-            });
-            return Object.entries(grouped).map(([category, skills]) => ({ category, skills }));
-          })()
-        : [];
+      const skillsGrouped = (() => {
+        if (profile.skills.length === 0) return [];
+        const grouped: Record<string, string[]> = {};
+        profile.skills.forEach(s => {
+          // Assign to a human-readable category based on source
+          let cat = "Technical Skills";
+          if (s.source === "GITHUB") cat = "Technologies & Languages";
+          else if (s.source === "RESUME") cat = "Professional Skills";
+          else if (s.source === "LINKEDIN") cat = "LinkedIn Skills";
+          else if (s.source === "MANUAL") cat = "Additional Skills";
+          if (!grouped[cat]) grouped[cat] = [];
+          if (!grouped[cat].includes(s.name)) grouped[cat].push(s.name);
+        });
+        return Object.entries(grouped).map(([category, skills]) => ({ category, skills }));
+      })();
 
       const displayName = profile.fullName || profile.user?.name || "";
 

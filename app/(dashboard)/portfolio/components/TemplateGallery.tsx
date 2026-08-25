@@ -79,7 +79,7 @@ export function TemplateGallery({ document, currentTemplateId, onSelectTemplate,
         </div>
         
         {/* Live rendering */}
-        <div className="flex-1 overflow-y-auto bg-surface-muted flex justify-center shadow-inner">
+        <div className="flex-1 overflow-y-auto bg-surface-muted flex justify-center shadow-inner" data-lenis-prevent>
           <div className="w-full max-w-[1920px] bg-background shadow-2xl origin-top transition-all min-h-full">
             <TemplateThumbnailBoundary templateName={activeDef.metadata.name}>
               <TemplateComponent document={document} />
@@ -115,7 +115,7 @@ export function TemplateGallery({ document, currentTemplateId, onSelectTemplate,
       </div>
 
       {/* Grid */}
-      <div className="flex-1 overflow-y-auto p-8 bg-surface-muted/30">
+      <div className="flex-1 overflow-y-auto p-8 bg-surface-muted/30" data-lenis-prevent>
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {filtered.map(t => {
             const def = TemplateRegistry.getTemplate(t.id);
@@ -129,8 +129,8 @@ export function TemplateGallery({ document, currentTemplateId, onSelectTemplate,
               >
                 {/* Scaled down Live Preview Thumbnail */}
                 <div className="relative h-64 bg-surface-muted overflow-hidden border-b border-border-light">
-                  <div className="absolute inset-0 pointer-events-none select-none flex justify-center">
-                    <div className="w-[1280px] h-[1024px] origin-top-left transform scale-[0.25] lg:scale-[0.27] shadow-xl">
+                  <div className="absolute inset-0 pointer-events-none select-none flex items-start justify-center">
+                    <div className="w-[1280px] h-[1024px] bg-background origin-top transform scale-[0.25] lg:scale-[0.27] shadow-xl overflow-hidden">
                       <TemplateThumbnailBoundary templateName={t.name}>
                         {Comp && <Comp document={document} />}
                       </TemplateThumbnailBoundary>

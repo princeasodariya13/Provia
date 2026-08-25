@@ -14,7 +14,7 @@ export default function Connect() {
   marqueeItems = [],
   certifications = [],
   header = {},
-  social = {},
+  social = [],
   services = [],
   faq = [],
   milestones = [],
@@ -62,15 +62,15 @@ export default function Connect() {
             >
               Email
             </a>
-            {socials.map((s) => (
+            {(Array.isArray(social) ? social : []).map((s) => (
               <a
-                key={s.href}
-                href={s.href}
+                key={s.url || s.platform}
+                href={s.url}
                 target="_blank"
                 rel="noreferrer"
                 className="hud rounded-full border border-border px-4 py-2 hover:border-accent hover:text-accent transition-colors"
               >
-                {s.label}
+                {s.platform}
               </a>
             ))}
           </div>

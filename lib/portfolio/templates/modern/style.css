@@ -1,3 +1,30 @@
-@theme {
-  /* Add custom tailwind variables here */
+.modern-theme {
+  --base: #ffffff;
+  --ink: #111827; /* gray-900 */
+  --muted: #6b7280; /* gray-500 */
+  --accent: #2563eb; /* blue-600 */
+  --border: #e5e7eb; /* gray-200 */
+  --card: #f9fafb; /* gray-50 */
+
+  color-scheme: light;
 }
+
+.modern-theme .bg-base { background-color: var(--base); }
+.modern-theme .bg-card { background-color: var(--card); }
+.modern-theme .text-ink { color: var(--ink); }
+.modern-theme .text-muted { color: var(--muted); }
+.modern-theme .text-accent { color: var(--accent); }
+.modern-theme .border-border { border-color: var(--border); }
+.modern-theme .hover\:text-accent:hover { color: var(--accent) !important; }
+
+.modern-theme .section-label {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.modern-theme .text-base { color: var(--base); }
+.modern-theme .bg-surface { background-color: var(--card); }
+.modern-theme .bg-accentSoft { background-color: rgba(37, 99, 235, 0.1); }

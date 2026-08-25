@@ -70,20 +70,20 @@ export default function Projects() {
             transition={{ duration: 0.6, delay: i * 0.08 }}
             className="group grid md:grid-cols-[80px_1fr_1fr] gap-6 items-start rounded-2xl border border-border bg-surface p-8 hover:border-accent/50 transition-colors duration-300"
           >
-            <span className="eyebrow text-accent">{p.index}</span>
+            <span className="eyebrow text-accent">0{i + 1}</span>
             <div>
               <h3 className="font-display text-2xl md:text-3xl font-semibold mb-2 group-hover:text-gradient transition-colors">
                 {p.title}
               </h3>
-              <p className="eyebrow mb-4">{p.tag} · {p.year}</p>
+              <p className="eyebrow mb-4">{p.category} · {p.year}</p>
               <p className="text-muted leading-relaxed max-w-md">{p.description}</p>
             </div>
             <div className="flex flex-wrap gap-2 content-start md:justify-end">
-              {p.stack.map((t) => (
-                <span key={t} className="eyebrow rounded-full border border-border px-3 py-1.5">
-                  {t}
-                </span>
-              ))}
+              {p.link && p.link !== "#" && (
+                <a href={p.link} className="eyebrow rounded-full border border-border px-3 py-1.5 hover:text-accent transition-colors">
+                  View Project
+                </a>
+              )}
             </div>
           </motion.div>
         ))}

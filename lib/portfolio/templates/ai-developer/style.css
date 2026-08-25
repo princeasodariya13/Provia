@@ -1,3 +1,78 @@
-@theme {
-  /* Add custom tailwind variables here */
+.ai-developer-theme {
+  --base: #050505;
+  --surface: #111111;
+  --surface2: #1a1a1a;
+  --ink: #f8fafc;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --border: #27272a;
+
+  background-color: var(--base);
+  color: var(--ink);
+  color-scheme: dark;
+}
+
+/* Base Colors */
+.ai-developer-theme .bg-base,
+.ai-developer-theme .bg-background { background-color: var(--base); }
+.ai-developer-theme .bg-surface { background-color: var(--surface); }
+.ai-developer-theme .bg-surface2 { background-color: var(--surface2); }
+.ai-developer-theme .bg-accent { background-color: var(--accent); }
+
+/* Text Colors */
+.ai-developer-theme .text-ink,
+.ai-developer-theme .text-foreground { color: var(--ink); }
+.ai-developer-theme .text-accent { color: var(--accent); }
+.ai-developer-theme .text-muted { color: var(--muted); }
+
+/* Border Colors */
+.ai-developer-theme .border-border { border-color: var(--border); }
+.ai-developer-theme .border-accent { border-color: var(--accent); }
+
+/* Hover States */
+.ai-developer-theme .hover\:text-accent:hover { color: var(--accent) !important; }
+.ai-developer-theme .hover\:border-accent:hover { border-color: var(--accent) !important; }
+.ai-developer-theme .group-hover\:text-accent .group:hover { color: var(--accent) !important; }
+
+/* Custom Typography & Effects */
+.ai-developer-theme .hud {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.ai-developer-theme .font-display {
+  font-family: system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.ai-developer-theme .text-glow {
+  text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+}
+
+.ai-developer-theme .bg-radial {
+  background: radial-gradient(circle at center, rgba(56, 189, 248, 0.08) 0%, transparent 60%);
+}
+
+.ai-developer-theme .bg-scan {
+  background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.5) 50%);
+  background-size: 100% 4px;
+}
+
+/* Animations */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.ai-developer-theme .animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ai-developer-theme .animate-marquee {
+  animation: marquee 20s linear infinite;
 }

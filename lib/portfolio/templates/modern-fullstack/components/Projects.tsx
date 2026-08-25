@@ -62,7 +62,7 @@ export default function Projects() {
             <div className="flex items-start justify-between mb-4">
               <div>
                 <h3 className="font-display text-2xl font-semibold text-deep">{p.title}</h3>
-                <p className="eyebrow mt-1 text-accent">{p.platform} · {p.period}</p>
+                <p className="eyebrow mt-1 text-accent">Application</p>
               </div>
             </div>
 
@@ -77,14 +77,9 @@ export default function Projects() {
             </div>
 
             <div className="flex items-center gap-4">
-              {p.demoUrl && (
-                <a href={p.demoUrl} className="eyebrow flex items-center gap-1 hover:text-accent transition-colors">
+              {p.link && p.link !== "#" && (
+                <a href={p.link} className="eyebrow flex items-center gap-1 hover:text-accent transition-colors">
                   Live Demo <ArrowUpRight className="h-3.5 w-3.5" />
-                </a>
-              )}
-              {p.codeUrl && (
-                <a href={p.codeUrl} className="eyebrow flex items-center gap-1 hover:text-accent transition-colors">
-                  <Github className="h-3.5 w-3.5" /> Code
                 </a>
               )}
             </div>

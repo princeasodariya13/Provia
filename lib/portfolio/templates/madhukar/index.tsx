@@ -11,12 +11,12 @@ import ThemeProvider from "./components/ThemeProvider";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import About from "./components/About";
+import Experience from "./components/Experience";
 import Resume from "./components/Resume";
 import Services from "./components/Services";
 import Skills from "./components/Skills";
 import Education from "./components/Education";
 import Projects from "./components/Projects";
-import Blog from "./components/Blog";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
@@ -29,12 +29,12 @@ export function madhukarTemplate({ document }: TemplateProps) {
         <Header />
         <Hero />
         <About />
+        <Experience />
         <Resume />
         <Services />
         <Skills />
         <Education />
         <Projects />
-        <Blog />
         <Contact />
         <Footer />
       </TemplateProvider>

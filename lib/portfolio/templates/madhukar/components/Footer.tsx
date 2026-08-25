@@ -34,10 +34,10 @@ export default function Footer() {
           Building the future, one line at a time.
         </p>
         <div className="flex gap-5">
-          {profile.socials.map((s) => (
+          {(Array.isArray(social) ? social : []).map((s: any) => (
             <a
               key={s.label}
-              href={s.url}
+              href={s.href || s.url}
               className="text-sm text-muted-light dark:text-muted-dark hover:text-accent transition-colors"
             >
               {s.label}

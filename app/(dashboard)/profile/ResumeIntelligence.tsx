@@ -123,7 +123,10 @@ export function ResumeIntelligence() {
     setApplySuccess(false);
     
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const res = await apiClient.post<any>("/api/v1/profile/resume/apply", { selections });
+    const res = await apiClient.post<any>("/api/v1/profile/resume/apply", {
+      resumeId: resumeData?.id || resumeData?.resumeId,  // support both field names
+      selections,
+    });
     
     if (res.success) {
       setApplySuccess(true);
@@ -273,6 +276,86 @@ export function ResumeIntelligence() {
                   <div key={i} className="flex items-center gap-3 border border-border-light p-3 rounded-lg bg-surface shadow-sm hover:border-brand-hover transition-colors">
                     <input type="checkbox" checked={selections.skills.includes(i)} onChange={() => toggleSelection("skills", i)} className="w-4 h-4 accent-brand rounded border-border" />
                     <span className="text-xs font-bold text-text-primary">{skill.name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {resumeData.extractedData.summary && (
+              <div className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={selections.summary} onChange={() => toggleSelection("summary")} className="w-4 h-4 accent-brand rounded border-border" />
+                  <span className="font-bold text-sm text-text-primary">Professional Summary</span>
+                </label>
+                {selections.summary && (
+                  <div className="pl-7 text-xs text-text-secondary">
+                    <p className="line-clamp-3">{resumeData.extractedData.summary}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {resumeData.extractedData.education?.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="font-bold text-xs uppercase tracking-widest text-text-muted pl-1">Education ({resumeData.extractedData.education.length})</h4>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {resumeData.extractedData.education.map((edu: any, i: number) => (
+                  <div key={i} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input type="checkbox" checked={selections.education.includes(i)} onChange={() => toggleSelection("education", i)} className="w-4 h-4 accent-brand rounded border-border mt-0.5" />
+                      <div>
+                        <span className="font-bold text-sm text-text-primary">{edu.institution}</span>
+                        <p className="text-xs font-semibold text-text-secondary">{edu.degree} {edu.fieldOfStudy ? `in ${edu.fieldOfStudy}` : ""}</p>
+                      </div>
+                    </label>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {resumeData.extractedData.projects?.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="font-bold text-xs uppercase tracking-widest text-text-muted pl-1">Projects ({resumeData.extractedData.projects.length})</h4>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {resumeData.extractedData.projects.map((proj: any, i: number) => (
+                  <div key={i} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input type="checkbox" checked={selections.projects.includes(i)} onChange={() => toggleSelection("projects", i)} className="w-4 h-4 accent-brand rounded border-border mt-0.5" />
+                      <div>
+                        <span className="font-bold text-sm text-text-primary">{proj.name}</span>
+                        <p className="text-xs font-semibold text-text-secondary line-clamp-1">{proj.description}</p>
+                      </div>
+                    </label>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {resumeData.extractedData.certifications?.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="font-bold text-xs uppercase tracking-widest text-text-muted pl-1">Certifications ({resumeData.extractedData.certifications.length})</h4>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {resumeData.extractedData.certifications.map((cert: any, i: number) => (
+                  <div key={i} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input type="checkbox" checked={selections.certifications.includes(i)} onChange={() => toggleSelection("certifications", i)} className="w-4 h-4 accent-brand rounded border-border mt-0.5" />
+                      <div>
+                        <span className="font-bold text-sm text-text-primary">{cert.name}</span>
+                        <p className="text-xs font-semibold text-text-secondary">{cert.issuer}</p>
+                      </div>
+                    </label>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {resumeData.extractedData.links?.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="font-bold text-xs uppercase tracking-widest text-text-muted pl-1">Links ({resumeData.extractedData.links.length})</h4>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {resumeData.extractedData.links.map((link: any, i: number) => (
+                  <div key={i} className="flex items-center gap-3 border border-border-light p-3 rounded-lg bg-surface shadow-sm hover:border-brand-hover transition-colors">
+                    <input type="checkbox" checked={selections.links.includes(i)} onChange={() => toggleSelection("links", i)} className="w-4 h-4 accent-brand rounded border-border" />
+                    <span className="text-xs font-bold text-text-primary">{link.platform}</span>
                   </div>
                 ))}
               </div>

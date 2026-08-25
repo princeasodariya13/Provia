@@ -11,6 +11,7 @@ export default function Nav() {
   const { 
   contact = {},
   profile = {},
+  socials = [],
   marqueeItems = [],
   certifications = [],
   header = {},
@@ -30,6 +31,11 @@ export default function Nav() {
   education = []
  } = templateData || {};
 
+  const safeNavLinks = (templateData as any)?.navLinks || globals?.navLinks || [
+    { label: "Profile", href: "#profile" },
+    { label: "Work", href: "#work" },
+    { label: "Contact", href: "#contact" },
+  ];
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -56,7 +62,7 @@ export default function Nav() {
         </a>
 
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
+          {safeNavLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -68,7 +74,7 @@ export default function Nav() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-5">
-          {socials.map((s) => (
+          {(socials || []).map((s: {label: string, href: string}) => (
             <a
               key={s.href}
               href={s.href}

@@ -46,7 +46,7 @@ export function StudioSidebar({
 }: Props) {
   return (
     <div className="w-52 border-r border-border-light bg-surface shrink-0 flex flex-col h-full overflow-hidden">
-      <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-1">
+      <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-1" data-lenis-prevent>
         <p className="px-3 pt-1 pb-2 text-[9px] font-bold uppercase tracking-widest text-text-muted">Studio</p>
 
         {TABS.map(tab => {

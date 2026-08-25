@@ -52,7 +52,7 @@ export default function Header() {
     >
       <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
         <a href="#home" className="font-display font-semibold text-lg tracking-tight">
-          {profile.initials}
+          {profile.name ? profile.name.charAt(0) : "P"}
           <span className="text-accent">.</span>
         </a>
 

@@ -112,9 +112,15 @@ export default function Hero() {
           <div className="absolute bottom-5 left-5 eyebrow">3D Abstract Object</div>
         </div>
         <div className="flex flex-col gap-4">
-          <StatChip label={`★ ${profile.age} yrs old`} />
-          <StatChip label="✦ 3rd Place — Hackathon" />
-          <StatChip label="⚡ TS, REACT, NODE" />
+          {profile.base && (
+            <StatChip label={`📍 ${profile.base}`} />
+          )}
+          {projects && projects.length > 0 && (
+            <StatChip label={`🚀 ${projects.length}+ Projects Shipped`} />
+          )}
+          {capabilities && capabilities.length > 0 && (
+            <StatChip label={`⚡ ${capabilities.map(c => c.title).join(", ")}`} />
+          )}
         </div>
       </motion.div>
     </section>

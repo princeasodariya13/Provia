@@ -11,7 +11,7 @@ export default function Footer() {
   marqueeItems = [],
   certifications = [],
   header = {},
-  social = {},
+  socials = [],
   services = [],
   faq = [],
   milestones = [],
@@ -35,13 +35,13 @@ export default function Footer() {
           <div className="text-muted text-sm">{profile.role}</div>
         </div>
         <div className="flex gap-5">
-          {profile.socials.map((s) => (
+          {socials.map((s: any) => (
             <a
-              key={s.label}
-              href={s.url}
+              key={s.label || s.platform}
+              href={s.url || s.href}
               className="text-sm text-muted hover:text-accent transition-colors"
             >
-              {s.label}
+              {s.label || s.platform}
             </a>
           ))}
         </div>

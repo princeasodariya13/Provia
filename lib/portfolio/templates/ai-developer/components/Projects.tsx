@@ -54,40 +54,30 @@ export default function Projects() {
       <div className="grid md:grid-cols-2 gap-6">
         {projects.map((p, i) => (
           <motion.a
-            href="#"
-            key={p.name}
+            href={p.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            key={p.title || i}
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.55, delay: i * 0.08 }}
             className="group rounded-2xl border border-border bg-surface p-8 hover:border-accent/50 hover:-translate-y-1 transition-all duration-300"
           >
-            <p className="hud mb-3">{p.domain}</p>
+            <p className="hud mb-3 truncate">{p.link !== "#" ? p.link : "Application"}</p>
             <h3 className="font-display text-2xl font-semibold mb-3 group-hover:text-accent transition-colors">
-              {p.name}
+              {p.title}
             </h3>
             <p className="text-muted text-sm leading-relaxed mb-5">
               {p.description}
             </p>
 
             <div className="flex flex-wrap gap-2 mb-6">
-              {p.tags.map((t) => (
-                <span key={t} className="hud rounded-full border border-border px-3 py-1">
-                  {t}
+              {(p.metrics || []).map((m: any, idx: number) => (
+                <span key={idx} className="hud rounded-full border border-border px-3 py-1">
+                  {m.value}
                 </span>
               ))}
-            </div>
-
-            <div className="flex items-center gap-5 hud text-ink/60">
-              <span className="flex items-center gap-1.5">
-                <Star className="h-3.5 w-3.5" /> {p.stars} stars
-              </span>
-              <span className="flex items-center gap-1.5">
-                <GitFork className="h-3.5 w-3.5" /> {p.forks} forks
-              </span>
-              <span className="flex items-center gap-1.5">
-                <CircleDot className="h-3.5 w-3.5" /> {p.issues} issues
-              </span>
             </div>
           </motion.a>
         ))}

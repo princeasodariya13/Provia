@@ -12,8 +12,8 @@ import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import Milestones from "./components/Milestones";
 import Projects from "./components/Projects";
-import GithubActivity from "./components/GithubActivity";
 import Stack from "./components/Stack";
+import Education from "./components/Education";
 import Connect from "./components/Connect";
 import Footer from "./components/Footer";
 
@@ -27,8 +27,8 @@ export function aideveloperTemplate({ document }: TemplateProps) {
         <Hero />
         <Milestones />
         <Projects />
-        <GithubActivity />
         <Stack />
+        <Education />
         <Connect />
         <Footer />
       </TemplateProvider>
@@ -46,5 +46,5 @@ export const aideveloperMetadata = {
   audience: ["AI Engineers","ML Engineers","Technical Researchers"],
   style: "Modern",
   recommended: true,
-  supportedSections: ["hero", "about", "experience", "projects", "skills", "contact"],
+  supportedSections: ["hero", "about", "experience", "education", "projects", "skills", "contact"],
 };

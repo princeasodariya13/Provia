@@ -1,3 +1,71 @@
-@theme {
-  /* Add custom tailwind variables here */
+.engineer-theme {
+  --base: #09090b;
+  --surface: #18181b;
+  --surface2: #27272a;
+  --surface-hover: #3f3f46;
+  --ink: #fafafa;
+  --muted: #a1a1aa;
+  --accent: #ccff00;
+  --accent2: #00ffcc;
+  --border: #27272a;
+
+  background-color: var(--base);
+  color: var(--ink);
+  color-scheme: dark;
+}
+
+/* Colors */
+.engineer-theme .bg-base { background-color: var(--base); }
+.engineer-theme .bg-surface { background-color: var(--surface); }
+.engineer-theme .bg-surface2 { background-color: var(--surface2); }
+.engineer-theme .bg-accent { background-color: var(--accent); }
+.engineer-theme .bg-accent2 { background-color: var(--accent2); }
+
+.engineer-theme .text-ink { color: var(--ink); }
+.engineer-theme .text-accent { color: var(--accent); }
+.engineer-theme .text-muted { color: var(--muted); }
+
+.engineer-theme .border-border { border-color: var(--border); }
+.engineer-theme .border-accent { border-color: var(--accent); }
+
+/* Typography */
+.engineer-theme .eyebrow {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Hover States */
+.engineer-theme .hover\:text-accent:hover { color: var(--accent) !important; }
+.engineer-theme .hover\:border-accent:hover { border-color: var(--accent) !important; }
+
+/* Grid Pattern */
+.engineer-theme .bg-grid {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Animations */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.engineer-theme .animate-blink {
+  animation: blink 1.5s step-end infinite;
+}
+
+.engineer-theme .section-pad {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 768px) {
+  .engineer-theme .section-pad {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
 }

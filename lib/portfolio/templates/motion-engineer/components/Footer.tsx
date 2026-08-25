@@ -8,10 +8,10 @@ export default function Footer() {
   const { 
   contact = {},
   profile = {},
+  social = [],
   marqueeItems = [],
   certifications = [],
   header = {},
-  social = {},
   services = [],
   faq = [],
   milestones = [],

@@ -34,7 +34,7 @@ export default function Nav() {
     >
       <div className="section-pad flex items-center justify-between h-20">
         <a href="#top" className="font-display text-lg font-bold tracking-tight">
-          RM<span className="text-accent">.</span>
+          {profile.name ? profile.name.charAt(0) : "P"}<span className="text-gradient">.</span>
         </a>
 
         <nav className="hidden md:flex items-center gap-8">

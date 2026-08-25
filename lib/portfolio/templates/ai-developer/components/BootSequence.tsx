@@ -12,7 +12,12 @@ const lines = [
   "BOOT SEQUENCE COMPLETE.",
 ];
 
-export default function BootSequence({ onDone }: { onDone: () => void }) {
+export default function BootSequence({ onDone }: { onDone?: () => void }) {
+  const templateData = useTemplateData();
+  const profile = templateData?.profile || { name: "DEVELOPER" };
+  const bootYear = new Date().getFullYear();
+  const firstName = profile.name ? profile.name.split(" ")[0] : "DEVELOPER";
+
   const [visible, setVisible] = useState(true);
   const [lineIndex, setLineIndex] = useState(0);
 
@@ -25,7 +30,7 @@ export default function BootSequence({ onDone }: { onDone: () => void }) {
 
   function handleEnter() {
     setVisible(false);
-    setTimeout(onDone, 700);
+    if (onDone) setTimeout(onDone, 700);
   }
 
   return (
@@ -44,7 +49,7 @@ export default function BootSequence({ onDone }: { onDone: () => void }) {
             animate={{ opacity: 1 }}
             className="hud mb-6"
           >
-            Dev Career FC // {profile.bootYear}
+            Dev Career FC // {bootYear}
           </motion.p>
 
           <div className="hud text-left mb-10 h-24 space-y-1">
@@ -67,7 +72,7 @@ export default function BootSequence({ onDone }: { onDone: () => void }) {
             transition={{ duration: 0.5 }}
             className="font-display text-4xl md:text-6xl font-bold tracking-tight text-glow text-center px-6"
           >
-            {profile.name.toUpperCase()}
+            {(profile.name || "DEVELOPER").toUpperCase()}
           </motion.h1>
 
           <motion.p
@@ -92,7 +97,7 @@ export default function BootSequence({ onDone }: { onDone: () => void }) {
           </motion.button>
 
           <div className="absolute bottom-6 hud opacity-60">
-            © {profile.bootYear} {profile.firstName.toUpperCase()} — ENGINEERED FOR THE FUTURE
+            © {bootYear} {firstName.toUpperCase()} — ENGINEERED FOR THE FUTURE
           </div>
         </motion.div>
       )}

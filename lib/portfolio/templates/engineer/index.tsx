@@ -10,12 +10,12 @@ import "./style.css";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import About from "./components/About";
+import Experience from "./components/Experience";
+import Education from "./components/Education";
 import Projects from "./components/Projects";
 import Capabilities from "./components/Capabilities";
-import Process from "./components/Process";
 import Stats from "./components/Stats";
 import Stack from "./components/Stack";
-import FAQ from "./components/FAQ";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
@@ -27,12 +27,12 @@ export function engineerTemplate({ document }: TemplateProps) {
         <Nav />
         <Hero />
         <About />
+        <Experience />
         <Projects />
         <Capabilities />
-        <Process />
         <Stats />
         <Stack />
-        <FAQ />
+        <Education />
         <Contact />
         <Footer />
       </TemplateProvider>
@@ -50,5 +50,5 @@ export const engineerMetadata = {
   audience: ["Software Engineers","Developers","Professionals"],
   style: "Classic",
   recommended: true,
-  supportedSections: ["hero", "about", "experience", "projects", "skills", "contact"],
+  supportedSections: ["hero", "about", "experience", "education", "projects", "skills", "contact"],
 };

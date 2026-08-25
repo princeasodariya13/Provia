@@ -681,7 +681,7 @@ export function StudioInspector({
       </div>
 
       {/* Panel body */}
-      <div className="flex-1 overflow-y-auto no-scrollbar p-4">
+      <div className="flex-1 overflow-y-auto no-scrollbar p-4" data-lenis-prevent>
         {activeTab === "content" && renderContentEditor()}
         {activeTab === "design" && renderDesignEditor()}
         {activeTab === "sections" && renderSectionsEditor()}

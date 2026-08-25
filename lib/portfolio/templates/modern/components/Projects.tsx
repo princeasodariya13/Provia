@@ -57,7 +57,7 @@ export default function Projects() {
               <div className="card-glow group rounded-2xl border border-border bg-card/60 overflow-hidden h-full flex flex-col">
                 <div className="relative aspect-[16/9] overflow-hidden">
                   <Image
-                    src={p.image}
+                    src={p.image || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&h=400&fit=crop"}
                     alt={p.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -76,29 +76,30 @@ export default function Projects() {
                   </p>
 
                   <div className="flex flex-wrap gap-2 mb-5">
-                    {p.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="font-mono text-xs text-accent bg-accentSoft rounded-full px-2.5 py-1"
-                      >
-                        {t}
+                    {p.tag && (
+                      <span className="font-mono text-xs text-accent bg-accentSoft rounded-full px-2.5 py-1">
+                        {p.tag}
                       </span>
-                    ))}
+                    )}
                   </div>
 
                   <div className="flex items-center gap-5 text-sm">
-                    <a
-                      href={p.liveUrl}
-                      className="inline-flex items-center gap-1.5 text-ink hover:text-accent transition-colors"
-                    >
-                      Live Demo <ExternalLink size={14} />
-                    </a>
-                    <a
-                      href={p.codeUrl}
-                      className="inline-flex items-center gap-1.5 text-muted hover:text-accent transition-colors"
-                    >
-                      Code <Github size={14} />
-                    </a>
+                    {p.url && p.url !== "#" && (
+                      <a
+                        href={p.url}
+                        className="inline-flex items-center gap-1.5 text-ink hover:text-accent transition-colors"
+                      >
+                        Live Demo <ExternalLink size={14} />
+                      </a>
+                    )}
+                    {p.repositoryUrl && p.repositoryUrl !== "#" && (
+                      <a
+                        href={p.repositoryUrl}
+                        className="inline-flex items-center gap-1.5 text-muted hover:text-accent transition-colors"
+                      >
+                        Code <Github size={14} />
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>

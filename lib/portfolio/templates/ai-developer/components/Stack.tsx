@@ -28,11 +28,13 @@ export default function Stack() {
   education = []
  } = templateData || {};
 
-  const skillGroups = Array.isArray(skills) ? skills.map((s: any, i: number) => ({
-    index: `0${i + 1}`,
-    title: s.category || "Skills",
-    skills: s.skills || []
-  })) : [];
+  const skillGroups = [
+    {
+      index: "01",
+      title: "Core Stack",
+      skills: Array.isArray(stack) ? stack.map((s: any) => s.name) : []
+    }
+  ];
 
   return (
     <section id="stack" className="section-pad py-24 border-b border-border">

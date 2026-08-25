@@ -35,7 +35,7 @@ export default function About() {
 
         <div className="grid md:grid-cols-5 gap-12">
           <div className="md:col-span-3 space-y-5">
-            {about.paragraphs.map((p, i) => (
+            {(about.paragraphs || []).map((p: string, i: number) => (
               <Reveal key={i} delay={i * 0.1}>
                 <p className="text-muted leading-relaxed text-lg">{p}</p>
               </Reveal>
@@ -43,7 +43,7 @@ export default function About() {
           </div>
 
           <div className="md:col-span-2 grid grid-cols-2 gap-4">
-            {about.stats.map((s, i) => (
+            {(about.stats || []).map((s: {label: string, value: string}, i: number) => (
               <Reveal key={s.label} delay={0.15 + i * 0.08}>
                 <div className="rounded-2xl border border-border bg-card/60 p-5 h-full">
                   <div className="section-label mb-2">{s.label}</div>

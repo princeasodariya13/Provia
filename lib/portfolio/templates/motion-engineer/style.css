@@ -1,3 +1,65 @@
-@theme {
-  /* Add custom tailwind variables here */
+.motion-engineer-theme {
+  --base: #000000;
+  --ink: #ffffff;
+  --muted: #a1a1aa;
+  --border: #27272a;
+  --gradient1: #7c5cff;
+  --gradient2: #f241a5;
+
+  color-scheme: dark;
+}
+
+.motion-engineer-theme .bg-gradient1 { background-color: var(--gradient1); }
+.motion-engineer-theme .bg-gradient2 { background-color: var(--gradient2); }
+.motion-engineer-theme .text-muted { color: var(--muted); }
+.motion-engineer-theme .border-border { border-color: var(--border); }
+
+/* Compatibility */
+.motion-engineer-theme .text-accent { color: var(--gradient1); }
+.motion-engineer-theme .border-accent { border-color: var(--gradient1); }
+.motion-engineer-theme .hover\:text-accent:hover { color: var(--gradient1) !important; }
+.motion-engineer-theme .hover\:border-accent:hover { border-color: var(--gradient1) !important; }
+
+.motion-engineer-theme .text-gradient {
+  background: linear-gradient(135deg, var(--gradient1), var(--gradient2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.motion-engineer-theme .eyebrow {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.motion-engineer-theme .section-pad {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 768px) {
+  .motion-engineer-theme .section-pad {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+}
+.motion-engineer-theme .animate-floaty {
+  animation: floaty 8s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+.motion-engineer-theme .animate-marquee {
+  animation: marquee 25s linear infinite;
 }

@@ -52,7 +52,7 @@ export default function Projects() {
               <div className="group glass rounded-2xl overflow-hidden h-full flex flex-col hover:border-cyan transition-colors">
                 <div className="relative aspect-[16/9] overflow-hidden">
                   <Image
-                    src={p.image}
+                    src={p.image || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&h=400&fit=crop"}
                     alt={p.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -77,12 +77,11 @@ export default function Projects() {
                   </div>
 
                   <div className="flex items-center gap-5 text-sm">
-                    <a href={p.liveUrl} className="inline-flex items-center gap-1.5 text-ink hover:text-cyan transition-colors">
-                      Live Demo <ExternalLink size={14} />
-                    </a>
-                    <a href={p.codeUrl} className="inline-flex items-center gap-1.5 text-muted hover:text-cyan transition-colors">
-                      Code <Github size={14} />
-                    </a>
+                    {p.link && p.link !== "#" && (
+                      <a href={p.link} className="inline-flex items-center gap-1.5 text-ink hover:text-cyan transition-colors">
+                        Live Demo <ExternalLink size={14} />
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>

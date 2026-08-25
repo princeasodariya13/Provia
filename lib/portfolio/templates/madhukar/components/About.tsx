@@ -37,10 +37,10 @@ export default function About() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <Reveal>
             <blockquote className="font-display font-semibold text-2xl leading-snug mb-6">
-              &ldquo;{about.quote}&rdquo;
+              &ldquo;{about.quote || about.summary?.split(".")[0] || "Building with purpose."}&rdquo;
             </blockquote>
             <div className="space-y-4">
-              {about.paragraphs.map((p, i) => (
+              {(about.paragraphs || (about.summary ? [about.summary] : ["Passionate developer building elegant solutions."])).map((p: string, i: number) => (
                 <p key={i} className="text-muted-light dark:text-muted-dark leading-relaxed">
                   {p}
                 </p>
@@ -51,7 +51,7 @@ export default function About() {
           <Reveal delay={0.15}>
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden glass p-2">
               <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden">
-                <Image src={about.image} alt="Workstation" fill className="object-cover" />
+                <Image src={about.image || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070"} alt="Workstation" fill className="object-cover" />
               </div>
             </div>
           </Reveal>

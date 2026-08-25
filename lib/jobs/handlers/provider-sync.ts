@@ -5,7 +5,7 @@ import { githubConnector } from "@/lib/integrations/github";
 import { linkedinConnector } from "@/lib/integrations/linkedin";
 import { SourceConnector } from "@/lib/integrations/connector";
 import { decryptToken } from "@/lib/integrations/crypto";
-import { normalizeProfileData } from "@/lib/integrations/normalize";
+import { normalizeProfileData, NormalizedGitHubData } from "@/lib/integrations/normalize";
 import { Provider } from "@prisma/client";
 import { AnalyticsService } from "@/lib/analytics/service";
 import { logger } from "@/lib/logger";
@@ -67,27 +67,114 @@ export const ProviderSyncHandler = {
         }
       }
 
+      // Only update scalar fields not manually edited by the user
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const safeUpdateData: Record<string, any> = {};
       for (const [key, val] of Object.entries(normalized)) {
+        // Skip non-scalar fields (arrays, objects) that we handle separately
+        if (Array.isArray(val) || (typeof val === "object" && val !== null)) continue;
+        
         if (!userEdits[key]) {
           safeUpdateData[key] = val;
         }
       }
 
+      let canonicalProfile: { id: string };
       if (existingProfile) {
-        await prisma.professionalProfile.update({
+        canonicalProfile = await prisma.professionalProfile.update({
           where: { id: existingProfile.id },
           data: safeUpdateData,
         });
       } else {
-        await prisma.professionalProfile.create({
+        canonicalProfile = await prisma.professionalProfile.create({
           data: {
             userId,
-            ...normalized,
+            ...safeUpdateData,
           }
         });
       }
+
+      // ─── GitHub-specific: persist repositories as projects ─────────────────
+      if (providerEnum === "GITHUB") {
+        const githubData = normalized as NormalizedGitHubData;
+
+        // Upsert projects from repositories (skip repos with no name, use externalId = repo.htmlUrl)
+        if (githubData.repositories && githubData.repositories.length > 0) {
+          for (const repo of githubData.repositories) {
+            if (!repo.name || !repo.htmlUrl) continue;
+
+            const technologies = [
+              ...(repo.language ? [repo.language] : []),
+              ...repo.topics,
+            ]
+              .filter(Boolean)
+              .slice(0, 10)
+              .join(", ");
+
+            // Check for an existing project from this repo (by externalId OR matching name+source)
+            const existing = await prisma.professionalProject.findFirst({
+              where: {
+                profileId: canonicalProfile.id,
+                externalId: repo.htmlUrl,
+              }
+            });
+
+            if (existing) {
+              // Only update non-manually-edited projects
+              if (!existing.isManuallyEdited) {
+                await prisma.professionalProject.update({
+                  where: { id: existing.id },
+                  data: {
+                    description: repo.description,
+                    repositoryUrl: repo.htmlUrl,
+                    url: repo.homepageUrl || repo.htmlUrl,
+                    technologies,
+                  }
+                });
+              }
+            } else {
+              // Check if a manual project with the same name already exists (deduplication)
+              const nameMatch = await prisma.professionalProject.findFirst({
+                where: {
+                  profileId: canonicalProfile.id,
+                  name: { equals: repo.name, mode: "insensitive" },
+                  isManuallyEdited: true,
+                }
+              });
+              if (!nameMatch) {
+                await prisma.professionalProject.create({
+                  data: {
+                    profileId: canonicalProfile.id,
+                    name: repo.name,
+                    description: repo.description,
+                    repositoryUrl: repo.htmlUrl,
+                    url: repo.homepageUrl || null,
+                    technologies,
+                    source: "GITHUB",
+                    externalId: repo.htmlUrl,
+                  }
+                });
+              }
+            }
+          }
+        }
+
+        // Upsert derived skills (languages + topics) — upsert by name so no duplicates
+        if (githubData.derivedSkills && githubData.derivedSkills.length > 0) {
+          for (const skillName of githubData.derivedSkills) {
+            await prisma.professionalSkill.upsert({
+              where: { profileId_name: { profileId: canonicalProfile.id, name: skillName } },
+              update: {}, // don't overwrite if already present
+              create: {
+                profileId: canonicalProfile.id,
+                name: skillName,
+                source: "GITHUB",
+              }
+            });
+          }
+        }
+      }
+      // ─── End GitHub-specific ───────────────────────────────────────────────
 
       await prisma.connection.update({
         where: { id: connection.id },
@@ -121,3 +208,4 @@ export const ProviderSyncHandler = {
     }
   }
 };
+
