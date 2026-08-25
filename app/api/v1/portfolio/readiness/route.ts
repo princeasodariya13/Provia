@@ -65,7 +65,7 @@ export const GET = withAPIHandler(async () => {
     },
     {
       id: "resume",
-      label: "Upload your resume",
+      label: "Upload your resume (Optional)",
       passed: hasResume,
       actionLabel: "Upload Resume",
       actionUrl: "/profile"
