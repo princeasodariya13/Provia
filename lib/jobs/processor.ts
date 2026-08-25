@@ -294,5 +294,61 @@ export const JobProcessor = {
         await new Promise(resolve => setTimeout(resolve, 5000));
       }
     }
+  },
+
+  /**
+   * Serverless-friendly batch processing.
+   * Processes a limited number of jobs and stops before maxDurationMs.
+   */
+  async processBatch(batchSize: number = 5, maxDurationMs: number = 25000) {
+    const workerId = `serverless-${crypto.randomUUID()}`;
+    logger.info({ workerId, batchSize, maxDurationMs }, "Starting serverless job batch");
+    
+    // Register temporary worker for observability
+    await prisma.workerStatus.create({
+      data: { workerId, status: "ONLINE", lastHeartbeatAt: new Date() }
+    });
+    
+    const startMs = performance.now();
+    let jobsProcessed = 0;
+
+    try {
+      // Always try to recover stale jobs first
+      await this.recoverStaleJobs();
+
+      for (let i = 0; i < batchSize; i++) {
+        // Check if we are running out of time
+        const elapsed = performance.now() - startMs;
+        if (elapsed >= maxDurationMs) {
+          logger.warn({ workerId, elapsed, maxDurationMs }, "Stopping batch to prevent serverless timeout");
+          break;
+        }
+
+        const processed = await this.processNextJob(workerId);
+        if (!processed) {
+          // No more jobs in the queue
+          break;
+        }
+        
+        jobsProcessed++;
+      }
+    } catch (error) {
+      logger.error({ workerId, err: error }, "Error during serverless job batch");
+    } finally {
+      // Unregister temporary worker
+      await prisma.workerStatus.updateMany({
+        where: { workerId },
+        data: { status: "OFFLINE", lastHeartbeatAt: new Date() }
+      });
+    }
+
+    const totalDuration = Math.round(performance.now() - startMs);
+    logger.info({ workerId, jobsProcessed, totalDuration }, "Completed serverless job batch");
+    
+    return {
+      jobsProcessed,
+      durationMs: totalDuration,
+      timedOut: totalDuration >= maxDurationMs
+    };
   }
 };

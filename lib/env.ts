@@ -45,6 +45,9 @@ const envSchema = z.object({
   AI_MODEL: z.string().optional(),
   
   NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
+  
+  // CRON
+  CRON_SECRET: z.string().min(16).optional(),
 
   // RATE LIMITING
   AUTH_RATE_LIMIT_WINDOW_SECONDS: z.string().optional().default("900"), // 15 minutes by default
@@ -90,6 +93,7 @@ export const env = envSchema.parse({
   GEMINI_API_KEY: process.env.GEMINI_API_KEY?.trim(),
   AI_MODEL: process.env.AI_MODEL?.trim() || "gemini-2.5-flash",
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  CRON_SECRET: process.env.CRON_SECRET,
   AUTH_RATE_LIMIT_WINDOW_SECONDS: process.env.AUTH_RATE_LIMIT_WINDOW_SECONDS,
   AUTH_LOGIN_IP_LIMIT: process.env.AUTH_LOGIN_IP_LIMIT,
   AUTH_LOGIN_ACCOUNT_LIMIT: process.env.AUTH_LOGIN_ACCOUNT_LIMIT,
