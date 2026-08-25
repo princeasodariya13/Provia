@@ -29,11 +29,23 @@ export const CloudinaryService = {
           resource_type: resourceType,
           overwrite: true,
         },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (error: any, result: any) => {
           if (error) {
-            console.error("Cloudinary Stream Upload Error:", error);
-            reject(new APIError(`Cloudinary upload failed: ${error.message || "Unknown error"}`, 500));
+            const diagnosticError = {
+              status: error.http_code || error.statusCode || 403, // Fallback to 403 if it was rejected
+              message: error.message || "Unknown Cloudinary error",
+              resourceType,
+              mimeType,
+              fileSize: buffer.length,
+              cloudNameConfigured: !!env.CLOUDINARY_CLOUD_NAME,
+              apiKeyConfigured: !!env.CLOUDINARY_API_KEY,
+              apiSecretConfigured: !!env.CLOUDINARY_API_SECRET,
+              rawError: typeof error === "object" ? JSON.stringify(error) : String(error)
+            };
+            
+            console.error("CloudinaryUploadDiagnostic:", JSON.stringify(diagnosticError, null, 2));
+            
+            reject(new APIError(`Cloudinary upload failed: ${diagnosticError.message}`, diagnosticError.status));
           } else if (result) {
             resolve({
               secureUrl: result.secure_url,
