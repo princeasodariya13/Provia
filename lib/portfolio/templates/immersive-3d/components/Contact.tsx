@@ -51,14 +51,13 @@ export default function Contact() {
                 Have a project, opportunity, or just want to say hi? Drop a message below.
               </p>
             </Reveal>
-            {contactCards.map((c, i) => (
+            {(social || []).map((c: any, i: number) => (
               <Reveal key={c.label} delay={0.05 * i}>
                 <a
                   href={c.href}
                   className="flex items-center justify-between glass rounded-xl px-4 py-3 hover:border-cyan transition-colors"
                 >
                   <span className="eyebrow">{c.label}</span>
-                  <span className="text-sm text-ink truncate ml-4">{c.value}</span>
                 </a>
               </Reveal>
             ))}

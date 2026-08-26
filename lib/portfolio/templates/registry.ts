@@ -1,5 +1,6 @@
 import { TemplateDefinition } from "./types";
 import { editorialV1 } from "./editorial-v1";
+import { premiumV1 } from "./premium-v1";
 import { engineerTemplate, engineerMetadata } from "./engineer";
 import { aideveloperTemplate, aideveloperMetadata } from "./ai-developer";
 import { motionengineerTemplate, motionengineerMetadata } from "./motion-engineer";
@@ -10,6 +11,7 @@ import { modernfullstackTemplate, modernfullstackMetadata } from "./modern-fulls
 
 const templates: Record<string, TemplateDefinition> = {
   [editorialV1.metadata.id]: editorialV1,
+  [premiumV1.metadata.id]: premiumV1,
   [engineerMetadata.id]: { metadata: engineerMetadata, component: engineerTemplate },
   [aideveloperMetadata.id]: { metadata: aideveloperMetadata, component: aideveloperTemplate },
   [motionengineerMetadata.id]: { metadata: motionengineerMetadata, component: motionengineerTemplate },
@@ -21,6 +23,7 @@ const templates: Record<string, TemplateDefinition> = {
 
 // Legacy ID aliases for backward compatibility with stored templateIds
 const ALIASES: Record<string, string> = {
+  "premium-v1": "premium-v1", // Self-alias (stable)
   // Old developer-named IDs → stable canonical IDs
   "engineer": "classic-professional",
   "ai-developer": "ai-technology",

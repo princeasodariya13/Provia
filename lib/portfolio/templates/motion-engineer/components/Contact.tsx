@@ -15,7 +15,7 @@ export default function Contact() {
   marqueeItems = [],
   certifications = [],
   header = {},
-  social = {},
+  socials = [],
   services = [],
   faq = [],
   milestones = [],

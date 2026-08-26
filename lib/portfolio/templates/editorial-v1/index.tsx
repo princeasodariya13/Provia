@@ -5,6 +5,7 @@ import { Experience } from "./sections/Experience";
 import { Projects } from "./sections/Projects";
 import { Skills } from "./sections/Skills";
 import { Education } from "./sections/Education";
+import { Certifications } from "./sections/Certifications";
 import { Contact } from "./sections/Contact";
 import { motion } from "framer-motion";
 
@@ -19,6 +20,7 @@ export function EditorialV1({ document }: TemplateProps) {
             <About data={document.about} />
             <Skills data={document.skills} />
             <Education data={document.education} />
+            <Certifications data={document.certifications} />
           </div>
           
           <div className="md:col-span-8 space-y-28">
@@ -41,7 +43,7 @@ export const editorialV1 = {
     name: "Editorial",
     version: "1.0.0",
     description: "A premium, typography-driven layout with asymmetric columns, geometric accents, and smooth animations.",
-    supportedSections: ["hero", "about", "experience", "education", "skills", "projects", "contact"],
+    supportedSections: ["hero", "about", "experience", "education", "skills", "projects", "certifications", "contact"],
   },
   component: EditorialV1,
 };

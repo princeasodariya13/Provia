@@ -674,14 +674,15 @@ export function StudioInspector({
   };
 
   return (
-    <div className="w-72 border-l border-border-light bg-surface shrink-0 flex flex-col h-full overflow-hidden shadow-[-2px_0_12px_rgba(0,0,0,0.03)]">
+    <div className="w-80 border-l border-border-light bg-surface/80 backdrop-blur-xl shrink-0 flex flex-col h-full overflow-hidden shadow-[-8px_0_24px_rgba(0,0,0,0.05)] z-20">
       {/* Panel header */}
-      <div className="h-12 border-b border-border-light flex items-center px-4 shrink-0 bg-surface-muted/30">
-        <h3 className="font-bold text-xs tracking-tight text-text-primary capitalize">{panelTitle()}</h3>
+      <div className="h-16 border-b border-border-light/50 flex items-center px-5 shrink-0 bg-surface/50 relative">
+        <h3 className="font-extrabold text-sm tracking-tight text-text-primary capitalize">{panelTitle()}</h3>
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-border-light/20 via-border-light to-border-light/20" />
       </div>
 
       {/* Panel body */}
-      <div className="flex-1 overflow-y-auto no-scrollbar p-4" data-lenis-prevent>
+      <div className="flex-1 overflow-y-auto no-scrollbar p-5" data-lenis-prevent>
         {activeTab === "content" && renderContentEditor()}
         {activeTab === "design" && renderDesignEditor()}
         {activeTab === "sections" && renderSectionsEditor()}
@@ -697,18 +698,30 @@ export function StudioInspector({
 // Helper components
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="space-y-1.5">
-      <label className="text-[10px] font-bold uppercase tracking-widest text-text-muted block">{label}</label>
-      {children}
+    <div className="space-y-2">
+      <label className="text-[10px] font-extrabold uppercase tracking-widest text-text-muted block">{label}</label>
+      {React.Children.map(children, child => {
+        if (React.isValidElement(child)) {
+          const element = child as React.ReactElement<any>;
+          // Add standard styling to Inputs and Textareas
+          const className = element.props.className || "";
+          if (element.type === Input || element.type === Textarea) {
+            return React.cloneElement(element, {
+              className: `bg-surface/50 border-border-light hover:border-border transition-all focus:ring-1 focus:ring-brand/50 rounded-xl ${className}`
+            });
+          }
+        }
+        return child;
+      })}
     </div>
   );
 }
 
 function EmptyState({ message, hint }: { message: string; hint: string }) {
   return (
-    <div className="py-8 text-center">
-      <p className="text-sm font-semibold text-text-secondary">{message}</p>
-      {hint && <p className="text-xs text-text-muted mt-1">{hint}</p>}
+    <div className="py-12 text-center px-4 border border-dashed border-border-light/60 rounded-2xl bg-surface-muted/20">
+      <p className="text-sm font-bold text-text-primary">{message}</p>
+      {hint && <p className="text-xs text-text-secondary mt-1.5 leading-relaxed">{hint}</p>}
     </div>
   );
 }

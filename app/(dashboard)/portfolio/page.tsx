@@ -298,24 +298,24 @@ export default function PortfolioStudioPage() {
   return (
     <div className="flex flex-col h-screen w-full bg-background overflow-hidden">
       {/* ── TOP BAR ── */}
-      <header className="h-14 border-b border-border-light bg-surface shrink-0 flex items-center justify-between px-3 sm:px-4 select-none gap-2">
+      <header className="h-16 border-b border-border-light/50 bg-surface/90 backdrop-blur-md shrink-0 flex items-center justify-between px-4 sm:px-6 select-none gap-2 relative z-30">
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand/20 to-transparent" />
+        
         {/* Left: back + title */}
-        <div className="flex items-center gap-3 min-w-0 shrink-0">
+        <div className="flex items-center gap-4 min-w-0 shrink-0">
           <Link
             href="/dashboard"
-            className="flex items-center gap-1.5 text-text-secondary hover:text-text-primary transition-colors text-xs font-bold shrink-0"
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-surface-muted/50 hover:bg-surface-muted border border-border-light text-text-secondary hover:text-text-primary transition-colors shrink-0"
           >
-            <ChevronLeft className="w-4 h-4" />
-            <span className="hidden sm:block">Dashboard</span>
+            <ChevronLeft className="w-4 h-4 -ml-0.5" />
           </Link>
-          <div className="hidden sm:block w-px h-5 bg-border-light" />
+          <div className="hidden sm:block w-px h-6 bg-border-light/50" />
           <div className="hidden sm:flex flex-col min-w-0">
-            <span className="text-xs font-bold text-text-primary leading-tight">Portfolio Studio</span>
-            <div className="flex items-center gap-1 text-[10px] text-text-secondary font-medium">
-              {version > 0 && <span>v{version}</span>}
-              {version > 0 && <span>·</span>}
-              <span className={saveStatus === 'unsaved' ? 'text-warning' : saveStatus === 'saving' ? 'text-text-muted animate-pulse' : 'text-text-muted'}>
-                {saveStatus === 'saving' ? 'Saving…' : saveStatus === 'saved' ? 'All changes saved' : 'Unsaved changes'}
+            <span className="text-sm font-extrabold text-text-primary leading-tight tracking-tight">Portfolio Studio</span>
+            <div className="flex items-center gap-1.5 text-[10px] text-text-secondary font-semibold uppercase tracking-widest mt-0.5">
+              {version > 0 && <span className="bg-brand/10 text-brand px-1.5 rounded-sm">v{version}</span>}
+              <span className={saveStatus === 'unsaved' ? 'text-warning flex items-center gap-1' : saveStatus === 'saving' ? 'text-text-muted animate-pulse flex items-center gap-1' : 'text-success flex items-center gap-1'}>
+                {saveStatus === 'saving' ? <><RefreshCw className="w-2.5 h-2.5 animate-spin"/> Saving…</> : saveStatus === 'saved' ? <><CheckCircle2 className="w-2.5 h-2.5"/> Saved</> : <><Circle className="w-2.5 h-2.5"/> Unsaved</>}
               </span>
             </div>
           </div>
@@ -406,27 +406,29 @@ export default function PortfolioStudioPage() {
         />
 
         {/* Right: Inspector */}
-        <StudioInspector
-          activeTab={activeTab}
-          activeSection={activeSection}
-          document={document}
-          onChange={handleDocumentChange}
-          templateId={templateId}
-          setTemplateId={handleTemplateChange}
-          publication={publication}
-          versions={versions}
-          onRestore={handleRestoreVersion}
-          onUnpublish={handleUnpublish}
-          onPublish={handlePublish}
-          publishing={publishing}
-          isPublished={isPublished}
-          publicUrl={publicUrl}
-          onCopyLink={handleCopyLink}
-          onRegenerateLink={handleRegenerateLink}
-          regeneratingLink={regeneratingLink}
-          onGenerate={handleGenerateAI}
-          generating={generating}
-        />
+        {activeTab !== "design" && (
+          <StudioInspector
+            activeTab={activeTab}
+            activeSection={activeSection}
+            document={document}
+            onChange={handleDocumentChange}
+            templateId={templateId}
+            setTemplateId={handleTemplateChange}
+            publication={publication}
+            versions={versions}
+            onRestore={handleRestoreVersion}
+            onUnpublish={handleUnpublish}
+            onPublish={handlePublish}
+            publishing={publishing}
+            isPublished={isPublished}
+            publicUrl={publicUrl}
+            onCopyLink={handleCopyLink}
+            onRegenerateLink={handleRegenerateLink}
+            regeneratingLink={regeneratingLink}
+            onGenerate={handleGenerateAI}
+            generating={generating}
+          />
+        )}
       </div>
 
       {/* Readiness Modal */}

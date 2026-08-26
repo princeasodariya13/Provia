@@ -71,111 +71,127 @@ export const POST = withAPIHandler(async (req) => {
   }
 
   // Handle arrays - using prisma transactions
-  const transactions = [];
+  const transactions: any[] = [];
 
   // Experience
-  for (const idx of selections.experience) {
-    const exp = structuredData.experience?.[idx];
-    if (exp) {
-      transactions.push(prisma.professionalExperience.create({
-        data: {
-          profileId: profile.id,
-          title: exp.title,
-          company: exp.company,
-          location: exp.location,
-          startDate: exp.startDate ? new Date(exp.startDate) : null,
-          endDate: exp.endDate ? new Date(exp.endDate) : null,
-          isCurrent: exp.current,
-          description: exp.description || (exp.responsibilities.length > 0 ? exp.responsibilities.join("\n") : null),
-          source: "RESUME",
-        }
-      }));
+  if (selections.experience.length > 0) {
+    transactions.push(prisma.professionalExperience.deleteMany({ where: { profileId: profile.id } }));
+    for (const idx of selections.experience) {
+      const exp = structuredData.experience?.[idx];
+      if (exp) {
+        transactions.push(prisma.professionalExperience.create({
+          data: {
+            profileId: profile.id,
+            title: exp.title,
+            company: exp.company,
+            location: exp.location,
+            startDate: exp.startDate ? new Date(exp.startDate) : null,
+            endDate: exp.endDate ? new Date(exp.endDate) : null,
+            isCurrent: exp.current,
+            description: exp.description || (exp.responsibilities.length > 0 ? exp.responsibilities.join("\n") : null),
+            source: "RESUME",
+          }
+        }));
+      }
     }
   }
 
   // Education
-  for (const idx of selections.education) {
-    const edu = structuredData.education?.[idx];
-    if (edu) {
-      transactions.push(prisma.professionalEducation.create({
-        data: {
-          profileId: profile.id,
-          institution: edu.institution,
-          degree: edu.degree,
-          fieldOfStudy: edu.fieldOfStudy,
-          startDate: edu.startDate ? new Date(edu.startDate) : null,
-          endDate: edu.endDate ? new Date(edu.endDate) : null,
-          description: edu.description,
-          source: "RESUME",
-        }
-      }));
+  if (selections.education.length > 0) {
+    transactions.push(prisma.professionalEducation.deleteMany({ where: { profileId: profile.id } }));
+    for (const idx of selections.education) {
+      const edu = structuredData.education?.[idx];
+      if (edu) {
+        transactions.push(prisma.professionalEducation.create({
+          data: {
+            profileId: profile.id,
+            institution: edu.institution,
+            degree: edu.degree,
+            fieldOfStudy: edu.fieldOfStudy,
+            startDate: edu.startDate ? new Date(edu.startDate) : null,
+            endDate: edu.endDate ? new Date(edu.endDate) : null,
+            description: edu.description,
+            source: "RESUME",
+          }
+        }));
+      }
     }
   }
 
   // Skills
-  for (const idx of selections.skills) {
-    const skill = structuredData.skills?.[idx];
-    if (skill) {
-      transactions.push(prisma.professionalSkill.upsert({
-        where: { profileId_name: { profileId: profile.id, name: skill.name } },
-        update: { source: "RESUME" },
-        create: {
-          profileId: profile.id,
-          name: skill.name,
-          source: "RESUME",
-        }
-      }));
+  if (selections.skills.length > 0) {
+    transactions.push(prisma.professionalSkill.deleteMany({ where: { profileId: profile.id } }));
+    for (const idx of selections.skills) {
+      const skill = structuredData.skills?.[idx];
+      if (skill) {
+        transactions.push(prisma.professionalSkill.create({
+          data: {
+            profileId: profile.id,
+            name: skill.name,
+            source: "RESUME",
+          }
+        }));
+      }
     }
   }
 
   // Projects
-  for (const idx of selections.projects) {
-    const proj = structuredData.projects?.[idx];
-    if (proj) {
-      transactions.push(prisma.professionalProject.create({
-        data: {
-          profileId: profile.id,
-          name: proj.name,
-          description: proj.description,
-          technologies: proj.technologies.join(", "),
-          url: proj.url,
-          source: "RESUME",
-        }
-      }));
+  if (selections.projects.length > 0) {
+    transactions.push(prisma.professionalProject.deleteMany({ where: { profileId: profile.id } }));
+    for (const idx of selections.projects) {
+      const proj = structuredData.projects?.[idx];
+      if (proj) {
+        transactions.push(prisma.professionalProject.create({
+          data: {
+            profileId: profile.id,
+            name: proj.name,
+            description: proj.description,
+            technologies: proj.technologies.join(", "),
+            url: proj.url,
+            source: "RESUME",
+          }
+        }));
+      }
     }
   }
 
   // Certifications
-  for (const idx of selections.certifications) {
-    const cert = structuredData.certifications?.[idx];
-    if (cert) {
-      transactions.push(prisma.professionalCertification.create({
-        data: {
-          profileId: profile.id,
-          name: cert.name,
-          organization: cert.issuer,
-          issueDate: cert.issueDate ? new Date(cert.issueDate) : null,
-          expirationDate: cert.expiryDate ? new Date(cert.expiryDate) : null,
-          credentialId: cert.credentialId,
-          credentialUrl: cert.credentialUrl,
-          source: "RESUME",
-        }
-      }));
+  if (selections.certifications.length > 0) {
+    transactions.push(prisma.professionalCertification.deleteMany({ where: { profileId: profile.id } }));
+    for (const idx of selections.certifications) {
+      const cert = structuredData.certifications?.[idx];
+      if (cert) {
+        transactions.push(prisma.professionalCertification.create({
+          data: {
+            profileId: profile.id,
+            name: cert.name,
+            organization: cert.issuer,
+            issueDate: cert.issueDate ? new Date(cert.issueDate) : null,
+            expirationDate: cert.expiryDate ? new Date(cert.expiryDate) : null,
+            credentialId: cert.credentialId,
+            credentialUrl: cert.credentialUrl,
+            source: "RESUME",
+          }
+        }));
+      }
     }
   }
 
   // Links
-  for (const idx of selections.links) {
-    const link = structuredData.links?.[idx];
-    if (link) {
-      transactions.push(prisma.professionalLink.create({
-        data: {
-          profileId: profile.id,
-          title: link.platform,
-          url: link.url,
-          source: "RESUME",
-        }
-      }));
+  if (selections.links.length > 0) {
+    transactions.push(prisma.professionalLink.deleteMany({ where: { profileId: profile.id } }));
+    for (const idx of selections.links) {
+      const link = structuredData.links?.[idx];
+      if (link) {
+        transactions.push(prisma.professionalLink.create({
+          data: {
+            profileId: profile.id,
+            title: link.platform,
+            url: link.url,
+            source: "RESUME",
+          }
+        }));
+      }
     }
   }
 

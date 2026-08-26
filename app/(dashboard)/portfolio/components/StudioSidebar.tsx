@@ -45,9 +45,9 @@ export function StudioSidebar({
   document, handleGenerateAI, generating
 }: Props) {
   return (
-    <div className="w-52 border-r border-border-light bg-surface shrink-0 flex flex-col h-full overflow-hidden">
+    <div className="w-56 bg-surface/80 backdrop-blur-xl border-r border-border-light shrink-0 flex flex-col h-full overflow-hidden z-20">
       <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-1" data-lenis-prevent>
-        <p className="px-3 pt-1 pb-2 text-[9px] font-bold uppercase tracking-widest text-text-muted">Studio</p>
+        <p className="px-3 pt-2 pb-3 text-[10px] font-extrabold uppercase tracking-widest text-text-muted">Studio Options</p>
 
         {TABS.map(tab => {
           const Icon = tab.icon;
@@ -56,16 +56,19 @@ export function StudioSidebar({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold transition-all rounded-lg ${
+              className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-semibold transition-all duration-300 rounded-xl relative overflow-hidden group ${
                 isActive
-                  ? "bg-brand/10 text-brand"
-                  : "text-text-secondary hover:text-text-primary hover:bg-surface-muted"
+                  ? "bg-brand/10 text-brand shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] border border-brand/20"
+                  : "text-text-secondary hover:text-text-primary hover:bg-surface-muted/50 border border-transparent"
               }`}
             >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? "text-brand" : "text-text-muted"}`} />
+              {isActive && (
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-1/2 bg-brand rounded-r-full shadow-[0_0_8px_rgba(204,41,54,0.6)]" />
+              )}
+              <Icon className={`w-4 h-4 transition-transform duration-300 ${isActive ? "text-brand scale-110" : "text-text-muted group-hover:text-text-primary"}`} />
               {tab.label}
               {tab.id === "publish" && (
-                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-success" aria-label="Publish" />
+                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_4px_rgba(0,255,0,0.5)]" aria-label="Publish" />
               )}
             </button>
           );
@@ -73,8 +76,9 @@ export function StudioSidebar({
 
         {/* Content sections sub-nav */}
         {activeTab === "content" && (
-          <div className="pt-3 mt-3 border-t border-border-light space-y-0.5">
-            <p className="px-3 pb-1 text-[9px] font-bold uppercase tracking-widest text-text-muted">Sections</p>
+          <div className="pt-4 mt-4 border-t border-border-light/50 space-y-1 relative">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-border-light to-transparent" />
+            <p className="px-3 pb-2 text-[10px] font-extrabold uppercase tracking-widest text-text-muted">Content Sections</p>
             {CONTENT_SECTIONS.map(section => {
               const isActive = activeSection === section.id;
               const hasContent = document ? (() => {
@@ -93,15 +97,18 @@ export function StudioSidebar({
                 <button
                   key={section.id}
                   onClick={() => setActiveSection(section.id)}
-                  className={`w-full flex items-center justify-between px-3 py-1.5 text-xs font-semibold transition-all rounded-lg ${
+                  className={`w-full flex items-center justify-between px-3 py-2 text-xs font-semibold transition-all duration-300 rounded-lg group ${
                     isActive
-                      ? "bg-surface-muted text-text-primary shadow-sm border border-border-light"
-                      : "text-text-secondary hover:text-text-primary border border-transparent"
+                      ? "bg-surface text-text-primary shadow-sm border border-border-light/80"
+                      : "text-text-secondary hover:text-text-primary hover:bg-surface-muted/30 border border-transparent"
                   }`}
                 >
-                  <span>{section.label}</span>
+                  <span className="flex items-center gap-2">
+                    <span className={`w-1.5 h-1.5 rounded-full transition-colors ${isActive ? 'bg-brand' : 'bg-transparent group-hover:bg-border-strong'}`} />
+                    {section.label}
+                  </span>
                   {hasContent && (
-                    <span className="w-1 h-1 rounded-full bg-success" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-success/80 shadow-[0_0_4px_rgba(0,255,0,0.3)]" />
                   )}
                 </button>
               );
@@ -111,14 +118,14 @@ export function StudioSidebar({
       </div>
 
       {/* Generate button */}
-      <div className="p-3 border-t border-border-light bg-surface-muted/30">
+      <div className="p-4 border-t border-border-light/50 bg-surface/50 backdrop-blur-md">
         <Button
           variant="outline"
-          className="w-full text-xs font-bold"
+          className="w-full text-sm font-bold shadow-sm hover:shadow-brand/10 hover:border-brand/30 transition-all rounded-xl h-10"
           onClick={handleGenerateAI}
           disabled={generating}
         >
-          <Zap className="w-3.5 h-3.5 mr-1.5 text-brand" />
+          <Zap className={`w-4 h-4 mr-2 ${generating ? 'text-text-muted animate-pulse' : 'text-brand'}`} />
           {generating ? "Generating…" : "Generate with AI"}
         </Button>
       </div>
