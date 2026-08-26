@@ -52,26 +52,61 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   // Auth boundary — block ALL content until auth resolves
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex flex-col justify-center items-center p-6">
-        <div className="w-8 h-8 bg-brand flex items-center justify-center rounded-lg shadow-sm mb-4">
-          <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse" />
+      <div className="min-h-screen bg-background flex flex-col justify-center items-center p-6 relative overflow-hidden">
+        {/* Subtle premium background glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-brand/5 blur-[80px] rounded-full pointer-events-none animate-pulse" />
+        
+        {/* Brand logo block */}
+        <div className="relative mb-8">
+          <div className="w-10 h-10 bg-brand rounded-xl shadow-lg shadow-brand/20 flex items-center justify-center relative z-10 animate-in zoom-in duration-500">
+            <div className="w-3 h-3 bg-white rounded-full animate-ping absolute opacity-50" />
+            <div className="w-2.5 h-2.5 bg-white rounded-full relative z-20" />
+          </div>
+          
+          {/* Orbital rings */}
+          <div className="absolute inset-0 border border-brand/20 rounded-xl animate-[spin_4s_linear_infinite] -m-3" />
+          <div className="absolute inset-0 border border-brand/10 rounded-xl animate-[spin_5s_linear_infinite_reverse] -m-6" />
         </div>
-        <p className="text-[10px] font-bold tracking-widest text-text-muted uppercase">
-          Loading Workspace
-        </p>
+
+        {/* Loading text with animated dots */}
+        <div className="flex flex-col items-center gap-2 relative z-10">
+          <div className="flex items-center gap-1.5 text-[10px] font-extrabold tracking-widest text-text-primary uppercase">
+            <span>Loading Workspace</span>
+            <span className="flex items-center gap-0.5 mt-0.5">
+              <span className="w-1 h-1 rounded-full bg-brand animate-bounce" style={{ animationDelay: '0ms' }} />
+              <span className="w-1 h-1 rounded-full bg-brand animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-1 h-1 rounded-full bg-brand animate-bounce" style={{ animationDelay: '300ms' }} />
+            </span>
+          </div>
+          <p className="text-[10px] text-text-muted font-medium tracking-wide">
+            Preparing your environment
+          </p>
+        </div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background flex flex-col justify-center items-center p-6">
-        <div className="w-8 h-8 bg-brand flex items-center justify-center rounded-lg shadow-sm mb-4">
-          <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse" />
+      <div className="min-h-screen bg-background flex flex-col justify-center items-center p-6 relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-brand/5 blur-[80px] rounded-full pointer-events-none animate-pulse" />
+        
+        <div className="relative mb-8">
+          <div className="w-10 h-10 bg-brand rounded-xl shadow-lg shadow-brand/20 flex items-center justify-center relative z-10">
+            <div className="w-2.5 h-2.5 bg-white rounded-full relative z-20" />
+          </div>
         </div>
-        <p className="text-[10px] font-bold tracking-widest text-text-muted uppercase">
-          Redirecting...
-        </p>
+
+        <div className="flex flex-col items-center gap-2 relative z-10">
+          <div className="flex items-center gap-1.5 text-[10px] font-extrabold tracking-widest text-text-primary uppercase">
+            <span>Redirecting</span>
+            <span className="flex items-center gap-0.5 mt-0.5">
+              <span className="w-1 h-1 rounded-full bg-brand animate-bounce" style={{ animationDelay: '0ms' }} />
+              <span className="w-1 h-1 rounded-full bg-brand animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-1 h-1 rounded-full bg-brand animate-bounce" style={{ animationDelay: '300ms' }} />
+            </span>
+          </div>
+        </div>
       </div>
     );
   }

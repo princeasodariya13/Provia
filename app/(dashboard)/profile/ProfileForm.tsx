@@ -34,6 +34,13 @@ export function ProfileForm() {
       setLoading(false);
     }
     if (!authLoading) fetchProfile();
+
+    const handleProfileUpdate = () => {
+      fetchProfile();
+    };
+
+    window.addEventListener("profileUpdated", handleProfileUpdate);
+    return () => window.removeEventListener("profileUpdated", handleProfileUpdate);
   }, [user, authLoading]);
 
   const handleSave = async () => {
@@ -48,8 +55,14 @@ export function ProfileForm() {
       setIsDirty(false);
       toast.success("Profile saved successfully!");
     } else {
-      setError(res.error || "Failed to save profile");
-      toast.error(res.error || "Failed to save profile");
+      let errorMessage = res.error || "Failed to save profile";
+      if (res.details && Array.isArray(res.details) && res.details.length > 0) {
+        // Extract the first validation issue message for clarity
+        const firstIssue = res.details[0];
+        errorMessage = firstIssue.message || "Please fill in all required fields.";
+      }
+      setError(errorMessage);
+      toast.error(errorMessage);
     }
     setSaving(false);
   };

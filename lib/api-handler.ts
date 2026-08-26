@@ -44,7 +44,12 @@ export function withAPIHandler(handler: HandlerFunc) {
         }
       });
 
-      if (error instanceof z.ZodError) {
+      try {
+        const fs = require('fs');
+        fs.appendFileSync('c:\\Users\\Prince\\Desktop\\Provia\\Provia\\my-app\\api-error.log', new Date().toISOString() + '\\n' + (error instanceof Error ? error.stack : JSON.stringify(error)) + '\\n\\n');
+      } catch(e) {}
+
+      if (error instanceof z.ZodError || (error && typeof error === 'object' && 'name' in error && error.name === 'ZodError')) {
         return NextResponse.json(
           {
             success: false,

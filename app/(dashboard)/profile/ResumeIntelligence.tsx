@@ -38,6 +38,35 @@ export function ResumeIntelligence() {
 
   const [applying, setApplying] = useState(false);
   const [applySuccess, setApplySuccess] = useState(false);
+  const [applyingText, setApplyingText] = useState("Importing Data");
+  const [applyProgress, setApplyProgress] = useState(0);
+
+  useEffect(() => {
+    if (!applying) {
+      setApplyingText("Importing Data");
+      setApplyProgress(0);
+      return;
+    }
+
+    const messages = ["Importing Data", "Waiting", "Just a sec", "Almost done"];
+    let idx = 0;
+    const textInterval = setInterval(() => {
+      idx = (idx + 1) % messages.length;
+      setApplyingText(messages[idx]);
+    }, 1500);
+
+    let currentProgress = 0;
+    const progressInterval = setInterval(() => {
+      currentProgress += Math.floor(Math.random() * 12) + 2;
+      if (currentProgress > 97) currentProgress = 97;
+      setApplyProgress(currentProgress);
+    }, 300);
+    
+    return () => {
+      clearInterval(textInterval);
+      clearInterval(progressInterval);
+    };
+  }, [applying]);
 
   const fetchResumeStatus = async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,6 +98,8 @@ export function ResumeIntelligence() {
     let interval: NodeJS.Timeout;
     if (status === "QUEUED" || status === "PROCESSING") {
       interval = setInterval(fetchResumeStatus, 3000);
+    } else if (status === "COMPLETED") {
+      setExpanded(true);
     }
     return () => clearInterval(interval);
   }, [status]);
@@ -149,14 +180,73 @@ export function ResumeIntelligence() {
         if (newSel[category].includes(idx)) {
           newSel[category] = newSel[category].filter((i: number) => i !== idx);
         } else {
-          newSel[category].push(idx);
+          newSel[category] = [...newSel[category], idx];
         }
       }
       return newSel;
     });
   };
 
+  const isAllSelected = () => {
+    if (!resumeData?.extractedData) return false;
+    const data = resumeData.extractedData;
+    if (data.personalInfo && !selections.personalInfo) return false;
+    if (data.summary && !selections.summary) return false;
+    if (data.experiences && selections.experience.length !== data.experiences.length) return false;
+    if (data.education && selections.education.length !== data.education.length) return false;
+    if (data.skills && selections.skills.length !== data.skills.length) return false;
+    if (data.projects && selections.projects.length !== data.projects.length) return false;
+    if (data.certifications && selections.certifications.length !== data.certifications.length) return false;
+    if (data.links && selections.links.length !== data.links.length) return false;
+    return true;
+  };
+
+  const handleSelectAll = () => {
+    if (!resumeData?.extractedData) return;
+    const data = resumeData.extractedData;
+    
+    if (isAllSelected()) {
+      setSelections({
+        personalInfo: false,
+        summary: false,
+        experience: [],
+        education: [],
+        skills: [],
+        projects: [],
+        certifications: [],
+        links: [],
+      });
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setSelections({
+        personalInfo: !!data.personalInfo,
+        summary: !!data.summary,
+        experience: data.experiences ? data.experiences.map((_: any, i: number) => i) : [],
+        education: data.education ? data.education.map((_: any, i: number) => i) : [],
+        skills: data.skills ? data.skills.map((_: any, i: number) => i) : [],
+        projects: data.projects ? data.projects.map((_: any, i: number) => i) : [],
+        certifications: data.certifications ? data.certifications.map((_: any, i: number) => i) : [],
+        links: data.links ? data.links.map((_: any, i: number) => i) : [],
+      });
+    }
+  };
+
   const handleApply = async () => {
+    const hasSelection = 
+      selections.personalInfo ||
+      selections.summary ||
+      selections.experience.length > 0 ||
+      selections.education.length > 0 ||
+      selections.skills.length > 0 ||
+      selections.projects.length > 0 ||
+      selections.certifications.length > 0 ||
+      selections.links.length > 0;
+
+    if (!hasSelection) {
+      toast.error("Please first select required fields then submit.");
+      return;
+    }
+
     setApplying(true);
     setApplySuccess(false);
     
@@ -167,12 +257,13 @@ export function ResumeIntelligence() {
     });
     
     if (res.success) {
+      setApplyProgress(100);
       setApplySuccess(true);
       toast.success("Resume data imported successfully!");
       setTimeout(() => {
         setExpanded(false);
         setApplySuccess(false);
-        window.location.reload();
+        window.dispatchEvent(new Event("profileUpdated"));
       }, 2000);
     } else {
       toast.error(res.error || "Failed to apply data.");
@@ -327,14 +418,21 @@ export function ResumeIntelligence() {
             <p className="text-xs font-medium text-warning-strong">Select the items below that you want to import into your Provia profile. Existing data will not be overwritten automatically.</p>
           </div>
 
-          <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+          <div className="flex justify-between items-center pt-2">
+            <span className="text-sm font-bold text-text-primary">Available Data</span>
+            <Button variant="outline" size="sm" onClick={handleSelectAll} className="h-8 text-xs font-bold hover:bg-brand/10 hover:text-brand border-border-light hover:border-brand/30">
+              {isAllSelected() ? "Deselect All" : "Select All"}
+            </Button>
+          </div>
+
+          <div className="space-y-4 max-h-[400px] overflow-y-auto overscroll-contain pr-2 custom-scrollbar" data-lenis-prevent="true">
             
             {resumeData.extractedData.personalInfo && (
-              <div className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input type="checkbox" checked={selections.personalInfo} onChange={() => toggleSelection("personalInfo")} className="w-4 h-4 accent-brand rounded border-border" />
+              <div onClick={() => toggleSelection("personalInfo")} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <input type="checkbox" checked={selections.personalInfo} readOnly className="w-4 h-4 accent-brand rounded border-border pointer-events-none" />
                   <span className="font-bold text-sm text-text-primary">Personal Info</span>
-                </label>
+                </div>
                 {selections.personalInfo && (
                   <div className="pl-7 text-xs text-text-secondary space-y-1">
                     <p>Name: {resumeData.extractedData.personalInfo.fullName}</p>
@@ -350,14 +448,14 @@ export function ResumeIntelligence() {
                 <h4 className="font-bold text-xs uppercase tracking-widest text-text-muted pl-1">Experience ({resumeData.extractedData.experiences.length})</h4>
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {resumeData.extractedData.experiences.map((exp: any, i: number) => (
-                  <div key={i} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors">
-                    <label className="flex items-start gap-3 cursor-pointer">
-                      <input type="checkbox" checked={selections.experience.includes(i)} onChange={() => toggleSelection("experience", i)} className="w-4 h-4 accent-brand rounded border-border mt-0.5" />
+                  <div key={i} onClick={() => toggleSelection("experience", i)} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors cursor-pointer">
+                    <div className="flex items-start gap-3">
+                      <input type="checkbox" checked={selections.experience.includes(i)} readOnly className="w-4 h-4 accent-brand rounded border-border mt-0.5 pointer-events-none" />
                       <div>
                         <span className="font-bold text-sm text-text-primary">{exp.title}</span>
                         <p className="text-xs font-semibold text-text-secondary">{exp.company}</p>
                       </div>
-                    </label>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -368,19 +466,19 @@ export function ResumeIntelligence() {
                 <h4 className="font-bold text-xs uppercase tracking-widest text-text-muted pl-1">Skills ({resumeData.extractedData.skills.length})</h4>
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {resumeData.extractedData.skills.map((skill: any, i: number) => (
-                  <div key={i} className="flex items-center gap-3 border border-border-light p-3 rounded-lg bg-surface shadow-sm hover:border-brand-hover transition-colors">
-                    <input type="checkbox" checked={selections.skills.includes(i)} onChange={() => toggleSelection("skills", i)} className="w-4 h-4 accent-brand rounded border-border" />
+                  <div key={i} onClick={() => toggleSelection("skills", i)} className="flex items-center gap-3 border border-border-light p-3 rounded-lg bg-surface shadow-sm hover:border-brand-hover transition-colors cursor-pointer">
+                    <input type="checkbox" checked={selections.skills.includes(i)} readOnly className="w-4 h-4 accent-brand rounded border-border pointer-events-none" />
                     <span className="text-xs font-bold text-text-primary">{skill.name}</span>
                   </div>
                 ))}
               </div>
             )}
             {resumeData.extractedData.summary && (
-              <div className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input type="checkbox" checked={selections.summary} onChange={() => toggleSelection("summary")} className="w-4 h-4 accent-brand rounded border-border" />
+              <div onClick={() => toggleSelection("summary")} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <input type="checkbox" checked={selections.summary} readOnly className="w-4 h-4 accent-brand rounded border-border pointer-events-none" />
                   <span className="font-bold text-sm text-text-primary">Professional Summary</span>
-                </label>
+                </div>
                 {selections.summary && (
                   <div className="pl-7 text-xs text-text-secondary">
                     <p className="line-clamp-3">{resumeData.extractedData.summary}</p>
@@ -394,14 +492,14 @@ export function ResumeIntelligence() {
                 <h4 className="font-bold text-xs uppercase tracking-widest text-text-muted pl-1">Education ({resumeData.extractedData.education.length})</h4>
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {resumeData.extractedData.education.map((edu: any, i: number) => (
-                  <div key={i} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors">
-                    <label className="flex items-start gap-3 cursor-pointer">
-                      <input type="checkbox" checked={selections.education.includes(i)} onChange={() => toggleSelection("education", i)} className="w-4 h-4 accent-brand rounded border-border mt-0.5" />
+                  <div key={i} onClick={() => toggleSelection("education", i)} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors cursor-pointer">
+                    <div className="flex items-start gap-3">
+                      <input type="checkbox" checked={selections.education.includes(i)} readOnly className="w-4 h-4 accent-brand rounded border-border mt-0.5 pointer-events-none" />
                       <div>
                         <span className="font-bold text-sm text-text-primary">{edu.institution}</span>
                         <p className="text-xs font-semibold text-text-secondary">{edu.degree} {edu.fieldOfStudy ? `in ${edu.fieldOfStudy}` : ""}</p>
                       </div>
-                    </label>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -412,14 +510,14 @@ export function ResumeIntelligence() {
                 <h4 className="font-bold text-xs uppercase tracking-widest text-text-muted pl-1">Projects ({resumeData.extractedData.projects.length})</h4>
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {resumeData.extractedData.projects.map((proj: any, i: number) => (
-                  <div key={i} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors">
-                    <label className="flex items-start gap-3 cursor-pointer">
-                      <input type="checkbox" checked={selections.projects.includes(i)} onChange={() => toggleSelection("projects", i)} className="w-4 h-4 accent-brand rounded border-border mt-0.5" />
+                  <div key={i} onClick={() => toggleSelection("projects", i)} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors cursor-pointer">
+                    <div className="flex items-start gap-3">
+                      <input type="checkbox" checked={selections.projects.includes(i)} readOnly className="w-4 h-4 accent-brand rounded border-border mt-0.5 pointer-events-none" />
                       <div>
                         <span className="font-bold text-sm text-text-primary">{proj.name}</span>
                         <p className="text-xs font-semibold text-text-secondary line-clamp-1">{proj.description}</p>
                       </div>
-                    </label>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -430,14 +528,14 @@ export function ResumeIntelligence() {
                 <h4 className="font-bold text-xs uppercase tracking-widest text-text-muted pl-1">Certifications ({resumeData.extractedData.certifications.length})</h4>
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {resumeData.extractedData.certifications.map((cert: any, i: number) => (
-                  <div key={i} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors">
-                    <label className="flex items-start gap-3 cursor-pointer">
-                      <input type="checkbox" checked={selections.certifications.includes(i)} onChange={() => toggleSelection("certifications", i)} className="w-4 h-4 accent-brand rounded border-border mt-0.5" />
+                  <div key={i} onClick={() => toggleSelection("certifications", i)} className="space-y-2 border border-border-light p-4 rounded-xl bg-surface shadow-sm hover:border-brand-hover transition-colors cursor-pointer">
+                    <div className="flex items-start gap-3">
+                      <input type="checkbox" checked={selections.certifications.includes(i)} readOnly className="w-4 h-4 accent-brand rounded border-border mt-0.5 pointer-events-none" />
                       <div>
                         <span className="font-bold text-sm text-text-primary">{cert.name}</span>
                         <p className="text-xs font-semibold text-text-secondary">{cert.issuer}</p>
                       </div>
-                    </label>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -448,8 +546,8 @@ export function ResumeIntelligence() {
                 <h4 className="font-bold text-xs uppercase tracking-widest text-text-muted pl-1">Links ({resumeData.extractedData.links.length})</h4>
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {resumeData.extractedData.links.map((link: any, i: number) => (
-                  <div key={i} className="flex items-center gap-3 border border-border-light p-3 rounded-lg bg-surface shadow-sm hover:border-brand-hover transition-colors">
-                    <input type="checkbox" checked={selections.links.includes(i)} onChange={() => toggleSelection("links", i)} className="w-4 h-4 accent-brand rounded border-border" />
+                  <div key={i} onClick={() => toggleSelection("links", i)} className="flex items-center gap-3 border border-border-light p-3 rounded-lg bg-surface shadow-sm hover:border-brand-hover transition-colors cursor-pointer">
+                    <input type="checkbox" checked={selections.links.includes(i)} readOnly className="w-4 h-4 accent-brand rounded border-border pointer-events-none" />
                     <span className="text-xs font-bold text-text-primary">{link.platform}</span>
                   </div>
                 ))}
@@ -458,8 +556,26 @@ export function ResumeIntelligence() {
           </div>
 
           <div className="pt-4 border-t border-border-light">
-            <Button onClick={handleApply} disabled={applying} className="w-full rounded-full font-bold shadow-sm" size="lg">
-              {applying ? "Importing Data..." : "Import Selected Data"}
+            <Button onClick={handleApply} disabled={applying} className="w-full rounded-full font-bold shadow-sm flex items-center justify-center gap-2 relative overflow-hidden" size="lg">
+              {applying ? (
+                <>
+                  <span className="animate-in fade-in duration-300">{applyingText}</span>
+                  <span className="flex items-center gap-0.5 mt-1">
+                    <span className="w-1 h-1 rounded-full bg-white/70 animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-1 h-1 rounded-full bg-white/70 animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-1 h-1 rounded-full bg-white/70 animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </span>
+                  <span className="absolute right-6 font-mono font-medium text-white/90 animate-in fade-in zoom-in duration-300">
+                    {applyProgress}%
+                  </span>
+                  
+                  {/* Background progress fill effect */}
+                  <div 
+                    className="absolute inset-y-0 left-0 bg-black/10 transition-all duration-300 ease-out"
+                    style={{ width: `${applyProgress}%` }}
+                  />
+                </>
+              ) : "Import Selected Data"}
             </Button>
             {applySuccess && (
               <p className="text-success text-xs font-bold text-center mt-3 flex items-center justify-center gap-1">

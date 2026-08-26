@@ -56,17 +56,17 @@ export function useToast() {
 }
 
 const ICONS: Record<ToastType, React.ReactNode> = {
-  success: <CheckCircle2 className="w-4 h-4 text-success shrink-0" />,
-  error: <XCircle className="w-4 h-4 text-error shrink-0" />,
-  warning: <AlertTriangle className="w-4 h-4 text-warning shrink-0" />,
-  info: <Info className="w-4 h-4 text-info shrink-0" />,
+  success: <CheckCircle2 className="w-5 h-5 text-white shrink-0" />,
+  error: <XCircle className="w-5 h-5 text-white shrink-0" />,
+  warning: <AlertTriangle className="w-5 h-5 text-white shrink-0" />,
+  info: <Info className="w-5 h-5 text-white shrink-0" />,
 };
 
 const STYLES: Record<ToastType, string> = {
-  success: "border-success/20 bg-success-muted",
-  error: "border-error/20 bg-error-muted",
-  warning: "border-warning/20 bg-warning-muted",
-  info: "border-info/20 bg-info-muted",
+  success: "border-success bg-success text-white shadow-success/30",
+  error: "border-error bg-error text-white shadow-error/30",
+  warning: "border-warning bg-warning text-white shadow-warning/30",
+  info: "border-info bg-info text-white shadow-info/30",
 };
 
 function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }) {
@@ -79,19 +79,22 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
 
   return (
     <div
-      className={`flex items-start gap-3 px-4 py-3 rounded-xl border shadow-lg transition-all duration-300 max-w-sm w-full ${STYLES[toast.type]} ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+      className={`relative overflow-hidden flex items-start gap-3 px-4 py-3.5 rounded-xl border shadow-2xl max-w-sm w-full transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${STYLES[toast.type]} ${
+        visible ? "opacity-100 translate-x-0 scale-100" : "opacity-0 translate-x-24 scale-75"
       }`}
     >
-      {ICONS[toast.type]}
-      <p className="text-sm font-medium text-text-primary flex-1 leading-snug">{toast.message}</p>
-      <button
-        onClick={onDismiss}
-        className="text-text-muted hover:text-text-primary transition-colors ml-1"
-        aria-label="Dismiss"
-      >
-        <X className="w-3.5 h-3.5" />
-      </button>
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10 pointer-events-none" />
+      <div className="relative z-10 flex items-start gap-3 w-full">
+        {ICONS[toast.type]}
+        <p className="text-sm font-bold flex-1 leading-snug pt-0.5">{toast.message}</p>
+        <button
+          onClick={onDismiss}
+          className="text-white/70 hover:text-white transition-colors ml-1 mt-0.5 hover:rotate-90 hover:scale-110 active:scale-95 duration-200"
+          aria-label="Dismiss"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
 }
