@@ -1,4 +1,3 @@
-"use client";
 import { TemplateProps } from "../types";
 import { PremiumHero } from "./sections/Hero";
 import { AboutSection } from "./sections/About";
