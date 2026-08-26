@@ -60,8 +60,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     setUser(null);
-    apiClient.post("/api/v1/auth/logout", {}).catch(() => {});
-    router.push("/login");
+    try {
+      await apiClient.post("/api/v1/auth/logout", {});
+    } catch {
+      // ignore
+    }
+    window.location.href = "/";
   };
 
   return (
