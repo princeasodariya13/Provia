@@ -5,6 +5,23 @@ import { jwtVerify } from "jose";
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Helper to add security headers to any response
+  const applySecurityHeaders = (response: NextResponse) => {
+    // Prevent Clickjacking
+    response.headers.set("X-Frame-Options", "DENY");
+    // Enforce HTTPS
+    response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+    // Prevent MIME type sniffing
+    response.headers.set("X-Content-Type-Options", "nosniff");
+    // Referrer policy
+    response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    // Basic Permissions Policy
+    response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    // Simple baseline CSP (adjustable if external scripts break)
+    response.headers.set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.cloudinary.com https://api.github.com https://api.linkedin.com; frame-ancestors 'none';");
+    return response;
+  };
+
   // 1. Always allow static assets and Next.js internals first
   if (
     pathname.startsWith("/_next") ||
@@ -13,7 +30,7 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith("/images") ||
     pathname.startsWith("/api/v1/auth/") // Let auth routes pass through to their own handlers
   ) {
-    return NextResponse.next();
+    return applySecurityHeaders(NextResponse.next());
   }
 
   // 2. Always allow public marketing & auth pages (unauthenticated)
@@ -33,14 +50,14 @@ export async function proxy(request: NextRequest) {
           const { payload } = await jwtVerify(token, secret, { algorithms: ["HS256"] });
           const expiresAt = payload.expiresAt as number | undefined;
           if (expiresAt && expiresAt > Math.floor(Date.now() / 1000)) {
-            return NextResponse.redirect(new URL("/dashboard", request.url));
+            return applySecurityHeaders(NextResponse.redirect(new URL("/dashboard", request.url)));
           }
         } catch {
           // invalid token, let through
         }
       }
     }
-    return NextResponse.next();
+    return applySecurityHeaders(NextResponse.next());
   }
 
   // 4. Protect private routes
@@ -54,11 +71,11 @@ export async function proxy(request: NextRequest) {
 
     if (!token) {
       if (isPrivateApi) {
-        return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+        return applySecurityHeaders(NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }));
       }
       const redirectUrl = new URL("/login", request.url);
       redirectUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(redirectUrl);
+      return applySecurityHeaders(NextResponse.redirect(redirectUrl));
     }
 
     try {
@@ -69,34 +86,34 @@ export async function proxy(request: NextRequest) {
       if (!expiresAt || expiresAt <= Math.floor(Date.now() / 1000)) {
         // Expired
         if (isPrivateApi) {
-          return NextResponse.json({ success: false, error: "Session expired" }, { status: 401 });
+          return applySecurityHeaders(NextResponse.json({ success: false, error: "Session expired" }, { status: 401 }));
         }
         const redirectUrl = new URL("/login", request.url);
         redirectUrl.searchParams.set("redirect", pathname);
-        return NextResponse.redirect(redirectUrl);
+        return applySecurityHeaders(NextResponse.redirect(redirectUrl));
       }
 
       // Admin-only routes
       if (pathname.startsWith("/operations")) {
         const role = payload.role as string | undefined;
         if (role !== "ADMIN") {
-          return NextResponse.redirect(new URL("/dashboard", request.url));
+          return applySecurityHeaders(NextResponse.redirect(new URL("/dashboard", request.url)));
         }
       }
 
-      return NextResponse.next();
+      return applySecurityHeaders(NextResponse.next());
     } catch {
       // Invalid/tampered token
       if (isPrivateApi) {
-        return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+        return applySecurityHeaders(NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }));
       }
       const redirectUrl = new URL("/login", request.url);
       redirectUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(redirectUrl);
+      return applySecurityHeaders(NextResponse.redirect(redirectUrl));
     }
   }
 
-  return NextResponse.next();
+  return applySecurityHeaders(NextResponse.next());
 }
 
 export const config = {

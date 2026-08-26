@@ -8,12 +8,30 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { APIError } from "@/lib/errors";
 
+import { RateLimiterService } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/ip";
+import { AnalyticsService } from "@/lib/analytics/service";
+
 const resetPasswordSchema = z.object({
   token: z.string(),
   newPassword: z.string().min(8),
 });
 
 export const POST = withAPIHandler(async (request: Request) => {
+  const ip = getClientIp(request);
+  const windowSecs = parseInt(env.AUTH_RATE_LIMIT_WINDOW_SECONDS || "900");
+  
+  // Rate Limit: 5 per 15 mins to prevent brute forcing token verification
+  const ipResult = await RateLimiterService.check(
+    `auth:reset-password:ip:${ip}`,
+    5,
+    windowSecs
+  );
+  if (!ipResult.allowed) {
+    AnalyticsService.record({ eventName: "auth.rate_limited", metadata: { endpoint: "reset-password", keyType: "ip" } });
+    throw new APIError("Too many requests. Please try again later.", 429);
+  }
+
   const body = await request.json();
   const { token, newPassword } = resetPasswordSchema.parse(body);
 

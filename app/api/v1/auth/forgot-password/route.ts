@@ -57,7 +57,6 @@ export const POST = withAPIHandler(async (request: Request) => {
       userId: user.id,
       type: "EMAIL_DELIVERY",
       payload: { userId: user.id, template: "PASSWORD_RESET" },
-      idempotencyKey: `email-reset-${user.id}`,
     });
   }
 
