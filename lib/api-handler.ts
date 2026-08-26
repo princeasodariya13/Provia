@@ -50,11 +50,12 @@ export function withAPIHandler(handler: HandlerFunc) {
       } catch(e) {}
 
       if (error instanceof z.ZodError || (error && typeof error === 'object' && 'name' in error && error.name === 'ZodError')) {
+        const zodErr = error as z.ZodError | (Error & { issues: z.ZodIssue[] });
         return NextResponse.json(
           {
             success: false,
             error: "Validation failed",
-            details: error.issues,
+            details: 'issues' in zodErr ? zodErr.issues : [],
             requestId
           },
           { status: 400 }
