@@ -34,6 +34,9 @@ export const POST = withAPIHandler(async (req) => {
   });
 
   if (existingUser) {
+    if (!existingUser.passwordHash) {
+      throw new APIError("An account with this email exists. Please sign in with your connected provider.", 401);
+    }
     const isValid = await bcrypt.compare(data.password, existingUser.passwordHash);
     if (!isValid) {
       throw new APIError("An account with this email already exists. Incorrect password.", 401);
@@ -43,7 +46,7 @@ export const POST = withAPIHandler(async (req) => {
     await createSession(existingUser);
     
     AnalyticsService.record({
-      eventName: "auth.login_via_register",
+      eventName: "auth.login_succeeded",
       userId: existingUser.id,
     });
 
