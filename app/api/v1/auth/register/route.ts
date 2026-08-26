@@ -34,7 +34,28 @@ export const POST = withAPIHandler(async (req) => {
   });
 
   if (existingUser) {
-    throw new APIError("An account with this email already exists", 409);
+    const isValid = await bcrypt.compare(data.password, existingUser.passwordHash);
+    if (!isValid) {
+      throw new APIError("An account with this email already exists. Incorrect password.", 401);
+    }
+    
+    // Direct login for returning users who use the register form
+    await createSession(existingUser);
+    
+    AnalyticsService.record({
+      eventName: "auth.login_via_register",
+      userId: existingUser.id,
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        id: existingUser.id,
+        name: existingUser.name,
+        email: existingUser.email,
+        role: existingUser.role,
+      },
+    });
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -49,8 +70,8 @@ export const POST = withAPIHandler(async (req) => {
     select: { id: true, name: true, email: true, role: true, sessionVersion: true, createdAt: true, updatedAt: true },
   });
 
-  // We intentionally do not call createSession here. 
-  // User must explicitly log in after registration for a proper auth flow.
+  // Direct login! Permanently store session for this device
+  await createSession(user);
 
   // Queue email verification (non-blocking — registration succeeds regardless)
   JobService.createJob({

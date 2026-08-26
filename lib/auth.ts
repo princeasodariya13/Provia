@@ -17,11 +17,11 @@ export interface SessionPayload {
 }
 
 export async function encrypt(payload: Omit<SessionPayload, "expiresAt">) {
-  const expiresAt = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60; // 7 days
+  const expiresAt = Math.floor(Date.now() / 1000) + 24 * 60 * 60; // 24 hours
   return new SignJWT({ ...payload, expiresAt })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("7d")
+    .setExpirationTime("24h")
     .sign(SECRET_KEY);
 }
 
@@ -50,7 +50,7 @@ export async function createSession(user: Pick<User, "id" | "role" | "sessionVer
     secure: env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 7 * 24 * 60 * 60, // 7 days
+    maxAge: 24 * 60 * 60, // 24 hours
   });
 }
 

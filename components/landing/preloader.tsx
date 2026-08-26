@@ -5,18 +5,33 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export function LandingPreloader() {
   const [loading, setLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     // Lock scroll while loading
     document.body.style.overflow = "hidden";
     
-    // Simulate loading for heavy 3D assets and Spline scenes (3.5 seconds)
+    // Simulate loading for heavy 3D assets and Spline scenes
+    const loadDuration = 3000;
+    const intervalTime = 30;
+    const totalTicks = loadDuration / intervalTime;
+    let tick = 0;
+
+    const interval = setInterval(() => {
+      tick++;
+      setProgress(Math.min(Math.round((tick / totalTicks) * 100), 100));
+      if (tick >= totalTicks) {
+        clearInterval(interval);
+      }
+    }, intervalTime);
+
     const timer = setTimeout(() => {
       setLoading(false);
       document.body.style.overflow = "";
     }, 3500);
 
     return () => {
+      clearInterval(interval);
       clearTimeout(timer);
       document.body.style.overflow = "";
     };
@@ -66,21 +81,22 @@ export function LandingPreloader() {
             </div>
 
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 1 }}
-              className="mt-12 w-48 h-1 bg-border-light overflow-hidden rounded-full"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.8 }}
+              className="mt-12 w-64 max-w-[80vw] flex flex-col items-center gap-3"
             >
-              <motion.div
-                initial={{ x: "-100%" }}
-                animate={{ x: "100%" }}
-                transition={{ 
-                  repeat: Infinity, 
-                  duration: 1.5, 
-                  ease: "easeInOut" 
-                }}
-                className="w-full h-full bg-brand"
-              />
+              <div className="flex justify-between w-full text-xs font-bold text-text-muted font-mono tracking-widest uppercase">
+                <span>Initializing</span>
+                <span className="text-brand tabular-nums">{progress}%</span>
+              </div>
+              <div className="w-full h-[2px] bg-border-light overflow-hidden rounded-full">
+                <motion.div
+                  className="h-full bg-brand"
+                  animate={{ width: `${progress}%` }}
+                  transition={{ ease: "easeOut", duration: 0.1 }}
+                />
+              </div>
             </motion.div>
           </div>
         </motion.div>
