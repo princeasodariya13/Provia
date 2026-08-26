@@ -1,43 +1,65 @@
+"use client";
 import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
 import { motion } from "framer-motion";
+import { SectionLabel } from "./About";
 
 export function Skills({ data }: { data: PortfolioDocumentDTO["skills"] }) {
-  if (!data || data.length === 0 || !data[0].skills?.length) return null;
+  if (!data || data.length === 0) return null;
+  const totalSkills = data.reduce((acc, g) => acc + g.skills.length, 0);
 
   return (
-    <section>
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        className="flex items-center gap-4 mb-8"
-      >
-        <div className="w-8 h-1 bg-[#CC2936]" aria-hidden="true" />
-        <h3 className="text-sm font-bold tracking-widest uppercase">Skills & Expertise</h3>
-      </motion.div>
-      <div className="flex flex-col gap-10">
+    <motion.section
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+    >
+      <SectionLabel label="Skills" index="04" />
+
+      <div className="space-y-8">
         {data.map((group, i) => (
-          <motion.div 
+          <motion.div
             key={i}
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -16 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ delay: i * 0.1, duration: 0.5 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ delay: i * 0.07, duration: 0.5, ease: "easeOut" }}
           >
             {group.category && (
-              <h4 className="text-lg font-black uppercase tracking-tight mb-4">{group.category}</h4>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-2 h-2 bg-[#CC2936] shrink-0" aria-hidden />
+                <h4 className="text-xs font-black uppercase tracking-[0.2em] text-[#111]">
+                  {group.category}
+                </h4>
+                <span className="text-[10px] font-bold text-[#AAA] tabular-nums ml-auto">
+                  {group.skills.length}
+                </span>
+              </div>
             )}
-            <ul className="flex flex-col gap-3 text-sm font-bold uppercase tracking-widest text-[#4D4D4D]">
+            <ul className="flex flex-col divide-y divide-[#E5DDD6]">
               {group.skills.map((skill, j) => (
-                <li key={j} className="flex items-center gap-4 border-b border-[#C9BEB9] pb-3 hover:text-[#CC2936] hover:border-[#000000] transition-colors">
-                  <div className="w-2 h-2 bg-[#000000] rounded-none" aria-hidden="true" />
-                  {skill}
+                <li
+                  key={j}
+                  className="group flex items-center justify-between py-2.5 cursor-default hover:bg-[#111] hover:px-3 transition-all duration-200"
+                >
+                  <span className="text-sm font-semibold text-[#333] group-hover:text-[#F5F0EA] uppercase tracking-wider transition-colors">
+                    {skill}
+                  </span>
+                  <div className="w-1.5 h-1.5 bg-transparent group-hover:bg-[#CC2936] transition-colors shrink-0" />
                 </li>
               ))}
             </ul>
           </motion.div>
         ))}
       </div>
-    </section>
+
+      {/* Total count footer */}
+      <div className="mt-8 pt-6 border-t border-[#D9D2C9] flex items-center gap-2">
+        <div className="w-4 h-[2px] bg-[#CC2936]" />
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#888]">
+          {totalSkills} skills across {data.length} categories
+        </p>
+      </div>
+    </motion.section>
   );
 }
