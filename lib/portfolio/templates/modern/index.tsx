@@ -19,17 +19,19 @@ import Footer from "./components/Footer";
 
 export function modernTemplate({ document }: TemplateProps) {
   const data = mapProviaToTemplate(document);
+  const isHidden = (sectionId: string) => document.configuration?.hiddenSections?.includes(sectionId);
+
   return (
-    <div className="modern-theme bg-white min-h-screen text-gray-900 font-sans">
+    <div className="modern-theme bg-base min-h-screen text-ink font-sans">
       <TemplateProvider data={data}>
         <Header />
-        <Hero />
-        <About />
-        <Experience />
-        <Education />
-        <Projects />
-        <Skills />
-        <Contact />
+        {!isHidden("hero")       && <Hero />}
+        {!isHidden("about")      && <About />}
+        {!isHidden("skills")     && <Skills />}
+        {!isHidden("projects")   && <Projects />}
+        {!isHidden("experience") && <Experience />}
+        {!isHidden("education")  && <Education />}
+        {!isHidden("contact")    && <Contact />}
         <Footer />
       </TemplateProvider>
     </div>
@@ -39,12 +41,12 @@ export function modernTemplate({ document }: TemplateProps) {
 export const modernMetadata = {
   id: "modern-minimal",
   name: "Modern Minimal",
-  version: "1.0.0",
-  description: "A refined minimalist portfolio focused on typography, whitespace, clear content hierarchy, and professional presentation.",
+  version: "2.0.0",
+  description: "A refined, premium minimalist portfolio. Focuses on typography, whitespace, elegant light-mode aesthetics, and professional presentation.",
   category: "Minimal",
-  tags: ["Minimal","Elegant","Developer"],
-  audience: ["Developers","Students","Freelancers"],
+  tags: ["Minimal", "Elegant", "Developer", "Light", "Clean"],
+  audience: ["Software Engineers", "Product Designers", "Consultants"],
   style: "Minimal",
-  recommended: false,
-  supportedSections: ["hero", "about", "experience", "projects", "skills", "contact"],
+  recommended: true,
+  supportedSections: ["hero", "about", "skills", "projects", "experience", "education", "contact"],
 };

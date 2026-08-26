@@ -85,7 +85,7 @@ export function Contact({
                   className="group flex items-center justify-between py-5 border-b border-[#222] hover:border-[#CC2936] transition-all duration-300"
                 >
                   <span className="text-xl font-black uppercase tracking-tight text-white group-hover:text-[#CC2936] transition-colors">
-                    {link.title}
+                    {link.title?.trim() || link.url?.trim().replace(/^https?:\/\//, '').split('/')[0] || "Link"}
                   </span>
                   <ArrowUpRight className="w-5 h-5 text-[#555] group-hover:text-[#CC2936] transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 duration-300" />
                 </a>

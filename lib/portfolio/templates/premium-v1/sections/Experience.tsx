@@ -43,7 +43,7 @@ function ExperienceCard({ item, index }: { item: Exp; index: number }) {
     >
       {/* Left: Date column */}
       <div className="flex md:flex-col md:items-end md:text-right mb-4 md:mb-0 md:pt-6 gap-3 md:gap-2">
-        <div className="flex items-center gap-1.5 text-sm font-semibold text-white/45">
+        <div className="flex items-center gap-1.5 text-sm font-semibold text-white/70">
           <Calendar className="w-3.5 h-3.5 md:hidden" />
           {item.isCurrent ? (
             <span className="inline-flex items-center gap-1.5">
@@ -55,10 +55,10 @@ function ExperienceCard({ item, index }: { item: Exp; index: number }) {
           )}
         </div>
         {item.startDate && (
-          <span className="text-xs text-white/25 font-mono">{formatDate(item.startDate)}</span>
+          <span className="text-xs text-white/40 font-mono">{formatDate(item.startDate)}</span>
         )}
         {duration && (
-          <span className="text-[10px] text-white/20 font-mono hidden md:block mt-1">
+          <span className="text-[10px] text-white/40 font-mono hidden md:block mt-1">
             {duration}
           </span>
         )}
@@ -95,14 +95,14 @@ function ExperienceCard({ item, index }: { item: Exp; index: number }) {
           </div>
 
           {item.location && (
-            <div className="flex items-center gap-1.5 text-xs text-white/30 mb-5 font-medium">
+            <div className="flex items-center gap-1.5 text-xs text-white/60 mb-5 font-medium">
               <MapPin className="w-3.5 h-3.5" />
               {item.location}
             </div>
           )}
 
           {item.description && (
-            <p className="text-sm md:text-base text-white/55 leading-[1.8]">
+            <p className="text-sm md:text-base text-white/80 leading-[1.8]">
               {item.description}
             </p>
           )}
@@ -110,7 +110,7 @@ function ExperienceCard({ item, index }: { item: Exp; index: number }) {
           {/* Mobile duration badge */}
           {duration && (
             <div className="md:hidden mt-4 pt-4 border-t border-white/6">
-              <span className="text-[10px] font-mono text-white/25">{duration}</span>
+              <span className="text-[10px] font-mono text-white/40">{duration}</span>
             </div>
           )}
         </div>

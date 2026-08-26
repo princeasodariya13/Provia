@@ -6,51 +6,62 @@ import { useTemplateData } from "../context";
 
 export default function Capabilities() {
   const templateData = useTemplateData();
-  // @ts-ignore
-  const { 
-  contact = {},
-  profile = {},
-  marqueeItems = [],
-  certifications = [],
-  header = {},
-  social = {},
-  services = [],
-  faq = [],
-  milestones = [],
-  globals = {},
-  steps = [],
-  about = {},
-  experience = [],
-  projects = [],
-  skills = [],
-  stats = [],
-  stack = [],
-  capabilities = [],
-  education = []
- } = templateData || {};
+  const { capabilities = [], skills = [] } = (templateData as any) || {};
+
+  // Prefer skills array if capabilities are empty
+  const items = capabilities.length > 0
+    ? capabilities
+    : skills.map((s: any, i: number) => ({
+        index: String(i + 1).padStart(2, "0"),
+        title: s.category || "Skill",
+        description: (s.skills || []).join(", "),
+      }));
+
+  if (!items || items.length === 0) return null;
 
   return (
-    <section className="section-pad py-24 border-t border-border">
-      <p className="eyebrow mb-4">[03] Capabilities</p>
-      <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight mb-12">
-        What I can do.
-      </h2>
+    <section className="section-pad py-28 border-t border-border">
+      <motion.p
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        className="eyebrow mb-5"
+      >
+        [05] Capabilities
+      </motion.p>
+      <motion.h2
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="font-display text-5xl md:text-6xl font-black tracking-tight mb-16"
+      >
+        What I can do<span className="text-accent">.</span>
+      </motion.h2>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        {capabilities.map((c, i) => (
+      <div className="grid md:grid-cols-3 gap-5">
+        {items.map((c: any, i: number) => (
           <motion.div
-            key={c.title}
-            initial={{ opacity: 0, y: 24 }}
+            key={c.title || i}
+            initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55, delay: i * 0.1 }}
-            className="rounded-2xl border border-border bg-surface p-8 hover:border-accent/60 hover:-translate-y-1 transition-all duration-300"
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.55, delay: i * 0.08 }}
+            className="glass-card p-8 group hover:-translate-y-1 hover:border-accent/30 transition-all duration-300"
           >
-            <span className="eyebrow text-accent">{c.index}</span>
-            <h3 className="font-display text-xl font-semibold mt-4 mb-3">
+            {/* Accent number */}
+            <div className="font-mono-custom text-3xl font-black text-accent/20 group-hover:text-accent/40 transition-colors mb-6 leading-none">
+              {c.index}
+            </div>
+            <h3 className="font-display text-xl font-black text-ink mb-3 tracking-tight">
               {c.title}
             </h3>
-            <p className="text-muted leading-relaxed">{c.description}</p>
+            <p className="text-muted text-sm leading-relaxed">
+              {c.description}
+            </p>
+
+            {/* Bottom accent line on hover */}
+            <div className="mt-6 h-0.5 w-0 bg-gradient-to-r from-accent to-accent2 rounded-full transition-all duration-500 group-hover:w-full" />
           </motion.div>
         ))}
       </div>

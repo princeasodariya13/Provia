@@ -1,61 +1,78 @@
+/* ============================================================
+   ENGINEER TEMPLATE — PREMIUM DESIGN SYSTEM v2.0
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
 .engineer-theme {
-  --base: #09090b;
-  --surface: #18181b;
-  --surface2: #27272a;
-  --surface-hover: #3f3f46;
-  --ink: #fafafa;
-  --muted: #a1a1aa;
-  --accent: #ccff00;
-  --accent2: #00ffcc;
-  --border: #27272a;
+  --base:           #050507;
+  --surface:        #0e0e12;
+  --surface2:       #16161c;
+  --surface3:       #1e1e26;
+  --surface-hover:  #252530;
+  --ink:            #f4f4f5;
+  --ink-dim:        #a1a1aa;
+  --muted:          #71717a;
+  --accent:         #c8ff00;
+  --accent-dim:     rgba(200,255,0,0.12);
+  --accent2:        #00ffb2;
+  --accent2-dim:    rgba(0,255,178,0.1);
+  --border:         rgba(255,255,255,0.07);
+  --border-strong:  rgba(255,255,255,0.13);
+  --glow:           rgba(200,255,0,0.15);
 
   background-color: var(--base);
   color: var(--ink);
   color-scheme: dark;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Colors */
-.engineer-theme .bg-base { background-color: var(--base); }
-.engineer-theme .bg-surface { background-color: var(--surface); }
-.engineer-theme .bg-surface2 { background-color: var(--surface2); }
-.engineer-theme .bg-accent { background-color: var(--accent); }
-.engineer-theme .bg-accent2 { background-color: var(--accent2); }
+/* ── Colors ──────────────────────────────────────────────── */
+.engineer-theme .bg-base        { background-color: var(--base); }
+.engineer-theme .bg-surface     { background-color: var(--surface); }
+.engineer-theme .bg-surface2    { background-color: var(--surface2); }
+.engineer-theme .bg-surface3    { background-color: var(--surface3); }
+.engineer-theme .bg-accent      { background-color: var(--accent); }
+.engineer-theme .bg-accent-dim  { background-color: var(--accent-dim); }
+.engineer-theme .bg-accent2     { background-color: var(--accent2); }
+.engineer-theme .text-ink       { color: var(--ink); }
+.engineer-theme .text-ink-dim   { color: var(--ink-dim); }
+.engineer-theme .text-accent    { color: var(--accent); }
+.engineer-theme .text-accent2   { color: var(--accent2); }
+.engineer-theme .text-muted     { color: var(--muted); }
+.engineer-theme .border-border  { border-color: var(--border); }
+.engineer-theme .border-border-strong { border-color: var(--border-strong); }
+.engineer-theme .border-accent  { border-color: var(--accent); }
 
-.engineer-theme .text-ink { color: var(--ink); }
-.engineer-theme .text-accent { color: var(--accent); }
-.engineer-theme .text-muted { color: var(--muted); }
+/* Ensure headings inherit the correct theme color and aren't overridden by globals.css */
+.engineer-theme h1,
+.engineer-theme h2,
+.engineer-theme h3,
+.engineer-theme h4,
+.engineer-theme h5,
+.engineer-theme h6 {
+  color: var(--ink);
+}
 
-.engineer-theme .border-border { border-color: var(--border); }
-.engineer-theme .border-accent { border-color: var(--accent); }
-
-/* Typography */
+/* ── Typography ──────────────────────────────────────────── */
+.engineer-theme .font-display {
+  font-family: 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.03em;
+}
+.engineer-theme .font-mono-custom {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
 .engineer-theme .eyebrow {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: var(--muted);
 }
 
-/* Hover States */
-.engineer-theme .hover\:text-accent:hover { color: var(--accent) !important; }
-.engineer-theme .hover\:border-accent:hover { border-color: var(--accent) !important; }
-
-/* Grid Pattern */
-.engineer-theme .bg-grid {
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-/* Animations */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-.engineer-theme .animate-blink {
-  animation: blink 1.5s step-end infinite;
-}
-
+/* ── Layout ──────────────────────────────────────────────── */
 .engineer-theme .section-pad {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
@@ -68,4 +85,117 @@
     padding-left: 3rem;
     padding-right: 3rem;
   }
+}
+@media (min-width: 1280px) {
+  .engineer-theme .section-pad {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+/* ── Borders / Dividers ──────────────────────────────────── */
+.engineer-theme .border-t { border-top: 1px solid var(--border); }
+.engineer-theme .border-b { border-bottom: 1px solid var(--border); }
+.engineer-theme .divide-y > * + * { border-top: 1px solid var(--border); }
+
+/* ── Hover States ────────────────────────────────────────── */
+.engineer-theme .hover\:text-accent:hover  { color: var(--accent) !important; }
+.engineer-theme .hover\:border-accent:hover { border-color: var(--accent) !important; }
+.engineer-theme .hover\:bg-surface2:hover  { background-color: var(--surface2) !important; }
+
+/* ── Grid Patterns ───────────────────────────────────────── */
+.engineer-theme .bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.engineer-theme .bg-dot-grid {
+  background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ── Glow Effects ────────────────────────────────────────── */
+.engineer-theme .accent-glow {
+  box-shadow: 0 0 0 1px var(--border), 0 0 40px var(--glow);
+}
+
+/* ── Animations ──────────────────────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.engineer-theme .animate-blink {
+  animation: blink 1.5s step-end infinite;
+}
+
+@keyframes eng-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+.engineer-theme .animate-float {
+  animation: eng-float 4s ease-in-out infinite;
+}
+
+@keyframes eng-spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.engineer-theme .animate-spin-slow {
+  animation: eng-spin-slow 20s linear infinite;
+}
+
+@keyframes eng-pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(200,255,0,0.35); }
+  70%  { box-shadow: 0 0 0 10px rgba(200,255,0,0); }
+  100% { box-shadow: 0 0 0 0 rgba(200,255,0,0); }
+}
+.engineer-theme .animate-pulse-ring {
+  animation: eng-pulse-ring 2.5s cubic-bezier(0.455,0.03,0.515,0.955) infinite;
+}
+
+/* ── Tag Pills ───────────────────────────────────────────── */
+.engineer-theme .tag-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background-color: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--ink-dim);
+}
+
+/* ── Project Row hover ───────────────────────────────────── */
+.engineer-theme .project-row:hover .project-arrow { opacity: 1; transform: translate(2px,-2px); }
+.engineer-theme .project-arrow { opacity: 0; transition: opacity 0.2s, transform 0.2s; }
+
+/* ── Skill bar ───────────────────────────────────────────── */
+.engineer-theme .skill-bar-track {
+  height: 3px;
+  border-radius: 9999px;
+  background: var(--border);
+  overflow: hidden;
+}
+.engineer-theme .skill-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+}
+
+/* ── Glass card ──────────────────────────────────────────── */
+.engineer-theme .glass-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  backdrop-filter: blur(12px);
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.engineer-theme .glass-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
 }

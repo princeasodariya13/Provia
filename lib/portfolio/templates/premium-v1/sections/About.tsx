@@ -44,7 +44,7 @@ export function AboutSection({ data }: { data: PortfolioDocumentDTO["about"] }) 
                     initial={{ opacity: 0, y: 16 }}
                     animate={inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 + i * 0.08 }}
-                    className="text-base md:text-lg text-white/50 leading-relaxed"
+                    className="text-base md:text-lg text-white/80 leading-relaxed"
                   >
                     {sentence}
                   </motion.p>
@@ -63,11 +63,11 @@ export function AboutSection({ data }: { data: PortfolioDocumentDTO["about"] }) 
             {/* Career themes */}
             {data.careerThemes && data.careerThemes.length > 0 && (
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.25em] text-white/25 mb-5">
+                <p className="text-[10px] font-black uppercase tracking-[0.25em] text-white/50 mb-5">
                   Areas of Focus
                 </p>
                 <div className="flex flex-col gap-3">
-                  {data.careerThemes.map((theme, i) => (
+                  {data.careerThemes.filter(t => t && t.trim().length > 0).map((theme, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, x: 20 }}
@@ -76,7 +76,7 @@ export function AboutSection({ data }: { data: PortfolioDocumentDTO["about"] }) 
                       className="group flex items-center gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/8 hover:border-violet-500/30 hover:bg-violet-500/5 transition-all duration-300"
                     >
                       <div className="w-2 h-2 rounded-full bg-gradient-to-r from-violet-400 to-cyan-400 shrink-0" />
-                      <span className="text-sm font-semibold text-white/70 group-hover:text-white transition-colors">
+                      <span className="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">
                         {theme}
                       </span>
                     </motion.div>
@@ -101,7 +101,7 @@ export function AboutSection({ data }: { data: PortfolioDocumentDTO["about"] }) 
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   <p className="text-sm font-bold text-white">Open to Work</p>
                 </div>
-                <p className="text-xs text-white/35 leading-relaxed">
+                <p className="text-xs text-white/60 leading-relaxed">
                   Seeking full-time roles, freelance contracts, or interesting collaborations.
                 </p>
               </div>

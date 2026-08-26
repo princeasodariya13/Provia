@@ -1,103 +1,71 @@
 // @ts-nocheck
 "use client";
-import Image from "next/image";
-import { EmptyState } from "@/lib/portfolio/templates/shared/EmptyState";
+
 import { ExternalLink } from "lucide-react";
-import { IconBrandGithub as Github } from "@tabler/icons-react";
+import { EmptyState } from "@/lib/portfolio/templates/shared/EmptyState";
 import { useTemplateData } from "../context";
 import { Reveal, SectionHeading } from "./Reveal";
 
 export default function Projects() {
   const templateData = useTemplateData();
-  // @ts-ignore
-  const { 
-  contact = {},
-  profile = {},
-  marqueeItems = [],
-  certifications = [],
-  header = {},
-  social = {},
-  services = [],
-  faq = [],
-  milestones = [],
-  globals = {},
-  steps = [],
-  about = {},
-  experience = [],
-  projects = [],
-  skills = [],
-  stats = [],
-  stack = [],
-  capabilities = [],
-  education = []
- } = templateData || {};
+  const { projects = [] } = (templateData as any) || {};
 
-  if (true) {
-  const isMissing = (!projects || projects.length === 0);
-  if (isMissing) {
+  if (!projects || projects.length === 0) {
     return (
       <section className="py-24 px-6 md:px-12 w-full max-w-7xl mx-auto opacity-80">
         <EmptyState type="projects" />
       </section>
     );
   }
-}
+
   return (
     <section id="projects" className="py-28 border-t border-border">
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto px-6 md:px-12">
         <SectionHeading index="03" label="Projects" title="Selected work." />
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {projects.map((p, i) => (
-            <Reveal
-              key={p.title}
-              delay={i * 0.1}
-              className={p.featured ? "md:col-span-2" : ""}
-            >
-              <div className="card-glow group rounded-2xl border border-border bg-card/60 overflow-hidden h-full flex flex-col">
-                <div className="relative aspect-[16/9] overflow-hidden">
-                  <Image
-                    src={p.image || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&h=400&fit=crop"}
-                    alt={p.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  {p.featured && (
-                    <span className="absolute top-4 left-4 rounded-full bg-accent text-base text-xs font-medium px-3 py-1">
-                      Featured
-                    </span>
+        <div className="grid md:grid-cols-2 gap-5">
+          {projects.map((p: any, i: number) => (
+            <Reveal key={p.title || i} delay={i * 0.08}>
+              <div className="mn-card group p-8 h-full flex flex-col cursor-default">
+
+                {/* Top row: index + link */}
+                <div className="flex items-center justify-between mb-4">
+                  <span className="section-label">{String(i + 1).padStart(2, "0")}</span>
+                  {(p.url && p.url !== "#") && (
+                    <a
+                      href={p.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-1.5 rounded-full text-muted hover:text-accent hover:bg-accent-light transition-all"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      <ExternalLink size={15} />
+                    </a>
                   )}
                 </div>
 
-                <div className="p-6 flex flex-col flex-1">
-                  <h3 className="font-display text-xl font-semibold mb-2">{p.title}</h3>
-                  <p className="text-muted text-sm leading-relaxed mb-4 flex-1">
-                    {p.description}
-                  </p>
+                <h3 className="font-display text-xl font-bold text-ink mb-3 group-hover:text-accent transition-colors tracking-tight">
+                  {p.title?.trim() || "Project"}
+                </h3>
+                <p className="text-muted text-sm leading-relaxed flex-1 mb-4">
+                  {p.description}
+                </p>
 
-                  <div className="flex flex-wrap gap-2 mb-5">
-                    {p.tag && (
-                      <span className="font-mono text-xs text-accent bg-accentSoft rounded-full px-2.5 py-1">
-                        {p.tag}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-5 text-sm">
-                    {p.url && p.url !== "#" && (
-                      <a
-                        href={p.url}
-                        className="inline-flex items-center gap-1.5 text-ink hover:text-accent transition-colors"
-                      >
-                        Live Demo <ExternalLink size={14} />
-                      </a>
-                    )}
+                {/* Tag + repo link */}
+                <div className="flex items-center justify-between gap-4 mt-auto pt-4 border-t border-border">
+                  {p.tag && (
+                    <span className="mn-tag mn-tag-accent">{p.tag}</span>
+                  )}
+                  <div className="flex items-center gap-3 ml-auto text-xs">
                     {p.repositoryUrl && p.repositoryUrl !== "#" && (
                       <a
                         href={p.repositoryUrl}
-                        className="inline-flex items-center gap-1.5 text-muted hover:text-accent transition-colors"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-muted hover:text-accent transition-colors font-mono"
+                        onClick={e => e.stopPropagation()}
                       >
-                        Code <Github size={14} />
+                        Source ↗
                       </a>
                     )}
                   </div>

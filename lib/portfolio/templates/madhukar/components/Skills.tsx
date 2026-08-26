@@ -29,7 +29,7 @@ export default function Skills() {
  } = templateData || {};
 
   const skillGroups = Array.isArray(skills) ? skills.map((s: any) => ({
-    title: s.category || "Skills",
+    title: s.category?.trim() || "Skills",
     note: "",
     items: s.skills || []
   })) : [];
@@ -51,7 +51,7 @@ export default function Skills() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {skillGroups.map((g, i) => (
-            <Reveal key={g.title} delay={i * 0.06}>
+            <Reveal key={`${g.title}-${i}`} delay={i * 0.06}>
               <div className="glass rounded-2xl p-6 h-full">
                 <h3 className="font-display font-semibold text-lg mb-1">{g.title}</h3>
                 <p className="text-xs text-muted mb-4">{g.note}</p>

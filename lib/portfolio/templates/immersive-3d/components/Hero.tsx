@@ -79,7 +79,7 @@ export default function Hero() {
             {profile.tagline}
           </motion.p>
 
-          <motion.div variants={item} className="mt-8 flex flex-wrap items-center gap-4">
+          <motion.div variants={item} className="mt-8 flex flex-wrap items-center gap-4 relative z-50">
             <a
               href="#projects"
               className="inline-flex items-center gap-2 rounded-full bg-cyan text-base px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"

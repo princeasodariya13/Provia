@@ -133,10 +133,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="w-9 h-9 rounded-xl bg-white/[0.06] hover:bg-white/15 border border-white/10 flex items-center justify-center transition-all duration-200 hover:scale-105"
+                  className="w-9 h-9 rounded-xl bg-white/[0.06] hover:bg-white/15 border border-white/10 flex items-center justify-center transition-all duration-200 hover:scale-105 text-white/60 hover:text-white"
                   title="Repository"
                 >
-                  <GitFork className="w-4 h-4 text-white/60" />
+                  <GitFork className="w-4 h-4" />
                 </a>
               )}
               {project.url && (
@@ -145,10 +145,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="w-9 h-9 rounded-xl bg-white/[0.06] hover:bg-white/15 border border-white/10 flex items-center justify-center transition-all duration-200 hover:scale-105"
+                  className="w-9 h-9 rounded-xl bg-white/[0.06] hover:bg-white/15 border border-white/10 flex items-center justify-center transition-all duration-200 hover:scale-105 text-white/60 hover:text-white"
                   title="Live site"
                 >
-                  <ExternalLink className="w-4 h-4 text-white/60" />
+                  <ExternalLink className="w-4 h-4" />
                 </a>
               )}
             </div>
@@ -156,7 +156,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
           {/* Description */}
           {project.description ? (
-            <p className="text-sm md:text-base text-white/60 leading-relaxed flex-1 mb-6">
+            <p className="text-sm md:text-base text-white/80 leading-relaxed flex-1 mb-6">
               {project.description}
             </p>
           ) : (
@@ -175,7 +175,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 </span>
               ))}
               {project.technologies.length > (isWide ? 8 : 5) && (
-                <span className="px-3 py-1 rounded-full text-[11px] font-semibold text-white/35 bg-white/[0.04] border border-white/8">
+                <span className="px-3 py-1 rounded-full text-[11px] font-semibold text-white/60 bg-white/[0.04] border border-white/8">
                   +{project.technologies.length - (isWide ? 8 : 5)} more
                 </span>
               )}

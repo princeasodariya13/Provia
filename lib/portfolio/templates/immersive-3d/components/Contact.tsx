@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { Send } from "lucide-react";
+import { motion } from "framer-motion";
 import { useTemplateData } from "../context";
 import { Reveal, SectionHeading } from "./Reveal";
 
@@ -53,18 +54,24 @@ export default function Contact() {
             </Reveal>
             {(social || []).map((c: any, i: number) => (
               <Reveal key={c.label} delay={0.05 * i}>
-                <a
+                <motion.a
+                  whileHover={{ x: 10, backgroundColor: "rgba(94, 247, 240, 0.05)" }}
                   href={c.href}
-                  className="flex items-center justify-between glass rounded-xl px-4 py-3 hover:border-cyan transition-colors"
+                  className="flex items-center justify-between glass rounded-xl px-4 py-3 border border-transparent hover:border-cyan/50 transition-colors"
                 >
-                  <span className="eyebrow">{c.label}</span>
-                </a>
+                  <span className="eyebrow">{c.label?.trim() || c.platform?.trim() || c.url?.trim().replace(/^https?:\/\//, '').split('/')[0] || c.href?.trim().replace(/^https?:\/\//, '').split('/')[0] || "Link"}</span>
+                </motion.a>
               </Reveal>
             ))}
           </div>
 
           <Reveal delay={0.15} className="md:col-span-3">
-            <form onSubmit={handleSubmit} className="glass rounded-2xl p-8 space-y-4">
+            <motion.form 
+              whileHover={{ scale: 1.01, boxShadow: "0 20px 40px -10px rgba(167, 139, 250, 0.1)" }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              onSubmit={handleSubmit} 
+              className="glass rounded-2xl p-8 space-y-4 hover:border-purple-500/20 transition-colors duration-500"
+            >
               <div>
                 <label className="eyebrow block mb-2">Name</label>
                 <input
@@ -104,7 +111,7 @@ export default function Contact() {
                   Thanks — {profile.name.split(" ")[0]} will get back to you soon.
                 </p>
               )}
-            </form>
+            </motion.form>
           </Reveal>
         </div>
       </div>

@@ -27,8 +27,8 @@ export default function Experience() {
               <div className="glass rounded-3xl p-8 md:p-10 flex flex-col md:flex-row gap-6 hover:border-accent transition-colors group relative">
                 <div className="md:w-1/4 shrink-0">
                   <div className="eyebrow text-accent mb-2">{exp.year}</div>
-                  <h3 className="font-display font-bold text-xl mb-1">{exp.company}</h3>
-                  <div className="text-muted text-sm">{exp.title}</div>
+                  <h3 className="font-display font-bold text-xl mb-1">{exp.company?.trim() || "Company"}</h3>
+                  <div className="text-muted text-sm">{exp.title?.trim() || "Role"}</div>
                 </div>
                 <div className="md:w-3/4">
                   <p className="text-muted leading-relaxed">

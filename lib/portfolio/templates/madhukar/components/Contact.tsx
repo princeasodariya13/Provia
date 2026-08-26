@@ -57,7 +57,7 @@ export default function Contact() {
                   href={c.href}
                   className="flex items-center justify-between glass rounded-xl px-4 py-3 hover:border-accent transition-colors"
                 >
-                  <span className="eyebrow">{c.label}</span>
+                  <span className="eyebrow">{c.label?.trim() || c.platform?.trim() || c.url?.trim().replace(/^https?:\/\//, '').split('/')[0] || c.href?.trim().replace(/^https?:\/\//, '').split('/')[0] || "Link"}</span>
                 </a>
               </Reveal>
             ))}

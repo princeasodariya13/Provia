@@ -7,29 +7,7 @@ import { useTemplateData } from "../context";
 
 export default function Contact() {
   const templateData = useTemplateData();
-  // @ts-ignore
-  const { 
-  contact = {},
-  profile = {},
-  marqueeItems = [],
-  certifications = [],
-  header = {},
-  social = {},
-  services = [],
-  faq = [],
-  milestones = [],
-  globals = {},
-  steps = [],
-  about = {},
-  experience = [],
-  projects = [],
-  skills = [],
-  stats = [],
-  stack = [],
-  capabilities = [],
-  education = []
- } = templateData || {};
-
+  const { contact = {}, profile = {}, socials = [] } = (templateData as any) || {};
   const [submitted, setSubmitted] = useState(false);
 
   function handleSubmit(e: React.FormEvent) {
@@ -38,82 +16,139 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="section-pad py-24 border-t border-border">
-      <div className="grid md:grid-cols-2 gap-16">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+    <section id="contact" className="section-pad py-28 border-t border-border relative overflow-hidden">
+
+      {/* Background glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_100%,rgba(200,255,0,0.04),transparent)] pointer-events-none" />
+
+      <div className="relative z-10">
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="eyebrow mb-5"
+        >
+          [07] Contact
+        </motion.p>
+        <motion.h2
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
+          className="font-display text-5xl md:text-6xl font-black tracking-tight mb-4"
         >
-          <p className="eyebrow mb-4">[06] Contact</p>
-          <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight mb-6">
-            Let&apos;s talk.
-          </h2>
-          <p className="text-muted leading-relaxed max-w-sm mb-10">
-            Direct line, no account manager in between. Tell me about your
-            project and I&apos;ll reply within a day with concrete next steps.
-          </p>
-
-          <dl className="space-y-6">
-            <Row label="Email" value={contact.email} href={`mailto:${contact.email}`} />
-            <Row label="Phone" value={contact.phone} href={`tel:${contact.phone.replace(/\s/g, "")}`} />
-            <Row label="Base" value={contact.base} />
-            <Row label="Response" value={contact.reply} />
-          </dl>
-        </motion.div>
-
-        <motion.form
-          onSubmit={handleSubmit}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          Let&apos;s talk<span className="text-accent">.</span>
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="rounded-2xl border border-border bg-surface p-8"
+          transition={{ delay: 0.2 }}
+          className="text-muted text-lg max-w-lg mb-16"
         >
-          <h3 className="font-display text-xl font-semibold mb-6">
-            Send a short briefing.
-          </h3>
+          Direct line, no account manager in between. I&apos;ll reply within one business day with concrete next steps.
+        </motion.p>
 
-          {submitted ? (
-            <p className="text-accent font-mono text-sm">
-              Thanks — that&apos;s in. I&apos;ll be in touch soon.
-            </p>
-          ) : (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <Field label="First name *" />
-                <Field label="Last name *" />
+        <div className="grid md:grid-cols-2 gap-12 items-start">
+
+          {/* Left: contact info */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="space-y-4"
+          >
+            {contact.email && (
+              <ContactRow label="Email" value={contact.email} href={`mailto:${contact.email}`} />
+            )}
+            {contact.phone && (
+              <ContactRow label="Phone" value={contact.phone} href={`tel:${contact.phone.replace(/\s/g,"")}`} />
+            )}
+            {contact.base && (
+              <ContactRow label="Based in" value={contact.base} />
+            )}
+            <ContactRow label="Response time" value={contact.reply || "Within 24 hours"} />
+
+            {socials.length > 0 && (
+              <div className="pt-4">
+                <div className="eyebrow mb-3">Socials</div>
+                <div className="flex flex-wrap gap-3">
+                  {socials.map((s: any) => (
+                    <a
+                      key={s.href}
+                      href={s.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 tag-pill hover:border-accent/50 hover:text-accent transition-colors"
+                    >
+                      {s.label?.trim() || s.href?.trim().replace(/^https?:\/\//, '').split('/')[0] || "Link"} ↗
+                    </a>
+                  ))}
+                </div>
               </div>
-              <Field label="Email *" type="email" />
-              <Field label="Company (optional)" />
-              <TextArea label="Message (optional)" />
-              <button
-                type="submit"
-                className="w-full rounded-full bg-accent text-base font-mono text-sm font-medium py-3 mt-2 hover:opacity-90 transition-opacity"
+            )}
+          </motion.div>
+
+          {/* Right: contact form */}
+          <motion.form
+            onSubmit={handleSubmit}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="glass-card p-8"
+          >
+            <h3 className="font-display text-xl font-black mb-6 tracking-tight">
+              Send a brief
+            </h3>
+
+            {submitted ? (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="py-8 text-center"
               >
-                Send request →
-              </button>
-            </div>
-          )}
-        </motion.form>
+                <div className="text-4xl mb-4">✓</div>
+                <p className="text-accent font-mono-custom text-sm">
+                  Message received. I&apos;ll be in touch soon.
+                </p>
+              </motion.div>
+            ) : (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="First name *" />
+                  <Field label="Last name *" />
+                </div>
+                <Field label="Email *" type="email" />
+                <Field label="Company (optional)" />
+                <TextArea label="Message" />
+                <button
+                  type="submit"
+                  className="w-full rounded-full bg-accent text-[#050507] font-semibold font-mono-custom text-sm py-3.5 mt-2 hover:bg-accent/90 transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(200,255,0,0.25)]"
+                >
+                  Send request →
+                </button>
+              </div>
+            )}
+          </motion.form>
+        </div>
       </div>
     </section>
   );
 }
 
-function Row({ label, value, href }: { label: string; value: string; href?: string }) {
-  const content = href ? (
-    <a href={href} className="hover:text-accent transition-colors">
-      {value}
-    </a>
-  ) : (
-    value
-  );
+function ContactRow({ label, value, href }: { label: string; value: string; href?: string }) {
   return (
-    <div className="flex items-center justify-between border-b border-border pb-3">
+    <div className="flex items-center justify-between py-3 border-b border-border">
       <dt className="eyebrow">{label}</dt>
-      <dd className="font-mono text-sm text-ink">{content}</dd>
+      <dd className="font-mono-custom text-sm text-ink">
+        {href ? (
+          <a href={href} className="hover:text-accent transition-colors">
+            {value}
+          </a>
+        ) : value}
+      </dd>
     </div>
   );
 }
@@ -124,7 +159,7 @@ function Field({ label, type = "text" }: { label: string; type?: string }) {
       <span className="eyebrow block mb-2">{label}</span>
       <input
         type={type}
-        className="w-full rounded-lg bg-surface2 border border-border px-4 py-2.5 text-sm text-ink focus:border-accent outline-none transition-colors"
+        className="w-full rounded-xl bg-surface2 border border-border px-4 py-3 text-sm text-ink outline-none focus:border-accent/60 transition-colors placeholder:text-muted"
       />
     </label>
   );
@@ -135,8 +170,8 @@ function TextArea({ label }: { label: string }) {
     <label className="block">
       <span className="eyebrow block mb-2">{label}</span>
       <textarea
-        rows={3}
-        className="w-full rounded-lg bg-surface2 border border-border px-4 py-2.5 text-sm text-ink focus:border-accent outline-none transition-colors resize-none"
+        rows={4}
+        className="w-full rounded-xl bg-surface2 border border-border px-4 py-3 text-sm text-ink outline-none focus:border-accent/60 transition-colors resize-none placeholder:text-muted"
       />
     </label>
   );

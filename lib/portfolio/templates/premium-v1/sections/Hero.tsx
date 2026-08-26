@@ -26,7 +26,7 @@ export function PremiumHero({ hero, contact, stats }: Props) {
   const words = hero.name.split(" ");
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-[#06060A]">
+    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-black">
       {/* ── Ambient background mesh ───────────────────────── */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
         <div className="absolute -top-56 -left-56 w-[700px] h-[700px] rounded-full bg-violet-600/[0.12] blur-[130px]" />
@@ -95,14 +95,14 @@ export function PremiumHero({ hero, contact, stats }: Props) {
             {/* Role / Headline */}
             <motion.div {...fadeUp(0.2)} className="flex items-center gap-4">
               <div className="h-px w-10 bg-gradient-to-r from-violet-400 to-cyan-400" />
-              <p className="text-lg md:text-xl text-white/55 font-light tracking-wide">
+              <p className="text-lg md:text-xl text-white/80 font-light tracking-wide">
                 {hero.headline}
               </p>
             </motion.div>
 
             {/* Short intro */}
             {hero.shortIntroduction && (
-              <motion.p {...fadeUp(0.28)} className="text-base text-white/35 max-w-lg leading-relaxed">
+              <motion.p {...fadeUp(0.28)} className="text-base text-white/70 max-w-lg leading-relaxed">
                 {hero.shortIntroduction}
               </motion.p>
             )}
@@ -125,17 +125,17 @@ export function PremiumHero({ hero, contact, stats }: Props) {
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2 px-5 py-3 rounded-full border border-white/12 bg-white/[0.04] text-sm font-semibold text-white/65 hover:text-white hover:border-violet-500/50 hover:bg-violet-500/10 transition-all duration-300 backdrop-blur-sm"
+                  className="group inline-flex items-center gap-2 px-5 py-3 rounded-full border border-white/12 bg-white/[0.04] text-sm font-semibold text-white/80 hover:text-white hover:border-violet-500/50 hover:bg-violet-500/10 transition-all duration-300 backdrop-blur-sm"
                 >
-                  {link.title}
-                  <ArrowUpRight className="w-3.5 h-3.5 opacity-0 -ml-1 group-hover:opacity-100 group-hover:ml-0 transition-all duration-200" />
+                  {link.title?.trim() || link.url?.trim().replace(/^https?:\/\//, '').split('/')[0] || "Link"}
+                  <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </a>
               ))}
             </motion.div>
 
             {/* Location */}
             {contact?.location && (
-              <motion.div {...fadeUp(0.42)} className="flex items-center gap-2 text-xs text-white/28 font-medium tracking-wide">
+              <motion.div {...fadeUp(0.42)} className="flex items-center gap-2 text-xs text-white/50 font-medium tracking-wide">
                 <MapPin className="w-3.5 h-3.5" />
                 {contact.location}
               </motion.div>
@@ -196,7 +196,7 @@ export function PremiumHero({ hero, contact, stats }: Props) {
                   {stats.map((s, i) => (
                     <span key={i} className="flex items-center gap-1.5">
                       <span className="text-sm font-black text-white">{s.value}</span>
-                      <span className="text-[10px] text-white/40 uppercase tracking-wider">{s.label}</span>
+                      <span className="text-[10px] text-white/60 uppercase tracking-wider">{s.label}</span>
                       {i < stats.length - 1 && <span className="w-px h-3 bg-white/15 ml-1.5" />}
                     </span>
                   ))}
@@ -211,9 +211,9 @@ export function PremiumHero({ hero, contact, stats }: Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.4, duration: 0.8 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden xl:flex flex-col items-center gap-2"
         >
-          <span className="text-[9px] tracking-[0.3em] uppercase text-white/20 font-bold">scroll</span>
+          <span className="text-[9px] tracking-[0.3em] uppercase text-white/50 font-bold">scroll</span>
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}

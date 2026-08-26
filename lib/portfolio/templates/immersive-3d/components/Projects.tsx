@@ -3,6 +3,7 @@ import Image from "next/image";
 import { EmptyState } from "@/lib/portfolio/templates/shared/EmptyState";
 import { ExternalLink } from "lucide-react";
 import { IconBrandGithub as Github } from "@tabler/icons-react";
+import { motion } from "framer-motion";
 import { useTemplateData } from "../context";
 import { Reveal, SectionHeading } from "./Reveal";
 
@@ -49,7 +50,11 @@ export default function Projects() {
         <div className="grid md:grid-cols-2 gap-6">
           {projects.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.1} className={p.featured ? "md:col-span-2" : ""}>
-              <div className="group glass rounded-2xl overflow-hidden h-full flex flex-col hover:border-cyan transition-colors">
+              <motion.div 
+                whileHover={{ y: -5, scale: 1.01, boxShadow: "0 20px 40px -10px rgba(94, 247, 240, 0.15)" }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="group glass rounded-2xl overflow-hidden h-full flex flex-col hover:border-cyan/50 transition-colors"
+              >
                 <div className="relative aspect-[16/9] overflow-hidden">
                   <Image
                     src={p.image || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&h=400&fit=crop"}
@@ -65,7 +70,7 @@ export default function Projects() {
                 </div>
 
                 <div className="p-6 flex flex-col flex-1">
-                  <h3 className="font-display text-xl font-semibold mb-2">{p.title}</h3>
+                  <h3 className="font-display text-xl font-semibold mb-2">{p.title?.trim() || "Project"}</h3>
                   <p className="text-muted text-sm leading-relaxed mb-4 flex-1">{p.description}</p>
 
                   <div className="flex flex-wrap gap-2 mb-5">
@@ -84,7 +89,7 @@ export default function Projects() {
                     )}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </Reveal>
           ))}
         </div>

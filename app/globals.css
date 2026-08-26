@@ -106,34 +106,35 @@
   }
 }
 
-/* ── BASE ───────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; }
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
 
-html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  font-size: 80%;
-  scroll-behavior: smooth;
-  /* Prevent overscroll bounce lag */
-  overscroll-behavior: none;
-}
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-size: 80%;
+    scroll-behavior: smooth;
+    /* Prevent overscroll bounce lag */
+    overscroll-behavior: none;
+  }
 
-body {
-  background-color: var(--background);
-  color: var(--text-primary);
-  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  line-height: 1.6;
-  /* GPU compositing layer for smoother scroll */
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: none;
-}
+  body {
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.6;
+    /* GPU compositing layer for smoother scroll */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+  }
 
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--text-primary);
-  line-height: 1.15;
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    line-height: 1.15;
+  }
 }
 
 /* ── INTERACTIVE DEPTH & UTILITIES ─────────────────────────── */

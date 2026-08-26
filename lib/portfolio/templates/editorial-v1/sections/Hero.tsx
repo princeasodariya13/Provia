@@ -140,8 +140,8 @@ export function Hero({
             rel="noopener noreferrer"
             className="group inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest border-b-2 border-[#111] pb-0.5 hover:border-[#CC2936] hover:text-[#CC2936] transition-all duration-300"
           >
-            {link.title}
-            <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+            {link.title?.trim() || link.url?.trim().replace(/^https?:\/\//, '').split('/')[0] || "Link"}
+            <span className="transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#CC2936]">
               ↗
             </span>
           </a>

@@ -50,8 +50,8 @@ export default function Education() {
               <span className="absolute -left-8 top-1.5 w-3.5 h-3.5 rounded-full bg-surface-light dark:bg-surface-dark border-2 border-accent" />
               <div className="glass rounded-2xl p-6">
                 <div className="eyebrow mb-2">{e.years}</div>
-                <h3 className="font-display font-semibold text-lg mb-1">{e.degree}</h3>
-                <div className="text-sm text-muted mb-2">{e.school}</div>
+                <h3 className="font-display font-semibold text-lg mb-1">{e.degree?.trim() || "Degree"}</h3>
+                <div className="text-sm text-muted mb-2">{e.school?.trim() || "School"}</div>
                 <span className="text-xs text-accent">{e.note}</span>
               </div>
             </Reveal>

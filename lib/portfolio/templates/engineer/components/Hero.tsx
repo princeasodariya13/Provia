@@ -4,67 +4,64 @@
 import { motion } from "framer-motion";
 import { useTemplateData } from "../context";
 
-const headline = "Engineering resilient systems that scale and adapt.";
-
 const container = {
   hidden: {},
-  show: {
-    transition: { staggerChildren: 0.045, delayChildren: 0.3 },
-  },
+  show: { transition: { staggerChildren: 0.04, delayChildren: 0.2 } },
 };
-
 const word = {
-  hidden: { y: "110%" },
-  show: { y: "0%", transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+  hidden: { y: "110%", opacity: 0 },
+  show: { y: "0%", opacity: 1, transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] } },
+};
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  show:   { opacity: 1, y: 0,  transition: { duration: 0.6, ease: "easeOut" } },
 };
 
 export default function Hero() {
   const templateData = useTemplateData();
-  // @ts-ignore
-  const { 
-  contact = {},
-  profile = {},
-  marqueeItems = [],
-  certifications = [],
-  header = {},
-  social = {},
-  services = [],
-  faq = [],
-  milestones = [],
-  globals = {},
-  steps = [],
-  about = {},
-  experience = [],
-  projects = [],
-  skills = [],
-  stats = [],
-  stack = [],
-  capabilities = [],
-  education = []
- } = templateData || {};
+  const {
+    profile    = {},
+    socials    = [],
+    projects   = [],
+    capabilities = [],
+    stats      = [],
+  } = (templateData as any) || {};
+
+  const headline = profile.role || "Engineering resilient systems that scale.";
+  const words = headline.split(" ");
 
   return (
-    <section id="profile" className="relative pt-40 pb-24 overflow-hidden">
-      <div className="absolute inset-0 bg-grid bg-grid opacity-[0.4] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_40%,transparent_100%)]" />
+    <section id="profile" className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden pt-24 pb-20">
 
-      <div className="section-pad relative">
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+      {/* Background grid */}
+      <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,#000_40%,transparent_100%)] opacity-50 pointer-events-none" />
+
+      {/* Accent orb */}
+      <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(200,255,0,0.06)_0%,transparent_70%)] pointer-events-none" />
+      <div className="absolute bottom-[10%] left-[-5%] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(0,255,178,0.05)_0%,transparent_70%)] pointer-events-none" />
+
+      <div className="section-pad relative z-10">
+
+        {/* Eyebrow */}
+        <motion.div
+          initial={{ opacity: 0, x: -16 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1, duration: 0.6 }}
-          className="eyebrow mb-6"
+          className="flex items-center gap-3 mb-8"
         >
-          [01] {profile.name} — Portfolio
-        </motion.p>
+          <span className="h-2 w-2 rounded-full bg-accent animate-pulse-ring" />
+          <span className="eyebrow">[01] {profile.name} — Portfolio</span>
+        </motion.div>
 
+        {/* Animated headline */}
         <motion.h1
           variants={container}
           initial="hidden"
           animate="show"
-          className="font-display text-[13vw] leading-[0.95] md:text-[6.2rem] font-bold tracking-tight max-w-5xl"
+          className="font-display text-[11vw] sm:text-[8vw] md:text-[6.5vw] lg:text-[5.5rem] leading-[0.92] font-black tracking-tight max-w-5xl mb-8"
         >
-          {headline.split(" ").map((w, i) => (
-            <span key={i} className="inline-block overflow-hidden mr-4 md:mr-5">
+          {words.map((w: string, i: number) => (
+            <span key={i} className="inline-block overflow-hidden mr-[0.22em] last:mr-0">
               <motion.span variants={word} className="inline-block">
                 {w}
               </motion.span>
@@ -72,64 +69,82 @@ export default function Hero() {
           ))}
         </motion.h1>
 
+        {/* Sub-heading */}
         <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.1, duration: 0.6 }}
-          className="mt-8 max-w-xl text-muted text-lg leading-relaxed"
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          transition={{ delay: 1.0 }}
+          className="text-ink-dim text-lg leading-relaxed max-w-xl mb-10"
         >
-          {profile.subhead}
+          {profile.tagline || profile.subhead}
         </motion.p>
 
+        {/* CTA row */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.25, duration: 0.6 }}
-          className="mt-10 flex flex-wrap items-center gap-4"
+          transition={{ delay: 1.2, duration: 0.6 }}
+          className="flex flex-wrap items-center gap-4 mb-16 relative z-50"
         >
           <a
             href="#contact"
-            className="group inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-mono text-sm font-medium text-base transition-transform hover:-translate-y-0.5"
+            className="group inline-flex items-center gap-2.5 rounded-full bg-accent text-base font-semibold text-[#050507] px-7 py-3.5 text-sm hover:bg-accent/90 transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(200,255,0,0.3)]"
           >
             Start a project
-            <span className="transition-transform group-hover:translate-x-1">→</span>
+            <span className="transition-transform group-hover:translate-x-1 text-base">→</span>
           </a>
-          <span className="eyebrow flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-accent2 animate-blink" />
-            {profile.badge}
-          </span>
+          <a
+            href="#work"
+            className="group inline-flex items-center gap-2.5 rounded-full border border-border bg-surface px-7 py-3.5 text-sm font-semibold text-ink hover:border-border-strong hover:bg-surface2 transition-all"
+          >
+            View my work
+          </a>
+          {socials.slice(0, 2).map((s: any) => (
+            <a
+              key={s.href}
+              href={s.href}
+              target="_blank"
+              rel="noreferrer"
+              className="eyebrow text-muted hover:text-accent transition-colors"
+            >
+              {s.label?.trim() || s.href?.trim().replace(/^https?:\/\//, '').split('/')[0] || "Link"}↗
+            </a>
+          ))}
+        </motion.div>
+
+        {/* Stat chips row */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.4, duration: 0.6 }}
+          className="flex flex-wrap gap-3"
+        >
+          {profile.base && <StatChip icon="📍" label={profile.base} />}
+          {projects.length > 0 && <StatChip icon="🚀" label={`${projects.length}+ Projects`} />}
+          {stats.length > 0 && stats.map((s: any, i: number) => (
+            <StatChip key={i} icon="⚡" label={`${s.value}${s.suffix || ""} ${s.label}`} />
+          ))}
+          {capabilities.slice(0, 2).map((c: any, i: number) => (
+            <StatChip key={`cap-${i}`} icon="●" label={c.title} accent />
+          ))}
         </motion.div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.9, duration: 0.8, ease: "easeOut" }}
-        className="section-pad mt-20 grid grid-cols-1 md:grid-cols-3 gap-4"
-      >
-        <div className="md:col-span-2 relative aspect-[16/9] rounded-2xl border border-border bg-surface overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(204,255,0,0.12),transparent_60%)]" />
-          <div className="absolute bottom-5 left-5 eyebrow">3D Abstract Object</div>
-        </div>
-        <div className="flex flex-col gap-4">
-          {profile.base && (
-            <StatChip label={`📍 ${profile.base}`} />
-          )}
-          {projects && projects.length > 0 && (
-            <StatChip label={`🚀 ${projects.length}+ Projects Shipped`} />
-          )}
-          {capabilities && capabilities.length > 0 && (
-            <StatChip label={`⚡ ${capabilities.map(c => c.title).join(", ")}`} />
-          )}
-        </div>
-      </motion.div>
+      {/* Bottom gradient fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-base to-transparent pointer-events-none" />
     </section>
   );
 }
 
-function StatChip({ label }: { label: string }) {
+function StatChip({ icon, label, accent = false }: { icon: string; label: string; accent?: boolean }) {
   return (
-    <div className="flex-1 rounded-2xl border border-border bg-surface px-5 py-4 flex items-center font-mono text-xs text-ink/80">
+    <div className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs border font-mono-custom ${
+      accent
+        ? "bg-accent-dim border-accent/30 text-accent"
+        : "bg-surface border-border text-ink-dim"
+    }`}>
+      <span className="text-[10px]">{icon}</span>
       {label}
     </div>
   );

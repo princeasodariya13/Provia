@@ -18,18 +18,21 @@ import Connect from "./components/Connect";
 import Footer from "./components/Footer";
 
 export function aideveloperTemplate({ document }: TemplateProps) {
+  const [isBooting, setIsBooting] = React.useState(true);
   const data = mapProviaToTemplate(document);
+  const isHidden = (sectionId: string) => document.configuration?.hiddenSections?.includes(sectionId);
+
   return (
-    <div className="ai-developer-theme bg-background min-h-screen text-foreground selection:bg-primary selection:text-primary-foreground font-sans">
+    <div className={`ai-developer-theme bg-base min-h-screen text-ink font-sans ${isBooting ? "h-[100svh] overflow-hidden" : ""}`}>
       <TemplateProvider data={data}>
-        <BootSequence />
+        <BootSequence onDone={() => setIsBooting(false)} />
         <Nav />
-        <Hero />
-        <Milestones />
-        <Projects />
-        <Stack />
-        <Education />
-        <Connect />
+        {!isHidden("hero")       && <Hero />}
+        {!isHidden("experience") && <Milestones />}
+        {!isHidden("projects")   && <Projects />}
+        {!isHidden("skills")     && <Stack />}
+        {!isHidden("education")  && <Education />}
+        {!isHidden("contact")    && <Connect />}
         <Footer />
       </TemplateProvider>
     </div>
@@ -39,12 +42,12 @@ export function aideveloperTemplate({ document }: TemplateProps) {
 export const aideveloperMetadata = {
   id: "ai-technology",
   name: "AI & Technology",
-  version: "1.0.0",
-  description: "A modern technology-focused portfolio designed for AI engineers, ML developers, software engineers, and technical innovators.",
+  version: "2.0.0",
+  description: "A modern, futuristic HUD-style portfolio for AI engineers, ML developers, and technical innovators.",
   category: "Technology",
-  tags: ["Technical","Modern","AI"],
-  audience: ["AI Engineers","ML Engineers","Technical Researchers"],
-  style: "Modern",
+  tags: ["Technical", "Modern", "AI", "Futuristic", "Dark"],
+  audience: ["AI Engineers", "ML Engineers", "Technical Researchers"],
+  style: "Futuristic",
   recommended: true,
   supportedSections: ["hero", "about", "experience", "education", "projects", "skills", "contact"],
 };

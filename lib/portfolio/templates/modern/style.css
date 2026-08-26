@@ -1,30 +1,168 @@
-.modern-theme {
-  --base: #ffffff;
-  --ink: #111827; /* gray-900 */
-  --muted: #6b7280; /* gray-500 */
-  --accent: #2563eb; /* blue-600 */
-  --border: #e5e7eb; /* gray-200 */
-  --card: #f9fafb; /* gray-50 */
+/* ============================================================
+   MODERN MINIMAL TEMPLATE — PREMIUM DESIGN SYSTEM v2.0
+   Light Mode / Clean / Professional / Elegant
+   ============================================================ */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+.modern-theme {
+  --base:          #FFFFFF;
+  --surface:       #F9FAFB;
+  --surface2:      #F3F4F6;
+  --surface3:      #EAECF0;
+  --ink:           #0F1117;
+  --ink-dim:       #374151;
+  --muted:         #6B7280;
+  --accent:        #2563EB;  /* blue-600 */
+  --accent-light:  #EFF6FF;  /* blue-50 */
+  --accent-mid:    #BFDBFE;  /* blue-200 */
+  --accent2:       #0EA5E9;  /* sky-500 */
+  --border:        #E5E7EB;
+  --border-strong: #D1D5DB;
+  --shadow-sm:     0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md:     0 4px 16px rgba(0,0,0,0.07);
+  --shadow-lg:     0 8px 32px rgba(0,0,0,0.09);
+
+  background-color: var(--base);
+  color: var(--ink);
   color-scheme: light;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-.modern-theme .bg-base { background-color: var(--base); }
-.modern-theme .bg-card { background-color: var(--card); }
-.modern-theme .text-ink { color: var(--ink); }
-.modern-theme .text-muted { color: var(--muted); }
-.modern-theme .text-accent { color: var(--accent); }
-.modern-theme .border-border { border-color: var(--border); }
+/* ── Color utilities ─────────────────────────────────────── */
+.modern-theme .bg-base        { background-color: var(--base); }
+.modern-theme .bg-surface     { background-color: var(--surface); }
+.modern-theme .bg-surface2    { background-color: var(--surface2); }
+.modern-theme .bg-card        { background-color: var(--surface); }
+.modern-theme .bg-accent      { background-color: var(--accent); }
+.modern-theme .bg-accentSoft  { background-color: var(--accent-light); }
+.modern-theme .text-ink       { color: var(--ink); }
+.modern-theme .text-ink-dim   { color: var(--ink-dim); }
+.modern-theme .text-muted     { color: var(--muted); }
+.modern-theme .text-accent    { color: var(--accent); }
+.modern-theme .text-base      { color: var(--base); }
+.modern-theme .border-border  { border-color: var(--border); }
 .modern-theme .hover\:text-accent:hover { color: var(--accent) !important; }
 
+/* Ensure headings inherit the correct theme color and aren't overridden by globals.css */
+.modern-theme h1,
+.modern-theme h2,
+.modern-theme h3,
+.modern-theme h4,
+.modern-theme h5,
+.modern-theme h6 {
+  color: var(--ink);
+}
+
+/* ── Typography ──────────────────────────────────────────── */
+.modern-theme .font-display {
+  font-family: 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.03em;
+}
+.modern-theme .font-mono {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
 .modern-theme .section-label {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
 }
 
-.modern-theme .text-base { color: var(--base); }
-.modern-theme .bg-surface { background-color: var(--card); }
-.modern-theme .bg-accentSoft { background-color: rgba(37, 99, 235, 0.1); }
+/* ── Layout ──────────────────────────────────────────────── */
+.modern-theme .max-6xl {
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (min-width: 768px) {
+  .modern-theme .max-6xl { padding-left: 3rem; padding-right: 3rem; }
+}
+@media (min-width: 1280px) {
+  .modern-theme .max-6xl { padding-left: 4rem; padding-right: 4rem; }
+}
+
+/* ── Dividers ────────────────────────────────────────────── */
+.modern-theme .border-t { border-top:    1px solid var(--border); }
+.modern-theme .border-b { border-bottom: 1px solid var(--border); }
+.modern-theme .divide-y > * + * { border-top: 1px solid var(--border); }
+
+/* ── Cards ───────────────────────────────────────────────── */
+.modern-theme .mn-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.modern-theme .mn-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.modern-theme .mn-card-accent {
+  background: var(--accent-light);
+  border: 1px solid var(--accent-mid);
+  border-radius: 1rem;
+}
+
+/* ── Pill tags ───────────────────────────────────────────── */
+.modern-theme .mn-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--ink-dim);
+}
+.modern-theme .mn-tag-accent {
+  background: var(--accent-light);
+  border-color: var(--accent-mid);
+  color: var(--accent);
+}
+
+/* ── Grid background ─────────────────────────────────────── */
+.modern-theme .grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(0,0,0,0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.modern-theme .bg-grid-fade {
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,0.04) 0%, transparent 70%);
+}
+
+/* ── Animations ──────────────────────────────────────────── */
+@keyframes mn-marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.modern-theme .animate-marquee {
+  animation: mn-marquee 30s linear infinite;
+}
+
+@keyframes mn-ping {
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+.modern-theme .animate-ping {
+  animation: mn-ping 1s cubic-bezier(0,0,0.2,1) infinite;
+}
+
+/* ── Timeline ────────────────────────────────────────────── */
+.modern-theme .timeline-line {
+  position: absolute;
+  left: -1px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+}

@@ -19,17 +19,19 @@ import Footer from "./components/Footer";
 
 export function motionengineerTemplate({ document }: TemplateProps) {
   const data = mapProviaToTemplate(document);
+  const isHidden = (sectionId: string) => document.configuration?.hiddenSections?.includes(sectionId);
+
   return (
-    <div className="motion-engineer-theme bg-black min-h-screen text-white font-sans">
+    <div className="motion-engineer-theme bg-base min-h-screen text-ink font-sans">
       <TemplateProvider data={data}>
         <CursorGlow />
         <Nav />
-        <Hero />
-        <About />
-        <Projects />
-        <Experience />
-        <Education />
-        <Contact />
+        {!isHidden("hero")       && <Hero />}
+        {!isHidden("about")      && <About />}
+        {!isHidden("projects")   && <Projects />}
+        {!isHidden("experience") && <Experience />}
+        {!isHidden("education")  && <Education />}
+        {!isHidden("contact")    && <Contact />}
         <Footer />
       </TemplateProvider>
     </div>
@@ -39,12 +41,12 @@ export function motionengineerTemplate({ document }: TemplateProps) {
 export const motionengineerMetadata = {
   id: "motion-creative",
   name: "Motion Creative",
-  version: "1.0.0",
-  description: "A dynamic portfolio with expressive motion, interactive transitions, and a strong creative-engineering personality.",
+  version: "2.0.0",
+  description: "A dynamic, expressive portfolio with bold purple-pink gradients, magnetic buttons, and smooth motion. Perfect for creative developers and frontend engineers.",
   category: "Creative",
-  tags: ["Creative","Interactive","Developer"],
-  audience: ["Creative Developers","Frontend Engineers","Designers"],
+  tags: ["Creative", "Interactive", "Developer", "Gradient", "Dark"],
+  audience: ["Creative Developers", "Frontend Engineers", "Designers"],
   style: "Dynamic",
-  recommended: false,
+  recommended: true,
   supportedSections: ["hero", "about", "experience", "education", "projects", "skills", "contact"],
 };

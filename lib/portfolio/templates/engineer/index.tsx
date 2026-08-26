@@ -21,19 +21,21 @@ import Footer from "./components/Footer";
 
 export function engineerTemplate({ document }: TemplateProps) {
   const data = mapProviaToTemplate(document);
+  const isHidden = (sectionId: string) => document.configuration?.hiddenSections?.includes(sectionId);
+
   return (
     <div className="engineer-theme bg-base min-h-screen text-ink selection:bg-accent selection:text-base font-sans">
       <TemplateProvider data={data}>
         <Nav />
-        <Hero />
-        <About />
-        <Experience />
-        <Projects />
-        <Capabilities />
-        <Stats />
-        <Stack />
-        <Education />
-        <Contact />
+        {!isHidden("hero") && <Hero />}
+        {!isHidden("about") && <About />}
+        {!isHidden("experience") && <Experience />}
+        {!isHidden("projects") && <Projects />}
+        {!isHidden("skills") && <Capabilities />}
+        {!isHidden("stats") && <Stats />}
+        {!isHidden("skills") && <Stack />}
+        {!isHidden("education") && <Education />}
+        {!isHidden("contact") && <Contact />}
         <Footer />
       </TemplateProvider>
     </div>

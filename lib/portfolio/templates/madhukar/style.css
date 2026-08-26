@@ -16,6 +16,16 @@
 .madhukar-theme .text-primary { color: var(--accent); }
 .madhukar-theme .border-border { border-color: var(--border); }
 
+/* Ensure headings inherit the correct theme color and aren't overridden by globals.css */
+.madhukar-theme h1,
+.madhukar-theme h2,
+.madhukar-theme h3,
+.madhukar-theme h4,
+.madhukar-theme h5,
+.madhukar-theme h6 {
+  color: var(--ink);
+}
+
 /* Compatibility */
 .madhukar-theme .bg-surface { background-color: var(--base-dark); }
 .madhukar-theme .text-accent { color: var(--accent); }

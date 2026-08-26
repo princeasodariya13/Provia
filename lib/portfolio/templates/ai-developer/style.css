@@ -1,78 +1,195 @@
+/* ============================================================
+   AI DEVELOPER TEMPLATE — PREMIUM DESIGN SYSTEM v2.0
+   Dark Futuristic / HUD / Terminal Aesthetic
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
 .ai-developer-theme {
-  --base: #050505;
-  --surface: #111111;
-  --surface2: #1a1a1a;
-  --ink: #f8fafc;
-  --muted: #94a3b8;
-  --accent: #38bdf8;
-  --border: #27272a;
+  --base:          #02020A;
+  --surface:       #08080F;
+  --surface2:      #0E0E1A;
+  --surface3:      #141422;
+  --surface-hover: #1A1A2E;
+  --ink:           #E8E8F0;
+  --ink-dim:       #A0A0C0;
+  --muted:         #6060A0;
+  --accent:        #38bdf8;   /* sky blue */
+  --accent-dim:    rgba(56,189,248,0.10);
+  --accent-glow:   rgba(56,189,248,0.20);
+  --accent2:       #818cf8;   /* indigo */
+  --accent2-dim:   rgba(129,140,248,0.10);
+  --border:        rgba(56,189,248,0.12);
+  --border-strong: rgba(56,189,248,0.25);
+  --grid-line:     rgba(56,189,248,0.05);
 
   background-color: var(--base);
   color: var(--ink);
   color-scheme: dark;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Base Colors */
+/* ── Alias classes for Tailwind ──────────────────────────── */
 .ai-developer-theme .bg-base,
-.ai-developer-theme .bg-background { background-color: var(--base); }
-.ai-developer-theme .bg-surface { background-color: var(--surface); }
-.ai-developer-theme .bg-surface2 { background-color: var(--surface2); }
-.ai-developer-theme .bg-accent { background-color: var(--accent); }
-
-/* Text Colors */
+.ai-developer-theme .bg-background   { background-color: var(--base); }
+.ai-developer-theme .bg-surface      { background-color: var(--surface); }
+.ai-developer-theme .bg-surface2     { background-color: var(--surface2); }
+.ai-developer-theme .bg-surface3     { background-color: var(--surface3); }
+.ai-developer-theme .bg-accent       { background-color: var(--accent); }
+.ai-developer-theme .bg-accent-dim   { background-color: var(--accent-dim); }
 .ai-developer-theme .text-ink,
 .ai-developer-theme .text-foreground { color: var(--ink); }
-.ai-developer-theme .text-accent { color: var(--accent); }
-.ai-developer-theme .text-muted { color: var(--muted); }
+.ai-developer-theme .text-ink-dim    { color: var(--ink-dim); }
+.ai-developer-theme .text-accent     { color: var(--accent); }
+.ai-developer-theme .text-accent2    { color: var(--accent2); }
+.ai-developer-theme .text-muted      { color: var(--muted); }
+.ai-developer-theme .border-border   { border-color: var(--border); }
+.ai-developer-theme .border-strong   { border-color: var(--border-strong); }
+.ai-developer-theme .border-accent   { border-color: var(--accent); }
 
-/* Border Colors */
-.ai-developer-theme .border-border { border-color: var(--border); }
-.ai-developer-theme .border-accent { border-color: var(--accent); }
-
-/* Hover States */
-.ai-developer-theme .hover\:text-accent:hover { color: var(--accent) !important; }
-.ai-developer-theme .hover\:border-accent:hover { border-color: var(--accent) !important; }
-.ai-developer-theme .group-hover\:text-accent .group:hover { color: var(--accent) !important; }
-
-/* Custom Typography & Effects */
-.ai-developer-theme .hud {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+/* Ensure headings inherit the correct theme color and aren't overridden by globals.css */
+.ai-developer-theme h1,
+.ai-developer-theme h2,
+.ai-developer-theme h3,
+.ai-developer-theme h4,
+.ai-developer-theme h5,
+.ai-developer-theme h6 {
+  color: var(--ink);
 }
 
+/* ── Typography ──────────────────────────────────────────── */
 .ai-developer-theme .font-display {
-  font-family: system-ui, -apple-system, sans-serif;
-  letter-spacing: -0.02em;
+  font-family: 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.03em;
+}
+.ai-developer-theme .hud {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.ai-developer-theme .hud-accent {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 
-.ai-developer-theme .text-glow {
-  text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+/* ── Layout ──────────────────────────────────────────────── */
+.ai-developer-theme .section-pad {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 768px) {
+  .ai-developer-theme .section-pad { padding-left: 3rem; padding-right: 3rem; }
+}
+@media (min-width: 1280px) {
+  .ai-developer-theme .section-pad { padding-left: 4rem; padding-right: 4rem; }
 }
 
+/* ── Dividers ────────────────────────────────────────────── */
+.ai-developer-theme .border-t  { border-top:    1px solid var(--border); }
+.ai-developer-theme .border-b  { border-bottom: 1px solid var(--border); }
+.ai-developer-theme .divide-y > * + * { border-top: 1px solid var(--border); }
+
+/* ── HUD Grid Pattern ────────────────────────────────────── */
+.ai-developer-theme .bg-hud-grid {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* ── Radial glow ─────────────────────────────────────────── */
 .ai-developer-theme .bg-radial {
-  background: radial-gradient(circle at center, rgba(56, 189, 248, 0.08) 0%, transparent 60%);
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(56,189,248,0.07) 0%, transparent 70%);
+}
+.ai-developer-theme .bg-radial-center {
+  background: radial-gradient(circle at 50% 50%, rgba(56,189,248,0.06) 0%, transparent 60%);
 }
 
+/* ── Glow Effects ────────────────────────────────────────── */
+.ai-developer-theme .glow-text {
+  text-shadow: 0 0 30px rgba(56,189,248,0.5), 0 0 60px rgba(56,189,248,0.2);
+}
+.ai-developer-theme .glow-box {
+  box-shadow: 0 0 0 1px var(--border), 0 0 30px var(--accent-glow);
+}
+
+/* ── Scanlines overlay ───────────────────────────────────── */
 .ai-developer-theme .bg-scan {
-  background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.5) 50%);
-  background-size: 100% 4px;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.15) 2px,
+    rgba(0,0,0,0.15) 4px
+  );
 }
 
-/* Animations */
-@keyframes blink {
+/* ── Glass cards ─────────────────────────────────────────── */
+.ai-developer-theme .ai-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.ai-developer-theme .ai-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 1px var(--border-strong), 0 8px 40px rgba(56,189,248,0.08);
+}
+
+/* ── Tag/chip ─────────────────────────────────────────────── */
+.ai-developer-theme .ai-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--ink-dim);
+}
+
+/* ── Hover state helpers ─────────────────────────────────── */
+.ai-developer-theme .hover\:text-accent:hover  { color: var(--accent) !important; }
+.ai-developer-theme .hover\:border-accent:hover { border-color: var(--accent) !important; }
+
+/* ── Animations ──────────────────────────────────────────── */
+@keyframes ai-blink {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  50%       { opacity: 0; }
 }
 .ai-developer-theme .animate-blink {
-  animation: blink 1s step-end infinite;
+  animation: ai-blink 1s step-end infinite;
 }
 
-@keyframes marquee {
-  0% { transform: translateX(0); }
+@keyframes ai-marquee {
+  0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 .ai-developer-theme .animate-marquee {
-  animation: marquee 20s linear infinite;
+  animation: ai-marquee 30s linear infinite;
+}
+
+@keyframes ai-pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(56,189,248,0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(56,189,248,0); }
+}
+.ai-developer-theme .animate-pulse-glow {
+  animation: ai-pulse-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes ai-scan-line {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
 }

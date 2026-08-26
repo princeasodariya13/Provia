@@ -24,6 +24,14 @@ export function EditorialV1({ document }: TemplateProps) {
       : []),
   ].slice(0, 3);
 
+  const isHidden = (sectionId: string) => document.configuration?.hiddenSections?.includes(sectionId);
+
+  // Check if we have anything to show in the sidebar grid
+  const showSkills = !isHidden("skills");
+  const showCerts = !isHidden("certifications");
+  const showEdu = !isHidden("education");
+  const showSidebarGrid = showSkills || showCerts || showEdu;
+
   return (
     <div
       className="min-h-screen bg-[#F5F0EA] text-[#111] selection:bg-[#CC2936] selection:text-white"
@@ -32,46 +40,58 @@ export function EditorialV1({ document }: TemplateProps) {
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');`}</style>
 
       {/* ── Hero ── */}
-      <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16">
-        <Hero
-          data={document.hero}
-          contact={document.contact}
-          stats={heroStats.length > 0 ? heroStats : undefined}
-        />
-      </div>
+      {!isHidden("hero") && (
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16">
+          <Hero
+            data={document.hero}
+            contact={document.contact}
+            stats={heroStats.length > 0 ? heroStats : undefined}
+          />
+        </div>
+      )}
 
       {/* ── About ── */}
-      <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9]">
-        <About data={document.about} />
-      </div>
+      {!isHidden("about") && (
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9]">
+          <About data={document.about} />
+        </div>
+      )}
 
       {/* ── Experience ── (full width, editorial newspaper feel) */}
-      <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9]">
-        <Experience data={document.experience} />
-      </div>
+      {!isHidden("experience") && (
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9]">
+          <Experience data={document.experience} />
+        </div>
+      )}
 
       {/* ── Projects ── */}
-      <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9]">
-        <Projects data={document.projects} />
-      </div>
+      {!isHidden("projects") && (
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9]">
+          <Projects data={document.projects} />
+        </div>
+      )}
 
       {/* ── Skills + Education + Certifications — 2-column sidebar layout ── */}
-      <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9]">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-20">
-          <div className="md:col-span-5 space-y-20">
-            <Skills data={document.skills} />
-            <Certifications data={document.certifications} />
-          </div>
-          <div className="md:col-span-7">
-            <Education data={document.education} />
+      {showSidebarGrid && (
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+            <div className="lg:col-span-4 space-y-20">
+              {showSkills && <Skills data={document.skills} />}
+              {showCerts && <Certifications data={document.certifications} />}
+            </div>
+            <div className="lg:col-span-8">
+              {showEdu && <Education data={document.education} />}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* ── Contact ── */}
-      <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32">
-        <Contact contact={document.contact} links={document.hero?.primaryLinks} />
-      </div>
+      {!isHidden("contact") && (
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32">
+          <Contact contact={document.contact} links={document.hero?.primaryLinks} />
+        </div>
+      )}
     </div>
   );
 }

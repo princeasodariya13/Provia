@@ -66,7 +66,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
-          className="mt-9 flex flex-wrap items-center gap-4"
+          className="mt-9 flex flex-wrap items-center gap-4 relative z-50"
         >
           <a
             href="#projects"
@@ -89,7 +89,7 @@ export default function Hero() {
           className="mt-16 flex gap-4"
         >
           {skills?.slice(0, 3).map((skill: any, i: number) => (
-            <PlatformCard key={i} label={skill.name} sub={skill.level} delay={i * 0.4} />
+            <PlatformCard key={i} label={skill.name?.trim() || "Skill"} sub={skill.level?.trim() || ""} delay={i * 0.4} />
           ))}
         </motion.div>
       </div>

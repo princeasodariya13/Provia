@@ -53,7 +53,7 @@ export function ProfileForm() {
     if (res.success) {
       setSuccess(true);
       setIsDirty(false);
-      toast.success("Profile saved successfully!");
+      toast.success("Profile saved! Go to Portfolio Studio and generate a new version to apply changes to your template.");
     } else {
       let errorMessage = res.error || "Failed to save profile";
       if (res.details && Array.isArray(res.details) && res.details.length > 0) {

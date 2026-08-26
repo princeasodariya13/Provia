@@ -30,7 +30,7 @@ export default function Skills() {
  } = templateData || {};
 
   const skillGroups = Array.isArray(skills) ? skills.map((s: any) => ({
-    title: s.category || "Skills",
+    title: s.category?.trim() || "Skills",
     skills: s.skills || []
   })) : [];
 
@@ -54,7 +54,7 @@ export default function Skills() {
       <div className="grid md:grid-cols-3 gap-6">
         {skillGroups.map((g, i) => (
           <motion.div
-            key={g.title}
+            key={`${g.title}-${i}`}
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

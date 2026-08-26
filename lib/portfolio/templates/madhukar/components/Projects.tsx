@@ -56,7 +56,7 @@ export default function Projects() {
                 </div>
                 <div className="p-8 flex flex-col justify-center">
                   <div className="eyebrow mb-2">{p.period}</div>
-                  <h3 className="font-display font-bold text-2xl mb-1">{p.title}</h3>
+                  <h3 className="font-display font-bold text-2xl mb-1">{p.title?.trim() || "Project"}</h3>
                   <div className="text-accent text-sm mb-4">{p.subtitle}</div>
                   <p className="text-muted text-sm leading-relaxed mb-5">
                     {p.description}

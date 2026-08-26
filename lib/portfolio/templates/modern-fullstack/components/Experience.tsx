@@ -59,8 +59,8 @@ export default function Experience() {
           >
             <span className="absolute left-[-5px] top-1.5 h-2.5 w-2.5 rounded-full bg-accent" />
             <p className="eyebrow mb-2 text-accent">{e.period}</p>
-            <h3 className="font-display text-xl font-semibold text-deep mb-1">{e.role}</h3>
-            <p className="eyebrow mb-3 text-ink/60">{e.org}</p>
+            <h3 className="font-display text-xl font-semibold text-deep mb-1">{e.role?.trim() || "Role"}</h3>
+            <p className="eyebrow mb-3 text-ink/60">{e.org?.trim() || "Company"}</p>
             <p className="text-muted text-sm leading-relaxed max-w-lg">{e.description}</p>
           </motion.div>
         ))}

@@ -40,7 +40,7 @@ export function Skills({ data }: { data: PortfolioDocumentDTO["skills"] }) {
               {group.skills.map((skill, j) => (
                 <li
                   key={j}
-                  className="group flex items-center justify-between py-2.5 cursor-default hover:bg-[#111] hover:px-3 transition-all duration-200"
+                  className="group flex items-center justify-between py-2.5 px-3 -mx-3 cursor-default hover:bg-[#111] transition-all duration-200"
                 >
                   <span className="text-sm font-semibold text-[#333] group-hover:text-[#F5F0EA] uppercase tracking-wider transition-colors">
                     {skill}

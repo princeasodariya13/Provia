@@ -23,6 +23,7 @@ import {
 import { StudioSidebar } from "./components/StudioSidebar";
 import { StudioInspector } from "./components/StudioInspector";
 import { StudioPreview } from "./components/StudioPreview";
+import { StudioSeoEditor } from "./components/StudioSeoEditor";
 import { ReadinessModal } from "./components/ReadinessModal";
 
 export type StudioTab = "content" | "design" | "sections" | "seo" | "history" | "publish" | "settings";
@@ -110,6 +111,9 @@ export default function PortfolioStudioPage() {
       if (res.success) {
         setSaveStatus("saved");
         setVersion(res.data.version);
+        if (res.data.id) {
+          setPortfolioId(res.data.id);
+        }
         // Quietly refresh versions
         apiClient.get<any>("/api/v1/portfolio/versions").then(vRes => {
           if (vRes.success) setVersions(vRes.data || []);
@@ -148,7 +152,20 @@ export default function PortfolioStudioPage() {
 
     setPublishing(true);
     try {
-      const res = await apiClient.post<any>(`/api/v1/portfolio/${portfolioId}/publish`, {});
+      let targetPortfolioId = portfolioId;
+      // Force a save to ensure the latest templateId and content are persisted
+      const saveRes = await apiClient.post<any>("/api/v1/portfolio/studio", {
+        content: document,
+        templateId: templateId
+      });
+      if (saveRes.success && saveRes.data?.id) {
+        targetPortfolioId = saveRes.data.id;
+        setPortfolioId(targetPortfolioId);
+        setVersion(saveRes.data.version);
+        setSaveStatus("saved");
+      }
+
+      const res = await apiClient.post<any>(`/api/v1/portfolio/${targetPortfolioId}/publish`, {});
       if (res.success && res.data) {
         const appUrl = window.location.origin;
         const fullUrl = res.data.publicUrl?.startsWith("/")
@@ -396,17 +413,26 @@ export default function PortfolioStudioPage() {
           generating={generating}
         />
 
-        {/* Center: Preview */}
-        <StudioPreview
-          document={document}
-          templateId={templateId}
-          previewDevice={previewDevice}
-          activeTab={activeTab}
-          onSelectTemplate={handleTemplateChange}
-        />
+        {/* Center: Preview or Full Width Editors */}
+        {activeTab !== "seo" && (
+          <StudioPreview
+            document={document}
+            templateId={templateId}
+            previewDevice={previewDevice}
+            activeTab={activeTab}
+            onSelectTemplate={handleTemplateChange}
+          />
+        )}
+        {activeTab === "seo" && (
+          <StudioSeoEditor
+            document={document}
+            onChange={handleDocumentChange}
+            publicUrl={publicUrl || undefined}
+          />
+        )}
 
         {/* Right: Inspector */}
-        {activeTab !== "design" && (
+        {activeTab !== "design" && activeTab !== "seo" && (
           <StudioInspector
             activeTab={activeTab}
             activeSection={activeSection}

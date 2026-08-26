@@ -21,43 +21,68 @@ export function PremiumV1({ document: doc }: TemplateProps) {
     }] : []),
   ].slice(0, 3);
 
+  // Helper to check if a section should be hidden
+  const isHidden = (sectionId: string) => doc.configuration?.hiddenSections?.includes(sectionId);
+
   return (
     <div
-      className="min-h-screen bg-[#06060A] text-white overflow-x-hidden"
+      className="min-h-screen bg-black text-white overflow-x-hidden"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
     >
       {/* Google Font */}
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');`}</style>
 
       {/* Hero — full-screen cinematic section */}
-      <PremiumHero
-        hero={doc.hero}
-        contact={doc.contact}
-        stats={heroStats.length > 0 ? heroStats : undefined}
-      />
+      {!isHidden("hero") && (
+        <PremiumHero
+          hero={doc.hero}
+          contact={doc.contact}
+          stats={heroStats.length > 0 ? heroStats : undefined}
+        />
+      )}
 
       {/* About */}
-      <GradientDivider />
-      <AboutSection data={doc.about} />
+      {!isHidden("about") && (
+        <>
+          <GradientDivider />
+          <AboutSection data={doc.about} />
+        </>
+      )}
 
       {/* Experience */}
-      <GradientDivider />
-      <ExperienceTimeline data={doc.experience} />
+      {!isHidden("experience") && (
+        <>
+          <GradientDivider />
+          <ExperienceTimeline data={doc.experience} />
+        </>
+      )}
 
       {/* Projects */}
-      <GradientDivider />
-      <BentoProjects data={doc.projects} />
+      {!isHidden("projects") && (
+        <>
+          <GradientDivider />
+          <BentoProjects data={doc.projects} />
+        </>
+      )}
 
       {/* Skills */}
-      <GradientDivider />
-      <SkillsCloud data={doc.skills} />
+      {!isHidden("skills") && (
+        <>
+          <GradientDivider />
+          <SkillsCloud data={doc.skills} />
+        </>
+      )}
 
       {/* Education */}
-      <GradientDivider />
-      <EducationSection data={doc.education} />
+      {!isHidden("education") && (
+        <>
+          <GradientDivider />
+          <EducationSection data={doc.education} />
+        </>
+      )}
 
       {/* Certifications (conditional) */}
-      {doc.certifications && doc.certifications.length > 0 && (
+      {!isHidden("certifications") && doc.certifications && doc.certifications.length > 0 && (
         <>
           <GradientDivider />
           <CertificationsSection data={doc.certifications} />
@@ -65,8 +90,12 @@ export function PremiumV1({ document: doc }: TemplateProps) {
       )}
 
       {/* Contact footer */}
-      <GradientDivider />
-      <ContactFooter contact={doc.contact} links={doc.hero?.primaryLinks} />
+      {!isHidden("contact") && (
+        <>
+          <GradientDivider />
+          <ContactFooter contact={doc.contact} links={doc.hero?.primaryLinks} />
+        </>
+      )}
     </div>
   );
 }

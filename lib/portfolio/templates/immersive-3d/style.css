@@ -15,6 +15,16 @@
   -webkit-font-smoothing: antialiased;
 }
 
+/* Ensure headings inherit the correct theme color and aren't overridden by globals.css */
+.immersive-3d-theme h1,
+.immersive-3d-theme h2,
+.immersive-3d-theme h3,
+.immersive-3d-theme h4,
+.immersive-3d-theme h5,
+.immersive-3d-theme h6 {
+  color: #f1f1fa;
+}
+
 ::selection {
   background: #5ef7f0;
   color: #050508;

@@ -45,10 +45,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="w-9 h-9 border border-[#111] group-hover:border-[#444] flex items-center justify-center hover:bg-[#CC2936] hover:border-[#CC2936] transition-all duration-200"
+                className="w-9 h-9 border border-[#111] group-hover:border-[#444] flex items-center justify-center hover:bg-[#CC2936] hover:border-[#CC2936] transition-all duration-200 text-[#111] group-hover:text-white hover:text-white"
                 title="Repository"
               >
-                <GitFork className="w-4 h-4 text-[#111] group-hover:text-white" />
+                <GitFork className="w-4 h-4" />
               </a>
             )}
             {project.url && (
@@ -57,10 +57,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="w-9 h-9 border border-[#111] group-hover:border-[#444] flex items-center justify-center hover:bg-[#CC2936] hover:border-[#CC2936] transition-all duration-200"
+                className="w-9 h-9 border border-[#111] group-hover:border-[#444] flex items-center justify-center hover:bg-[#CC2936] hover:border-[#CC2936] transition-all duration-200 text-[#111] group-hover:text-white hover:text-white"
                 title="Live site"
               >
-                <ExternalLink className="w-4 h-4 text-[#111] group-hover:text-white" />
+                <ExternalLink className="w-4 h-4" />
               </a>
             )}
           </div>

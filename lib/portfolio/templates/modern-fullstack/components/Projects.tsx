@@ -61,7 +61,7 @@ export default function Projects() {
           >
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h3 className="font-display text-2xl font-semibold text-deep">{p.title}</h3>
+                <h3 className="font-display text-2xl font-semibold text-deep">{p.title?.trim() || "Project"}</h3>
                 <p className="eyebrow mt-1 text-accent">Application</p>
               </div>
             </div>

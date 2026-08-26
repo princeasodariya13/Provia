@@ -50,7 +50,7 @@ export function About({ data }: { data: PortfolioDocumentDTO["about"] }) {
         <div className="mt-8 pt-8 border-t border-[#D9D2C9]">
           <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#888] mb-4">Focus Areas</p>
           <div className="flex flex-col gap-2">
-            {data.careerThemes.map((theme, i) => (
+            {data.careerThemes.filter(t => t && t.trim().length > 0).map((theme, i) => (
               <div key={i} className="flex items-center gap-3 py-2 border-b border-[#E5DDD6] last:border-0">
                 <div className="w-1.5 h-1.5 bg-[#CC2936] shrink-0" aria-hidden />
                 <span className="text-sm font-semibold text-[#333] uppercase tracking-wide">{theme}</span>

@@ -3,6 +3,16 @@
   color: #1e2419;
 }
 
+/* Ensure headings inherit the correct theme color and aren't overridden by globals.css */
+.modern-fullstack-theme h1,
+.modern-fullstack-theme h2,
+.modern-fullstack-theme h3,
+.modern-fullstack-theme h4,
+.modern-fullstack-theme h5,
+.modern-fullstack-theme h6 {
+  color: #1e2419;
+}
+
 ::selection {
   background-color: #3f7d58;
   color: #ffffff;

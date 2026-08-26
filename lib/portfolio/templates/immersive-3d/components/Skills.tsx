@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useTemplateData } from "../context";
 import { EmptyState } from "@/lib/portfolio/templates/shared/EmptyState";
+import { motion } from "framer-motion";
 import { Reveal, SectionHeading } from "./Reveal";
 
 export default function Skills() {
@@ -28,7 +29,7 @@ export default function Skills() {
  } = templateData || {};
 
   const skillGroups = Array.isArray(skills) ? skills.map((s: any) => ({
-    title: s.category || "Skills",
+    title: s.category?.trim() || "Skills",
     items: s.skills || []
   })) : [];
 
@@ -49,8 +50,12 @@ export default function Skills() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {skillGroups.map((g, i) => (
-            <Reveal key={g.title} delay={i * 0.06}>
-              <div className="glass rounded-2xl p-6 h-full hover:border-cyan transition-colors">
+            <Reveal key={`${g.title}-${i}`} delay={i * 0.06}>
+              <motion.div 
+                whileHover={{ y: -5, scale: 1.02, boxShadow: "0 20px 40px -10px rgba(94, 247, 240, 0.15)" }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="glass rounded-2xl p-6 h-full hover:border-cyan/50 transition-colors"
+              >
                 <div className="eyebrow mb-4">{g.title}</div>
                 <ul className="space-y-3">
                   {(g.items || []).map((s) => (
@@ -60,7 +65,7 @@ export default function Skills() {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
             </Reveal>
           ))}
         </div>

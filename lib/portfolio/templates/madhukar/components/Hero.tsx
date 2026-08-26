@@ -85,7 +85,7 @@ export default function Hero() {
             {profile.bio}
           </motion.p>
 
-          <motion.div variants={item} className="mt-8 flex flex-wrap items-center gap-4">
+          <motion.div variants={item} className="mt-8 flex flex-wrap items-center gap-4 relative z-50">
             <a
               href="#contact"
               className="inline-flex items-center gap-2 rounded-full bg-accent text-white px-6 py-3 text-sm font-medium hover:opacity-90 transition-opacity"

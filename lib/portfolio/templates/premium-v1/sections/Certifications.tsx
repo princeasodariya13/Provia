@@ -50,7 +50,7 @@ function CertCard({ cert, index }: { cert: Cert; index: number }) {
             </span>
           )}
           {isExpired && (
-            <span className="px-2.5 py-1 rounded-full text-[10px] font-bold text-white/25 bg-white/5 border border-white/10">
+            <span className="px-2.5 py-1 rounded-full text-[10px] font-bold text-white/50 bg-white/5 border border-white/10">
               Expired
             </span>
           )}
@@ -60,10 +60,10 @@ function CertCard({ cert, index }: { cert: Cert; index: number }) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="w-8 h-8 rounded-xl bg-white/[0.05] hover:bg-amber-500/20 border border-white/8 hover:border-amber-400/30 flex items-center justify-center transition-all duration-200"
+              className="w-8 h-8 rounded-xl bg-white/[0.05] hover:bg-amber-500/20 border border-white/8 hover:border-amber-400/30 flex items-center justify-center transition-all duration-200 text-white/60 group-hover:text-amber-400 hover:text-amber-300"
               title="View credential"
             >
-              <ExternalLink className="w-3.5 h-3.5 text-white/40 group-hover:text-amber-400" />
+              <ExternalLink className="w-3.5 h-3.5" />
             </a>
           )}
         </div>
@@ -76,7 +76,7 @@ function CertCard({ cert, index }: { cert: Cert; index: number }) {
       <p className="text-sm font-semibold text-amber-400/70 mb-4">{cert.organization}</p>
 
       {/* Dates */}
-      <div className="flex flex-wrap gap-3 text-[11px] text-white/30 font-mono">
+      <div className="flex flex-wrap gap-3 text-[11px] text-white/60 font-mono">
         {cert.issueDate && (
           <span className="flex items-center gap-1.5">
             <CalendarDays className="w-3 h-3" />

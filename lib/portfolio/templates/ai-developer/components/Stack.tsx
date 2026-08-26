@@ -6,73 +6,74 @@ import { useTemplateData } from "../context";
 
 export default function Stack() {
   const templateData = useTemplateData();
-  const { 
-  contact = {},
-  profile = {},
-  marqueeItems = [],
-  certifications = [],
-  header = {},
-  social = {},
-  services = [],
-  faq = [],
-  milestones = [],
-  globals = {},
-  steps = [],
-  about = {},
-  experience = [],
-  projects = [],
-  skills = [],
-  stats = [],
-  stack = [],
-  capabilities = [],
-  education = []
- } = templateData || {};
+  const { stack = [], skills = [] } = (templateData as any) || {};
 
-  const skillGroups = [
-    {
-      index: "01",
-      title: "Core Stack",
-      skills: Array.isArray(stack) ? stack.map((s: any) => s.name) : []
-    }
-  ];
+  // Build grouped skill categories from skills array
+  const groups = skills.length > 0
+    ? skills.map((s: any, i: number) => ({
+        index: String(i + 1).padStart(2, "0"),
+        title: s.category || "Skills",
+        items: s.skills || [],
+      }))
+    : stack.length > 0
+    ? [{ index: "01", title: "Core Stack", items: stack.map((s: any) => s.name || s) }]
+    : [];
+
+  if (groups.length === 0) return null;
 
   return (
-    <section id="stack" className="section-pad py-24 border-b border-border">
-      <p className="hud mb-4">Interactive Skills Map</p>
-      <h2 className="font-display text-3xl md:text-5xl font-bold tracking-tight mb-4 max-w-2xl">
-        The engineering foundation.
-      </h2>
-      <p className="text-muted max-w-lg mb-14">
-        Tools, languages, and frameworks used to build scalable architectures
-        and interactive interfaces.
-      </p>
+    <section id="stack" className="section-pad py-28 border-b border-border relative">
+      <div className="absolute inset-0 bg-hud-grid opacity-30 pointer-events-none" />
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {skillGroups.map((group, i) => (
-          <motion.div
-            key={group.title}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55, delay: i * 0.08 }}
-            className="rounded-2xl border border-border bg-surface p-8 hover:border-accent/50 transition-colors"
-          >
-            <div className="flex items-baseline gap-3 mb-6">
-              <span className="hud text-accent">{group.index}</span>
-              <h3 className="font-display text-xl font-semibold">{group.title}</h3>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {group.skills.map((s) => (
-                <span
-                  key={s}
-                  className="hud rounded-full border border-border px-3 py-1.5 text-ink/80"
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-        ))}
+      <div className="relative z-10">
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="hud-accent mb-4"
+        >
+          // Skills Map
+        </motion.p>
+        <motion.h2
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="font-display text-4xl md:text-5xl font-black tracking-tight mb-4 text-ink"
+        >
+          The engineering foundation<span className="text-accent">_</span>
+        </motion.h2>
+        <p className="text-ink-dim text-lg max-w-lg mb-16 leading-relaxed">
+          Tools, languages, and frameworks powering scalable architectures and intelligent systems.
+        </p>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {groups.map((group: any, i: number) => (
+            <motion.div
+              key={group.title || i}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 0.5, delay: i * 0.07 }}
+              className="ai-card p-7 group hover:border-accent/40 hover:-translate-y-0.5 transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-5">
+                <span className="hud-accent">{group.index}</span>
+                <h3 className="font-display text-lg font-black text-ink">{group.title}</h3>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {group.items.map((skill: string, si: number) => (
+                  <span
+                    key={si}
+                    className="ai-tag hover:border-accent/50 hover:text-accent transition-colors"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

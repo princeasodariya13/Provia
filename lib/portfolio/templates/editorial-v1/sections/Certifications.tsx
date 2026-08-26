@@ -50,7 +50,7 @@ export function Certifications({ data }: { data: PortfolioDocumentDTO["certifica
                       Valid
                     </span>
                   ) : (
-                    <span className="text-[9px] font-black uppercase tracking-widest text-[#888] group-hover:text-[#666] border border-[#CCC] group-hover:border-[#555] px-2 py-1 transition-colors">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-[#888] group-hover:text-[#CCC] border border-[#CCC] group-hover:border-[#777] px-2 py-1 transition-colors">
                       Expired
                     </span>
                   )}
@@ -60,10 +60,10 @@ export function Certifications({ data }: { data: PortfolioDocumentDTO["certifica
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="w-7 h-7 border border-[#111] group-hover:border-[#555] flex items-center justify-center hover:bg-[#CC2936] hover:border-[#CC2936] transition-all duration-200"
+                      className="w-7 h-7 border border-[#111] group-hover:border-[#555] flex items-center justify-center hover:bg-[#CC2936] hover:border-[#CC2936] transition-all duration-200 text-[#111] group-hover:text-white hover:text-white"
                       title="View credential"
                     >
-                      <ExternalLink className="w-3.5 h-3.5 text-[#111] group-hover:text-white" />
+                      <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   )}
                 </div>

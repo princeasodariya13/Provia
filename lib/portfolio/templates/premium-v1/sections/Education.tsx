@@ -45,14 +45,14 @@ function EducationCard({ edu, index }: { edu: Edu; index: number }) {
             {edu.degree && (
               <p className="text-sm font-semibold text-violet-400">
                 {edu.degree}
-                {edu.fieldOfStudy ? <span className="text-white/40"> &middot; {edu.fieldOfStudy}</span> : ""}
+                {edu.fieldOfStudy ? <span className="text-white/60"> &middot; {edu.fieldOfStudy}</span> : ""}
               </p>
             )}
           </div>
         </div>
 
         {/* Meta row */}
-        <div className="flex flex-wrap gap-4 text-xs text-white/35 font-medium mb-5">
+        <div className="flex flex-wrap gap-4 text-xs text-white/60 font-medium mb-5">
           {(edu.startDate || edu.endDate) && (
             <span className="flex items-center gap-1.5">
               <CalendarDays className="w-3.5 h-3.5" />
@@ -71,10 +71,10 @@ function EducationCard({ edu, index }: { edu: Edu; index: number }) {
         {edu.description && (
           <div className="pt-4 border-t border-white/[0.06]">
             <div className="flex items-center gap-2 mb-2.5">
-              <BookOpen className="w-3.5 h-3.5 text-white/25" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/25">Notes</span>
+              <BookOpen className="w-3.5 h-3.5 text-white/50" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50">Notes</span>
             </div>
-            <p className="text-sm text-white/45 leading-relaxed">{edu.description}</p>
+            <p className="text-sm text-white/70 leading-relaxed">{edu.description}</p>
           </div>
         )}
       </div>

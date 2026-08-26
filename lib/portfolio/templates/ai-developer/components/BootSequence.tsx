@@ -90,7 +90,7 @@ export default function BootSequence({ onDone }: { onDone?: () => void }) {
             animate={{ opacity: lineIndex >= lines.length - 1 ? 1 : 0, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
             onClick={handleEnter}
-            className="mt-10 group inline-flex items-center gap-3 rounded-full border border-accent/40 px-6 py-3 hud text-accent hover:bg-accent hover:text-base transition-colors"
+            className="mt-10 group inline-flex items-center gap-3 rounded-full border border-accent/40 px-6 py-3 hud text-accent hover:bg-accent hover:text-base transition-colors relative z-50"
           >
             Begin the Experience
             <span className="transition-transform group-hover:translate-x-1">→</span>

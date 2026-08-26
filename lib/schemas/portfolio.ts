@@ -87,6 +87,8 @@ export const portfolioDocumentSchema = z.object({
   seo: z.object({
     title: z.string().optional(),
     description: z.string().optional(),
+    keywords: z.string().optional(),
+    noIndex: z.boolean().optional(),
   }).optional(),
 });
 
