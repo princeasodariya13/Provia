@@ -1,13 +1,20 @@
 import { TemplateDefinition } from "./types";
 import { editorialV1 } from "./editorial-v1";
 import { premiumV1 } from "./premium-v1";
-import { engineerTemplate, engineerMetadata } from "./engineer";
-import { aideveloperTemplate, aideveloperMetadata } from "./ai-developer";
-import { motionengineerTemplate, motionengineerMetadata } from "./motion-engineer";
-import { modernTemplate, modernMetadata } from "./modern";
-import { madhukarTemplate, madhukarMetadata } from "./madhukar";
-import { immersive3dTemplate, immersive3dMetadata } from "./immersive-3d";
-import { modernfullstackTemplate, modernfullstackMetadata } from "./modern-fullstack";
+import { engineerTemplate } from "./engineer";
+import { engineerMetadata } from "./engineer/metadata";
+import { aideveloperTemplate } from "./ai-developer";
+import { aideveloperMetadata } from "./ai-developer/metadata";
+import { motionengineerTemplate } from "./motion-engineer";
+import { motionengineerMetadata } from "./motion-engineer/metadata";
+import { modernTemplate } from "./modern";
+import { modernMetadata } from "./modern/metadata";
+import { madhukarTemplate } from "./madhukar";
+import { madhukarMetadata } from "./madhukar/metadata";
+import { immersive3dTemplate } from "./immersive-3d";
+import { immersive3dMetadata } from "./immersive-3d/metadata";
+import { modernfullstackTemplate } from "./modern-fullstack";
+import { modernfullstackMetadata } from "./modern-fullstack/metadata";
 
 const templates: Record<string, TemplateDefinition> = {
   [editorialV1.metadata.id]: editorialV1,

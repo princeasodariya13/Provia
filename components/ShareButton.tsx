@@ -34,7 +34,7 @@ export function ShareButton({ title, text, url }: { title: string; text: string;
   return (
     <button 
       onClick={handleShare}
-      className="fixed bottom-6 right-6 z-50 bg-accent text-white px-4 py-3 font-bold uppercase tracking-widest text-sm flex items-center gap-2 shadow-lg transition-transform hover:scale-105 active:scale-95"
+      className="fixed bottom-6 right-6 z-50 group bg-brand hover:bg-brand-hover text-white rounded-full px-5 py-3 font-bold uppercase tracking-widest text-sm flex items-center gap-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(204,41,54,0.3)] active:scale-95"
       aria-label="Share Portfolio"
     >
       {copied ? (
@@ -44,7 +44,7 @@ export function ShareButton({ title, text, url }: { title: string; text: string;
         </>
       ) : (
         <>
-          <Share2 className="w-4 h-4" />
+          <Share2 className="w-4 h-4 transition-transform group-hover:rotate-12" />
           Share
         </>
       )}

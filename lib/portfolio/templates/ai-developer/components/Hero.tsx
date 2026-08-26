@@ -90,7 +90,7 @@ export default function Hero() {
             >
               <a
                 href="#connect"
-                className="inline-flex items-center gap-2 rounded-full bg-accent text-[#02020A] hud font-bold px-7 py-3.5 hover:bg-accent/90 transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(56,189,248,0.35)]"
+                className="inline-flex items-center gap-2 rounded-full bg-accent !text-[#02020A] hud font-bold px-7 py-3.5 hover:bg-accent/90 transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(56,189,248,0.35)]"
               >
                 Let&apos;s Connect →
               </a>

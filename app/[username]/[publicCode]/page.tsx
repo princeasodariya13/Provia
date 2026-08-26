@@ -7,6 +7,9 @@ import { env } from "@/lib/env";
 import { ShareButton } from "@/components/ShareButton";
 import { AnalyticsService } from "@/lib/analytics/service";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // Ensure username format is valid (lowercase, hyphens)
 const USERNAME_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i;
 // Ensure public code is exactly 32 hex chars

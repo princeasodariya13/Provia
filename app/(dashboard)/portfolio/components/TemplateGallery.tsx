@@ -128,9 +128,12 @@ export function TemplateGallery({ document, currentTemplateId, onSelectTemplate,
                 className={`group relative flex flex-col bg-surface border rounded-2xl overflow-hidden transition-all duration-300 ${isSelected ? 'border-brand shadow-lg ring-1 ring-brand' : 'border-border-light hover:border-border-strong hover:shadow-xl'}`}
               >
                 {/* Scaled down Live Preview Thumbnail */}
-                <div className="relative h-64 bg-surface-muted overflow-hidden border-b border-border-light">
-                  <div className="absolute inset-0 pointer-events-none select-none flex items-start justify-center">
-                    <div className="w-[1280px] h-[1024px] bg-background origin-top transform scale-[0.25] lg:scale-[0.27] shadow-xl overflow-hidden">
+                <div className="relative h-72 bg-surface-muted overflow-hidden border-b border-border-light">
+                  <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
+                    <div 
+                      className="absolute top-0 left-0 bg-background origin-top-left overflow-hidden"
+                      style={{ width: '400%', height: '400%', transform: 'scale(0.25)' }}
+                    >
                       <TemplateThumbnailBoundary templateName={t.name}>
                         {Comp && <Comp document={document} />}
                       </TemplateThumbnailBoundary>

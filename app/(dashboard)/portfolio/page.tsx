@@ -142,6 +142,7 @@ export default function PortfolioStudioPage() {
     } else {
       toast.info("Template selected. Generate your portfolio to apply it.");
     }
+    setActiveTab("content");
   };
 
   const handlePublish = async () => {
@@ -420,6 +421,7 @@ export default function PortfolioStudioPage() {
             templateId={templateId}
             previewDevice={previewDevice}
             activeTab={activeTab}
+            setActiveTab={setActiveTab}
             onSelectTemplate={handleTemplateChange}
           />
         )}

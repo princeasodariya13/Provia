@@ -108,7 +108,7 @@ export default function Connect() {
                 <TextArea label="Message" />
                 <button
                   type="submit"
-                  className="w-full rounded-full bg-accent text-[#02020A] hud font-bold py-3.5 mt-2 hover:bg-accent/90 transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(56,189,248,0.3)]"
+                  className="w-full rounded-full bg-accent !text-[#02020A] hud font-bold py-3.5 mt-2 hover:bg-accent/90 transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(56,189,248,0.3)]"
                 >
                   Send Transmission →
                 </button>

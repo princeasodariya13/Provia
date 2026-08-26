@@ -3,8 +3,8 @@
 import React from "react";
 import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
 import { TemplateRegistry } from "@/lib/portfolio/templates/registry";
-import { PreviewDevice } from "../page";
-import { LayoutTemplate, Zap } from "lucide-react";
+import { PreviewDevice, StudioTab } from "../page";
+import { LayoutTemplate, Zap, ArrowLeft } from "lucide-react";
 
 import { TemplateGallery } from "./TemplateGallery";
 import { mockPortfolioDocument } from "@/lib/portfolio/templates/shared/mock";
@@ -14,6 +14,7 @@ interface Props {
   templateId: string;
   previewDevice: PreviewDevice;
   activeTab: string;
+  setActiveTab: (tab: StudioTab) => void;
   onSelectTemplate: (id: string) => void;
 }
 
@@ -29,7 +30,7 @@ const DEVICE_SCALE: Record<PreviewDevice, string> = {
   mobile: "scale-[0.7] origin-top",
 };
 
-export function StudioPreview({ document, templateId, previewDevice, activeTab, onSelectTemplate }: Props) {
+export function StudioPreview({ document, templateId, previewDevice, activeTab, setActiveTab, onSelectTemplate }: Props) {
   const templateDef = TemplateRegistry.getTemplate(templateId) || TemplateRegistry.getTemplate(TemplateRegistry.getDefaultTemplateId());
 
   // Design tab: show full-screen template gallery
@@ -87,6 +88,14 @@ export function StudioPreview({ document, templateId, previewDevice, activeTab, 
       <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10 bg-surface border border-border-light rounded-full px-3 py-1 text-[10px] font-bold text-text-muted uppercase tracking-wider shadow-sm">
         {templateDef.metadata.name} · {previewDevice}
       </div>
+
+      {/* Back to Design Templates Button */}
+      <button 
+        onClick={() => setActiveTab("design")}
+        className="absolute top-3 left-4 z-10 flex items-center gap-1.5 bg-surface border border-border-light rounded-full px-3 py-1 text-[10px] font-bold text-text-secondary hover:text-text-primary hover:border-border-strong uppercase tracking-wider shadow-sm transition-all"
+      >
+        <ArrowLeft className="w-3 h-3" /> Back to Design
+      </button>
 
       <div className="w-full h-full pt-12 pb-6 flex justify-center overflow-hidden">
         <div

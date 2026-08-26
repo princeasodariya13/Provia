@@ -66,10 +66,24 @@ export const POST = withAPIHandler(async (request: Request, { params }: any) => 
 
   if (existingPub) {
     uniqueSlug = existingPub.publicSlug; // preserve existing slug
+    // Generate a fresh link (publicCode) every time the user republishes
+    let newPublicCode = "";
+    let isUniqueCode = false;
+    while (!isUniqueCode) {
+      newPublicCode = crypto.randomBytes(16).toString("hex");
+      const existing = await prisma.portfolioPublication.findUnique({
+        where: { publicCode: newPublicCode }
+      });
+      if (!existing) {
+        isUniqueCode = true;
+      }
+    }
+
     const pub = await prisma.portfolioPublication.update({
       where: { userId: user.id },
       data: {
         portfolioDocumentId,
+        publicCode: newPublicCode,
         isActive: true,
         updatedAt: new Date(),
       }
