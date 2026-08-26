@@ -164,7 +164,7 @@ export const DELETE = withAPIHandler(async (req) => {
     // Soft delete if foreign key constraints fail
     await prisma.resume.update({
       where: { id: resume.id },
-      data: { isActive: false, status: "FAILED", fileUrl: null }
+      data: { isActive: false, status: "FAILED", fileUrl: "" }
     });
   }
 

@@ -34,6 +34,8 @@ export type AnalyticsEventName =
   | "resume.parse_failed"
   | "resume.applied"
   | "asset.avatar_updated"
+  | "asset.avatar_removed"
+  | "asset.resume_removed"
   | "system.error"
   | "job.queued"
   | "job.started"
