@@ -33,11 +33,36 @@ export default function Contact() {
  } = templateData || {};
 
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // Wire this up to Formspree/Resend or a Next.js API route.
-    setSent(true);
+    setLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      message: formData.get("message")
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        setSent(true);
+        e.currentTarget.reset();
+      } else {
+        alert("Failed to send message. Please try again.");
+      }
+    } catch (err) {
+      alert("Failed to send message. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -76,6 +101,7 @@ export default function Contact() {
                 <label className="eyebrow block mb-2">Name</label>
                 <input
                   required
+                  name="name"
                   type="text"
                   className="w-full rounded-xl border border-border bg-transparent px-4 py-3 text-ink placeholder:text-muted/60 focus:border-cyan outline-none transition-colors"
                   placeholder="Your name"
@@ -85,6 +111,7 @@ export default function Contact() {
                 <label className="eyebrow block mb-2">Email</label>
                 <input
                   required
+                  name="email"
                   type="email"
                   className="w-full rounded-xl border border-border bg-transparent px-4 py-3 text-ink placeholder:text-muted/60 focus:border-cyan outline-none transition-colors"
                   placeholder="you@example.com"
@@ -94,6 +121,7 @@ export default function Contact() {
                 <label className="eyebrow block mb-2">Message</label>
                 <textarea
                   required
+                  name="message"
                   rows={4}
                   className="w-full rounded-xl border border-border bg-transparent px-4 py-3 text-ink placeholder:text-muted/60 focus:border-cyan outline-none transition-colors resize-none"
                   placeholder="Tell me about your project..."
@@ -101,9 +129,10 @@ export default function Contact() {
               </div>
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 rounded-full bg-cyan text-base px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
+                disabled={loading}
+                className="inline-flex items-center gap-2 rounded-full bg-cyan text-base px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
               >
-                {sent ? "Message sent" : "Send Message"}
+                {loading ? "Sending..." : sent ? "Message sent" : "Send Message"}
                 <Send size={16} />
               </button>
               {sent && (

@@ -11,11 +11,13 @@ import { IntegrationsPreview } from "@/components/landing/integrations-preview"
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect"
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient"
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card"
+import { LandingPreloader } from "@/components/landing/preloader"
 
 
 export default function Home() {
   return (
     <>
+      <LandingPreloader />
       <Navbar />
       <div className="flex flex-col w-full overflow-hidden bg-background relative min-h-screen">
 
