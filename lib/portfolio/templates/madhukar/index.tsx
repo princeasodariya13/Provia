@@ -25,21 +25,20 @@ export function madhukarTemplate({ document }: TemplateProps) {
   return (
     <div className="madhukar-theme bg-background min-h-screen text-foreground font-sans">
       <TemplateProvider data={data}>
-        <ThemeProvider />
-        <Header />
-        <Hero />
-        <About />
-        <Experience />
-        <Resume />
-        <Services />
-        <Skills />
-        <Education />
-        <Projects />
-        <Contact />
-        <Footer />
+        <ThemeProvider>
+          <Header />
+          <Hero />
+          <About />
+          <Experience />
+          <Resume />
+          <Services />
+          <Skills />
+          <Education />
+          <Projects />
+          <Contact />
+          <Footer />
+        </ThemeProvider>
       </TemplateProvider>
     </div>
   );
 }
-
-
