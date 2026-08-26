@@ -42,6 +42,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [commandOpen, setCommandOpen] = React.useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
 
+  // If auth resolved but no user, redirect and show nothing (proxy should have already blocked this)
+  React.useEffect(() => {
+    if (!isLoading && !user) {
+      router.replace("/login");
+    }
+  }, [isLoading, user, router]);
+
   // Auth boundary — block ALL content until auth resolves
   if (isLoading) {
     return (
@@ -56,9 +63,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // If auth resolved but no user, redirect and show nothing (proxy should have already blocked this)
   if (!user) {
-    router.replace("/login");
     return (
       <div className="min-h-screen bg-background flex flex-col justify-center items-center p-6">
         <div className="w-8 h-8 bg-brand flex items-center justify-center rounded-lg shadow-sm mb-4">

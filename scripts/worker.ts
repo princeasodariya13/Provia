@@ -5,7 +5,7 @@ import { prisma } from "../lib/db";
 import { logger } from "../lib/logger";
 
 const pollInterval = parseInt(env.JOB_POLL_INTERVAL_MS, 10);
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8081;
 
 async function startWorker() {
   if (!process.env.DATABASE_URL) {
