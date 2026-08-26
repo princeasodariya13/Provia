@@ -112,7 +112,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen w-full bg-background flex flex-col md:flex-row text-text-primary selection:bg-brand/20 relative overflow-hidden">
+    <div className="min-h-screen w-full bg-background flex flex-col md:flex-row text-text-primary selection:bg-brand/20 relative overflow-x-clip">
 
       {/* Background Geometric Identity - Abstract Editorial Composition */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -188,9 +188,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         {!collapsed && (
           <div className="px-5 mt-4 mb-2">
             <div className="flex items-center gap-3 p-3 rounded-xl border border-border-light bg-surface shadow-sm hover:border-brand-hover transition-colors cursor-pointer" onClick={() => router.push("/profile")}>
-              <Avatar src={user.avatarUrl} fallback={user.fullName || user.email} size="sm" className="ring-2 ring-background border border-border-light shadow-sm" />
+              <Avatar src={user.avatarUrl} fallback={user.fullName || user.name || user.email} size="sm" className="ring-2 ring-background border border-border-light shadow-sm" />
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-bold truncate text-text-primary leading-tight">{user.fullName || "User"}</p>
+                <p className="text-sm font-bold truncate text-text-primary leading-tight">{user.fullName || user.name || "User"}</p>
                 <p className="text-[11px] font-medium truncate text-text-secondary leading-tight mt-0.5">Professional Account</p>
               </div>
             </div>
@@ -269,9 +269,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
       {/* ── MOBILE DRAWER ── */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
+        <div className="fixed inset-0 z-50 md:hidden animate-in fade-in duration-200">
           <div className="absolute inset-0 bg-text-primary/20 backdrop-blur-sm transition-opacity" onClick={() => setMobileOpen(false)} />
-          <div className="absolute inset-y-0 left-0 w-4/5 max-w-sm bg-surface shadow-2xl flex flex-col transform transition-transform border-r border-border-light">
+          <div className="absolute inset-y-0 left-0 w-[85%] max-w-sm bg-surface shadow-2xl flex flex-col transform transition-transform border-r border-border-light animate-in slide-in-from-left-full duration-300 ease-out">
             <div className="h-16 flex items-center justify-between px-5 border-b border-border-light bg-surface-muted/30">
               <div className="flex items-center gap-3">
                 <div className="w-7 h-7 bg-brand flex items-center justify-center rounded-lg shadow-sm">
@@ -289,9 +289,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
             <div className="p-5 border-b border-border-light bg-surface">
               <div className="flex items-center gap-3">
-                <Avatar src={user.avatarUrl} fallback={user.fullName || user.email} size="sm" className="shadow-sm" />
+                <Avatar src={user.avatarUrl} fallback={user.fullName || user.name || user.email} size="sm" className="shadow-sm" />
                 <div className="min-w-0">
-                  <p className="text-sm font-bold truncate text-text-primary">{user.fullName || "User"}</p>
+                  <p className="text-sm font-bold truncate text-text-primary">{user.fullName || user.name || "User"}</p>
                   <p className="text-xs text-text-secondary truncate">{user.email}</p>
                 </div>
               </div>

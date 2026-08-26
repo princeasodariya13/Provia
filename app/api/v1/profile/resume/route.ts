@@ -51,7 +51,7 @@ export const POST = withAPIHandler(async (req) => {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  const uploadResult = await CloudinaryService.uploadBuffer(buffer, publicId, "auto", file.type);
+  const uploadResult = await CloudinaryService.uploadBuffer(buffer, publicId, "raw", file.type);
 
   // Soft deactivate existing active resumes for the user
   await prisma.resume.updateMany({
@@ -129,4 +129,54 @@ export const GET = withAPIHandler(async () => {
       extractedData: resume.structuredData ? JSON.parse(resume.structuredData) : null,
     }
   });
+});
+
+export const DELETE = withAPIHandler(async (req) => {
+  const user = await requireAuth();
+
+  const resume = await prisma.resume.findFirst({
+    where: { userId: user.id, isActive: true },
+    orderBy: { version: "desc" }
+  });
+
+  if (!resume) {
+    return NextResponse.json({ success: true, data: { message: "No active resume to delete" } }, { status: 200 });
+  }
+
+  if (resume.publicId) {
+    try {
+      await CloudinaryService.destroyAsset(resume.publicId, "image");
+    } catch {
+      // Ignore
+    }
+    try {
+      await CloudinaryService.destroyAsset(resume.publicId, "raw");
+    } catch {
+      // Ignore
+    }
+  }
+
+  try {
+    await prisma.resume.delete({
+      where: { id: resume.id }
+    });
+  } catch (err) {
+    // Soft delete if foreign key constraints fail
+    await prisma.resume.update({
+      where: { id: resume.id },
+      data: { isActive: false, status: "FAILED", fileUrl: null }
+    });
+  }
+
+  AnalyticsService.record({
+    eventName: "asset.resume_removed",
+    userId: user.id,
+  });
+
+  return NextResponse.json({
+    success: true,
+    data: {
+      message: "Resume removed successfully"
+    }
+  }, { status: 200 });
 });

@@ -22,7 +22,15 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     requestAnimationFrame(raf);
 
+    // Setup ResizeObserver to force Lenis to recalculate bounds when content loads dynamically
+    const resizeObserver = new ResizeObserver(() => {
+      lenis.resize();
+    });
+    
+    resizeObserver.observe(document.body);
+
     return () => {
+      resizeObserver.disconnect();
       lenis.destroy();
     };
   }, []);

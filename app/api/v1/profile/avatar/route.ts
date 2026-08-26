@@ -95,3 +95,44 @@ export const POST = withAPIHandler(async (req) => {
     }
   }, { status: 200 });
 });
+
+export const DELETE = withAPIHandler(async (req) => {
+  const user = await requireAuth();
+
+  const profile = await prisma.professionalProfile.findFirst({
+    where: { userId: user.id }
+  });
+
+  if (!profile || !profile.avatarUrl) {
+    return NextResponse.json({ success: true, data: { message: "No avatar to delete" } }, { status: 200 });
+  }
+
+  // If there's an existing Cloudinary avatar, delete it
+  if (profile.avatarUrl.includes("cloudinary.com/")) {
+    try {
+      const matches = profile.avatarUrl.match(/upload\/(?:v\d+\/)?(provia\/users\/[^/]+\/avatar\/[^.]+)/);
+      if (matches && matches[1]) {
+        await CloudinaryService.destroyAsset(matches[1], "image");
+      }
+    } catch {
+      // Ignore destroy failure
+    }
+  }
+
+  await prisma.professionalProfile.update({
+    where: { id: profile.id },
+    data: { avatarUrl: null }
+  });
+
+  AnalyticsService.record({
+    eventName: "asset.avatar_removed",
+    userId: user.id,
+  });
+
+  return NextResponse.json({
+    success: true,
+    data: {
+      message: "Avatar removed successfully"
+    }
+  }, { status: 200 });
+});

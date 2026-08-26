@@ -6,12 +6,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { UploadCloud, CheckCircle, AlertCircle, RefreshCw, FileText, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
+import { UploadCloud, CheckCircle, AlertCircle, RefreshCw, FileText, Sparkles, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
+import { useToast } from "@/components/ui/toast";
 
 export function ResumeIntelligence() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [uploadSuccessMsg, setUploadSuccessMsg] = useState(false);
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const [removing, setRemoving] = useState(false);
+  const toast = useToast();
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [resumeData, setResumeData] = useState<any>(null);
@@ -72,33 +79,64 @@ export function ResumeIntelligence() {
     }
   };
 
-  const handleUpload = async () => {
+  const handleUpload = () => {
     if (!file) return;
 
     setUploading(true);
     setError(null);
+    setUploadProgress(0);
+    setUploadSuccessMsg(false);
 
     const formData = new FormData();
     formData.append("file", file);
 
-    try {
-      const res = await fetch("/api/v1/profile/resume", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/v1/profile/resume");
 
-      if (!res.ok) throw new Error(data.error || "Upload failed");
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percentComplete = Math.round((event.loaded / event.total) * 100);
+        setUploadProgress(percentComplete);
+      }
+    };
 
-      setStatus(data.data.status);
-      setFile(null);
-      await fetchResumeStatus();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
-    } finally {
+    xhr.onload = async () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        const data = JSON.parse(xhr.responseText);
+        setUploadProgress(100);
+        setUploadSuccessMsg(true);
+        setFile(null);
+        toast.success("Resume uploaded successfully");
+        
+        setTimeout(async () => {
+          setUploadSuccessMsg(false);
+          setStatus(data.data.status);
+          await fetchResumeStatus();
+          setUploading(false);
+          setUploadProgress(null);
+        }, 2000);
+      } else {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          setError(data.error || "Upload failed");
+          toast.error(data.error || "Upload failed");
+        } catch {
+          setError("Upload failed");
+          toast.error("Upload failed");
+        }
+        setUploading(false);
+        setUploadProgress(null);
+      }
+    };
+
+    xhr.onerror = () => {
+      setError("Network error occurred during upload");
+      toast.error("Network error occurred during upload");
       setUploading(false);
-    }
+      setUploadProgress(null);
+    };
+
+    xhr.send(formData);
   };
 
   const toggleSelection = (category: string, idx?: number) => {
@@ -130,21 +168,44 @@ export function ResumeIntelligence() {
     
     if (res.success) {
       setApplySuccess(true);
+      toast.success("Resume data imported successfully!");
       setTimeout(() => {
         setExpanded(false);
         setApplySuccess(false);
         window.location.reload();
       }, 2000);
     } else {
-      alert("Failed to apply data.");
+      toast.error(res.error || "Failed to apply data.");
     }
     setApplying(false);
   };
 
+  const handleRemove = async () => {
+    setRemoving(true);
+    try {
+      const res = await fetch("/api/v1/profile/resume", { method: "DELETE" });
+      if (res.ok) {
+        setResumeData(null);
+        setStatus("NONE");
+        setFile(null);
+        toast.success("Resume removed successfully");
+      } else {
+        const errData = await res.json();
+        toast.error(errData.error || "Failed to remove resume.");
+      }
+    } catch {
+      toast.error("Error removing resume.");
+    } finally {
+      setRemoving(false);
+    }
+  };
+
   return (
-    <section className="bg-surface border border-border-light rounded-2xl overflow-hidden shadow-sm">
-      <div className="border-b border-border-light p-5 bg-surface-muted/30 flex items-center justify-between">
-        <h2 className="text-base font-bold text-text-primary flex items-center gap-2">
+    <>
+    <section className="relative bg-surface/60 backdrop-blur-xl border border-border-light rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-brand/5 hover:border-brand/20 transition-all duration-500 group">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-brand/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+      <div className="border-b border-border-light/50 p-5 bg-surface-muted/20 flex items-center justify-between relative z-10">
+        <h2 className="text-base font-extrabold text-text-primary tracking-tight flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-brand" /> Resume Intelligence
         </h2>
         {status !== "NONE" && (
@@ -154,9 +215,40 @@ export function ResumeIntelligence() {
         )}
       </div>
       
-      <CardContent className="p-6">
-        {status === "NONE" || status === "FAILED" ? (
-          <div className="flex flex-col items-center gap-4">
+      <CardContent className="p-6 relative z-10">
+        {removing ? (
+          <div className="flex flex-col items-center gap-4 text-center py-6 w-full animate-in fade-in duration-300">
+            <div className="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center animate-pulse">
+              <Trash2 className="w-8 h-8 text-error" />
+            </div>
+            <div className="w-full max-w-[200px] space-y-2">
+              <h3 className="text-sm font-bold text-text-primary">Removing Resume...</h3>
+            </div>
+          </div>
+        ) : uploadSuccessMsg ? (
+          <div className="flex flex-col items-center gap-4 text-center py-6">
+            <div className="w-16 h-16 rounded-full bg-success/10 flex items-center justify-center animate-in zoom-in duration-300">
+              <CheckCircle className="w-8 h-8 text-success" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-text-primary">Upload Successful!</h3>
+              <p className="text-xs text-text-secondary">Initializing AI engine...</p>
+            </div>
+          </div>
+        ) : uploading ? (
+          <div className="flex flex-col items-center gap-4 text-center py-6 w-full animate-in fade-in duration-300">
+            <div className="w-16 h-16 rounded-full bg-brand/10 flex items-center justify-center animate-pulse">
+              <UploadCloud className="w-8 h-8 text-brand" />
+            </div>
+            <div className="w-full max-w-[200px] space-y-2">
+              <h3 className="text-sm font-bold text-text-primary">Uploading... {uploadProgress || 0}%</h3>
+              <div className="h-2 w-full bg-surface-muted rounded-full overflow-hidden shadow-inner">
+                <div className="h-full bg-brand transition-all duration-300 ease-out" style={{ width: `${uploadProgress || 0}%` }} />
+              </div>
+            </div>
+          </div>
+        ) : status === "NONE" || status === "FAILED" ? (
+          <div className="flex flex-col items-center gap-4 animate-in fade-in duration-300">
             <div className="w-16 h-16 rounded-full bg-surface-muted flex items-center justify-center">
               <FileText className="w-8 h-8 text-text-muted" />
             </div>
@@ -166,9 +258,9 @@ export function ResumeIntelligence() {
             </div>
             
             <div className="w-full space-y-3 mt-2">
-              <Input type="file" accept="application/pdf" onChange={handleFileChange} className="cursor-pointer text-xs h-9 rounded-lg" />
-              <Button onClick={handleUpload} disabled={!file || uploading} size="sm" className="w-full rounded-full shadow-sm font-bold bg-brand hover:bg-brand-hover">
-                {uploading ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <UploadCloud className="w-4 h-4 mr-2" />}
+              <Input type="file" accept="application/pdf" onChange={handleFileChange} className="cursor-pointer text-xs h-9 rounded-lg bg-surface/50 border-border-light hover:border-border transition-colors" />
+              <Button onClick={handleUpload} disabled={!file || uploading} size="sm" className="w-full rounded-full shadow-sm font-bold bg-brand hover:bg-brand-hover hover:-translate-y-0.5 transition-all">
+                <UploadCloud className="w-4 h-4 mr-2" />
                 Process Resume
               </Button>
               {error && <div className="text-error text-xs font-semibold text-center">{error}</div>}
@@ -176,14 +268,17 @@ export function ResumeIntelligence() {
           </div>
         ) : (
           <div className="space-y-5">
-            <div className="flex items-center gap-4 p-4 border border-border-light bg-surface-muted/30 rounded-xl">
+            <div className="flex items-center gap-4 p-4 border border-border-light bg-surface-muted/30 rounded-xl relative group/resume">
               <FileText className="w-8 h-8 text-brand shrink-0" />
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="font-bold text-sm text-text-primary truncate">{resumeData?.filename}</p>
                 <p className="text-[11px] text-text-secondary mt-0.5">
                   {(resumeData?.size / 1024).toFixed(1)} KB • Uploaded {new Date(resumeData?.createdAt).toLocaleDateString()}
                 </p>
               </div>
+              <Button onClick={() => setIsRemoveModalOpen(true)} disabled={uploading} variant="ghost" size="icon" className="text-error hover:bg-error-muted hover:text-error transition-opacity">
+                <Trash2 className="w-4 h-4" />
+              </Button>
             </div>
 
             {status === "QUEUED" || status === "PROCESSING" ? (
@@ -375,5 +470,15 @@ export function ResumeIntelligence() {
         </div>
       )}
     </section>
+
+    <ConfirmModal
+      isOpen={isRemoveModalOpen}
+      onClose={() => setIsRemoveModalOpen(false)}
+      onConfirm={handleRemove}
+      title="Remove Resume"
+      description="Are you sure you want to permanently remove your uploaded resume? This action cannot be undone."
+      confirmText="Remove Resume"
+    />
+    </>
   );
 }

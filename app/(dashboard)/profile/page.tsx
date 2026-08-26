@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/ui/page-header";
 
 export default function ProfilePage() {
   return (
-    <div className="space-y-12 max-w-7xl mx-auto pb-16">
+    <div className="space-y-12 max-w-7xl mx-auto pb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <PageHeader
         title="Profile Workspace"
         description="Manage your canonical professional identity. The verified data here seeds your portfolio and AI analysis."
