@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { Send } from "lucide-react";
 import { motion } from "framer-motion";
+import { useToast } from "@/components/ui/toast";
 import { useTemplateData } from "../context";
 import { Reveal, SectionHeading } from "./Reveal";
 
@@ -34,6 +35,7 @@ export default function Contact() {
 
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -55,11 +57,12 @@ export default function Contact() {
       if (res.ok) {
         setSent(true);
         e.currentTarget.reset();
+        toast.success("Message sent successfully!");
       } else {
-        alert("Failed to send message. Please try again.");
+        toast.error("Failed to send message. Please try again.");
       }
     } catch (err) {
-      alert("Failed to send message. Please try again.");
+      toast.error("Failed to send message. Please try again.");
     } finally {
       setLoading(false);
     }
