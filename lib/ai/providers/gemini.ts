@@ -17,7 +17,7 @@ export const geminiProvider: AIProvider = {
     }
 
     const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
-    const modelName = env.AI_MODEL || "gemini-2.5-flash";
+    const modelName = env.AI_MODEL || "gemini-3.6-flash";
     const model = genAI.getGenerativeModel({ 
       model: modelName,
       generationConfig: {

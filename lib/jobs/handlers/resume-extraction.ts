@@ -48,7 +48,81 @@ IMPORTANT RULES:
 2. Never hallucinate. If a piece of information (e.g., location, dates, technologies) is not explicitly present in the resume, return null or an empty array as appropriate.
 3. Never invent companies, job titles, dates, technologies, achievements, education, certifications, or URLs.
 4. Clean up any weird formatting.
-5. If there are multiple experiences, order them chronologically (newest first).`;
+5. If there are multiple experiences, order them chronologically (newest first).
+
+EXPECTED JSON SCHEMA:
+{
+  "personalInfo": {
+    "fullName": "string | null",
+    "headline": "string | null",
+    "email": "string | null",
+    "phone": "string | null",
+    "location": "string | null",
+    "website": "string (URL) | null"
+  },
+  "summary": "string | null",
+  "experience": [
+    {
+      "company": "string",
+      "title": "string",
+      "location": "string | null",
+      "employmentType": "string | null",
+      "startDate": "string | null",
+      "endDate": "string | null",
+      "current": "boolean",
+      "description": "string | null",
+      "responsibilities": ["string"],
+      "achievements": ["string"],
+      "technologies": ["string"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "string",
+      "degree": "string | null",
+      "fieldOfStudy": "string | null",
+      "startDate": "string | null",
+      "endDate": "string | null",
+      "grade": "string | null",
+      "description": "string | null"
+    }
+  ],
+  "skills": [
+    {
+      "name": "string",
+      "category": "string | null",
+      "proficiency": "string | null"
+    }
+  ],
+  "projects": [
+    {
+      "name": "string",
+      "description": "string | null",
+      "technologies": ["string"],
+      "url": "string (URL) | null",
+      "achievements": ["string"]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "string",
+      "issuer": "string",
+      "issueDate": "string | null",
+      "expiryDate": "string | null",
+      "credentialId": "string | null",
+      "credentialUrl": "string (URL) | null"
+    }
+  ],
+  "achievements": ["string"],
+  "languages": ["string"],
+  "links": [
+    {
+      "platform": "string",
+      "url": "string (URL)"
+    }
+  ]
+}
+`;
 
       const { GoogleGenerativeAI } = await import("@google/generative-ai");
       const { env } = await import("@/lib/env");
@@ -59,7 +133,7 @@ IMPORTANT RULES:
 
       const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({
-        model: env.AI_MODEL || "gemini-2.5-flash",
+        model: env.AI_MODEL || "gemini-3.6-flash",
         generationConfig: {
           responseMimeType: "application/json",
         }

@@ -91,7 +91,7 @@ export const env = envSchema.parse({
   JOB_POLL_INTERVAL_MS: process.env.JOB_POLL_INTERVAL_MS?.trim(),
   JOB_PROCESSING_TIMEOUT_MS: process.env.JOB_PROCESSING_TIMEOUT_MS?.trim(),
   GEMINI_API_KEY: process.env.GEMINI_API_KEY?.trim(),
-  AI_MODEL: process.env.AI_MODEL?.trim() || "gemini-2.5-flash",
+  AI_MODEL: process.env.AI_MODEL?.trim() || "gemini-3.6-flash",
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   CRON_SECRET: process.env.CRON_SECRET,
   AUTH_RATE_LIMIT_WINDOW_SECONDS: process.env.AUTH_RATE_LIMIT_WINDOW_SECONDS,
