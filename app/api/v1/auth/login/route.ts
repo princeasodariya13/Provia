@@ -59,6 +59,33 @@ export const POST = withAPIHandler(async (req) => {
 
   // ---- STEP 30: ENFORCE EMAIL VERIFICATION ----
   if (!user.emailVerified) {
+    // UI states: "a new verification link has been sent."
+    // Actually send it here synchronously so the user gets it even without background workers!
+    try {
+      const { EmailDeliveryHandler } = await import("@/lib/jobs/handlers/email-delivery");
+      await EmailDeliveryHandler.handler({
+        id: "sync-login",
+        type: "EMAIL_DELIVERY",
+        userId: user.id,
+        status: "PROCESSING",
+        attempts: 1,
+        maxAttempts: 1,
+        availableAt: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        payload: { userId: user.id, template: "VERIFY_EMAIL" },
+        result: null,
+        errorCode: null,
+        errorMessage: null,
+        startedAt: null,
+        completedAt: null,
+        failedAt: null,
+        idempotencyKey: null,
+      });
+    } catch (err) {
+      console.error("Failed to resend verification email on login:", err);
+    }
+
     AnalyticsService.record({ eventName: "auth.login_failed", userId: user.id, metadata: { reason: "unverified_email" } });
     throw new APIError("Please verify your email before signing in.", 403, { code: "UNVERIFIED_EMAIL" });
   }

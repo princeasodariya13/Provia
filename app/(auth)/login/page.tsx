@@ -17,15 +17,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   
-  const initialError = typeof window !== "undefined" 
-    ? new URLSearchParams(window.location.search).get("error") || "" 
-    : "";
-  const isNewlyRegistered = typeof window !== "undefined" 
-    ? new URLSearchParams(window.location.search).get("registered") === "true" 
-    : false;
-  
-  const [error, setError] = useState(initialError);
-  const [successMsg, setSuccessMsg] = useState(isNewlyRegistered ? "Account created successfully! Please sign in." : "");
+  const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   
   const [isLoading, setIsLoading] = useState(false);
   const [isUnverified, setIsUnverified] = useState(false);
@@ -33,10 +26,23 @@ export default function LoginPage() {
   const [resendMsg, setResendMsg] = useState("");
 
   useEffect(() => {
-    if (initialError) {
-      window.history.replaceState({}, document.title, window.location.pathname);
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      const urlError = searchParams.get("error");
+      const isRegistered = searchParams.get("registered") === "true";
+      
+      if (urlError) {
+        setError(urlError);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+      
+      if (isRegistered) {
+        setSuccessMsg("Account created successfully! Please sign in.");
+        // We can optionally clear the registered query param here too
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
     }
-  }, [initialError]);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

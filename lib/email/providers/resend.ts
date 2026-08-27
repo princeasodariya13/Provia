@@ -8,7 +8,8 @@ export class ResendProvider implements EmailProvider {
   private fromEmail: string;
 
   constructor() {
-    this.fromEmail = env.EMAIL_FROM || "noreply@provia.app";
+    // Resend free tier strictly requires sending from onboarding@resend.dev
+    this.fromEmail = env.EMAIL_FROM || "onboarding@resend.dev";
     
     if (env.RESEND_API_KEY) {
       this.resend = new Resend(env.RESEND_API_KEY);

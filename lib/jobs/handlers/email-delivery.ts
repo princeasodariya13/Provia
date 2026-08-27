@@ -40,6 +40,11 @@ export const EmailDeliveryHandler = {
           .sign(SECRET_KEY);
 
         const resetUrl = `${env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`;
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`\n\n[DEV LINK] Click here to reset password for ${user.email}:\n${resetUrl}\n\n`);
+        }
+        
         result = await EmailService.sendPasswordResetEmail(user.email, resetUrl);
         break;
       }
@@ -55,6 +60,11 @@ export const EmailDeliveryHandler = {
           .setExpirationTime("24h")
           .sign(EMAIL_SECRET_KEY);
         const verifyUrl = `${env.NEXT_PUBLIC_APP_URL}/verify-email?token=${verifyToken}`;
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`\n\n[DEV LINK] Click here to verify email for ${user.email}:\n${verifyUrl}\n\n`);
+        }
+        
         result = await EmailService.sendEmailVerificationEmail(user.email, user.name, verifyUrl);
         break;
       }

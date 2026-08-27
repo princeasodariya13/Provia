@@ -18,18 +18,20 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   
-  const initialError = typeof window !== "undefined" 
-    ? new URLSearchParams(window.location.search).get("error") || "" 
-    : "";
-  const [error, setError] = useState(initialError);
-  
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (initialError) {
-      window.history.replaceState({}, document.title, window.location.pathname);
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      const urlError = searchParams.get("error");
+      
+      if (urlError) {
+        setError(urlError);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
     }
-  }, [initialError]);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

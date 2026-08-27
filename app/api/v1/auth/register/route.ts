@@ -42,6 +42,47 @@ export const POST = withAPIHandler(async (req) => {
       throw new APIError("An account with this email already exists. Incorrect password.", 401);
     }
     
+    // Handle unverified users trying to register again
+    if (!existingUser.emailVerified) {
+      // Resend the verification email silently
+      try {
+        const { EmailDeliveryHandler } = await import("@/lib/jobs/handlers/email-delivery");
+        await EmailDeliveryHandler.handler({
+          id: "sync-register-resend",
+          type: "EMAIL_DELIVERY",
+          userId: existingUser.id,
+          status: "PROCESSING",
+          attempts: 1,
+          maxAttempts: 1,
+          availableAt: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          payload: { userId: existingUser.id, template: "VERIFY_EMAIL" },
+          result: null,
+          errorCode: null,
+          errorMessage: null,
+          startedAt: null,
+          completedAt: null,
+          failedAt: null,
+          idempotencyKey: null,
+        });
+      } catch (err) {
+        console.error("Failed to resend verification on re-register:", err);
+      }
+      
+      return NextResponse.json({
+        success: true,
+        requiresVerification: true,
+        message: "Registration successful. Please check your email to verify your account.",
+        data: {
+          id: existingUser.id,
+          name: existingUser.name,
+          email: existingUser.email,
+          role: existingUser.role,
+        },
+      });
+    }
+    
     // Direct login for returning users who use the register form
     await createSession(existingUser);
     
@@ -73,16 +114,34 @@ export const POST = withAPIHandler(async (req) => {
     select: { id: true, name: true, email: true, role: true, sessionVersion: true, createdAt: true, updatedAt: true },
   });
 
-  // Direct login! Permanently store session for this device
-  await createSession(user);
+  // NOTE: Deliberately skipping createSession(user) here. 
+  // The user MUST verify their email before they can sign in.
 
-  // Queue email verification (non-blocking — registration succeeds regardless)
-  JobService.createJob({
-    userId: user.id,
-    type: "EMAIL_DELIVERY",
-    payload: { userId: user.id, template: "VERIFY_EMAIL" },
-    idempotencyKey: `email-verify-${user.id}`,
-  }).catch(() => { /* Non-blocking */ });
+  // Trigger email verification synchronously so it sends instantly without needing a background worker
+  try {
+    const { EmailDeliveryHandler } = await import("@/lib/jobs/handlers/email-delivery");
+    await EmailDeliveryHandler.handler({
+      id: "sync-register",
+      type: "EMAIL_DELIVERY",
+      userId: user.id,
+      status: "PROCESSING",
+      attempts: 1,
+      maxAttempts: 1,
+      availableAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      payload: { userId: user.id, template: "VERIFY_EMAIL" },
+      result: null,
+      errorCode: null,
+      errorMessage: null,
+      startedAt: null,
+      completedAt: null,
+      failedAt: null,
+      idempotencyKey: null,
+    });
+  } catch (err) {
+    console.error("Failed to send synchronous verification email on register:", err);
+  }
 
   AnalyticsService.record({
     eventName: "auth.registered",
@@ -91,6 +150,8 @@ export const POST = withAPIHandler(async (req) => {
 
   return NextResponse.json({
     success: true,
+    requiresVerification: true,
+    message: "Registration successful. Please check your email to verify your account.",
     data: user,
   });
 });
