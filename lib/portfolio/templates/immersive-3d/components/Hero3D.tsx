@@ -3,7 +3,7 @@
 
 import { Suspense, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, OrbitControls, Environment, Sparkles, MeshDistortMaterial } from "@react-three/drei";
+import { Float, OrbitControls, Environment, Sparkles, MeshDistortMaterial, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
 
 function CoreShape() {
@@ -37,31 +37,30 @@ function CoreShape() {
       <group>
         {/* Core dark glass distorted orb */}
         <mesh ref={meshRef}>
-          <icosahedronGeometry args={[1.5, 4]} />
+          <icosahedronGeometry args={[1.5, 64]} />
           <MeshDistortMaterial
-            color="#050505"
-            emissive="#0a1a24"
-            emissiveIntensity={0.5}
-            roughness={0.05}
-            metalness={1}
-            distort={0.4}
-            speed={2}
+            color="#05050a"
+            emissive="#000000"
+            roughness={0.1}
+            metalness={0.9}
+            distort={0.35}
+            speed={2.5}
             clearcoat={1}
             clearcoatRoughness={0.1}
           />
         </mesh>
-        
+
         {/* Intricate Orbital Rings */}
         <mesh ref={ring1Ref}>
           <torusGeometry args={[2.5, 0.015, 32, 100]} />
           <meshStandardMaterial color="#5EF7F0" emissive="#5EF7F0" emissiveIntensity={2} />
         </mesh>
-        
+
         <mesh ref={ring2Ref} rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[2.9, 0.015, 32, 100]} />
           <meshStandardMaterial color="#A78BFA" emissive="#A78BFA" emissiveIntensity={2} />
         </mesh>
-        
+
         <mesh ref={ring3Ref} rotation={[0, Math.PI / 2, 0]}>
           <torusGeometry args={[3.4, 0.01, 32, 100]} />
           <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={1} opacity={0.2} transparent />
@@ -77,22 +76,30 @@ export default function Hero3D() {
       <Canvas camera={{ position: [0, 0, 8.5], fov: 45 }} dpr={[1, 2]}>
         <Suspense fallback={null}>
           <ambientLight intensity={0.2} />
-          
+
           {/* Neon rim lights */}
           <directionalLight position={[10, 10, 5]} intensity={1.5} color="#5EF7F0" />
           <directionalLight position={[-10, -10, -5]} intensity={1.5} color="#A78BFA" />
           <pointLight position={[0, 0, 5]} intensity={0.5} color="#ffffff" />
-          
-          {/* Photorealistic HDRI reflections */}
-          <Environment preset="city" />
-          
+
+          {/* Premium Studio Lighting Environment */}
+          <Environment resolution={512}>
+            {/* Top light for rim reflection */}
+            <Lightformer form="rect" intensity={4} position={[0, 5, 0]} scale={[10, 10, 1]} rotation-x={Math.PI / 2} />
+            {/* Colorful side lights */}
+            <Lightformer form="rect" intensity={5} color="#5EF7F0" position={[-10, 0, 5]} scale={[10, 20, 1]} rotation-y={Math.PI / 4} />
+            <Lightformer form="rect" intensity={5} color="#A78BFA" position={[10, 0, 5]} scale={[10, 20, 1]} rotation-y={-Math.PI / 4} />
+            {/* Background fill */}
+            <Lightformer form="circle" intensity={1.5} color="#ffffff" position={[0, -5, -10]} scale={[20, 20, 1]} />
+          </Environment>
+
           {/* High-end particle effects */}
           <Sparkles count={250} scale={14} size={1.5} speed={0.4} opacity={0.4} color="#5EF7F0" />
           <Sparkles count={150} scale={18} size={2.5} speed={0.2} opacity={0.2} color="#A78BFA" />
           <Sparkles count={100} scale={10} size={1} speed={0.6} opacity={0.5} color="#ffffff" />
 
           <CoreShape />
-          
+
           <OrbitControls
             enableZoom={false}
             enablePan={false}
