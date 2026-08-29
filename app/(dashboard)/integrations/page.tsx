@@ -198,7 +198,7 @@ export default function IntegrationsPage() {
   ) || [];
   
   const githubSkills = profile?.skills?.filter((s: any) => 
-    s.source === "GITHUB" || rawGithubSkills.includes(s.name)
+    s.source === "GITHUB"
   ) || [];
   
   const linkedinExperiences = profile?.experiences?.filter((e: any) => e.source === "LINKEDIN") || [];

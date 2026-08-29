@@ -37,7 +37,7 @@ export const POST = withAPIHandler(async (req) => {
       where: {
         profileId_name: { profileId: profile.id, name: skillName },
       },
-      update: {}, 
+      update: { source: "GITHUB" }, 
       create: {
         profileId: profile.id,
         name: skillName,

@@ -29,19 +29,28 @@ export const POST = withAPIHandler(async (req) => {
     return NextResponse.json({ success: false, error: "Profile not found" }, { status: 404 });
   }
 
-  // First, delete any GITHUB projects that are NOT in the incoming list
-  // but only if they haven't been manually edited.
   const incomingUrls = data.repositories.map(r => r.html_url);
-  await prisma.professionalProject.deleteMany({
+  
+  const projectsToUnlinkOrDelete = await prisma.professionalProject.findMany({
     where: {
       profileId: profile.id,
-      source: "GITHUB",
-      isManuallyEdited: false,
       externalId: {
-        notIn: incomingUrls
+        notIn: incomingUrls,
+        contains: "github.com"
       }
     }
   });
+
+  for (const proj of projectsToUnlinkOrDelete) {
+    if (proj.source === "GITHUB" && !proj.isManuallyEdited) {
+      await prisma.professionalProject.delete({ where: { id: proj.id } });
+    } else {
+      await prisma.professionalProject.update({
+        where: { id: proj.id },
+        data: { externalId: null } // unlink it from GitHub
+      });
+    }
+  }
 
   for (const repo of data.repositories) {
     const technologies = [
