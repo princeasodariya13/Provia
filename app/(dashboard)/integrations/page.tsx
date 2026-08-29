@@ -483,30 +483,6 @@ export default function IntegrationsPage() {
           syncedData={
             (linkedinState.state === "SYNCED" || linkedinState.state === "CONNECTED") && rawLinkedinData ? (
               <div className="mt-4 space-y-4">
-                <div className="flex items-start gap-4 p-4 bg-surface border border-border-light rounded-xl">
-                  {rawLinkedinData.picture ? (
-                    <img src={rawLinkedinData.picture} alt="Profile" className="w-12 h-12 rounded-full border border-border-strong object-cover" />
-                  ) : (
-                    <div className="w-12 h-12 rounded-full bg-surface-muted flex items-center justify-center border border-border-strong">
-                      <Briefcase className="w-5 h-5 text-text-muted" />
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-bold text-text-primary text-sm truncate">{rawLinkedinData.name}</h4>
-                      <Badge variant="success" className="text-[9px] h-4">VERIFIED</Badge>
-                    </div>
-                    {rawLinkedinData.headline && (
-                      <p className="text-xs text-text-secondary mt-1 line-clamp-2">{rawLinkedinData.headline}</p>
-                    )}
-                    {rawLinkedinData.linkedin_profile_url && (
-                      <a href={rawLinkedinData.linkedin_profile_url} target="_blank" rel="noreferrer" className="text-xs text-brand hover:underline mt-1 inline-block">
-                        View LinkedIn Profile
-                      </a>
-                    )}
-                  </div>
-                </div>
-
                 <div className="p-3 bg-brand/5 border border-brand/20 rounded-lg flex items-start gap-3">
                   <div className="p-1.5 bg-brand/10 rounded-md">
                     <Briefcase className="w-4 h-4 text-brand" />
@@ -514,6 +490,31 @@ export default function IntegrationsPage() {
                   <div className="text-xs text-text-secondary leading-relaxed">
                     <span className="font-bold text-text-primary block mb-0.5">Where is my timeline?</span>
                     LinkedIn strictly limits 3rd-party access to full professional timelines. To import your complete work experience and education, we recommend using our <span className="font-bold text-brand">Smart Resume Upload</span> in the Portfolio Studio.
+                  </div>
+                </div>
+
+                <div className="pt-6 mt-6 border-t border-border-strong border-dashed">
+                  <div className="text-sm font-bold text-text-primary mb-4 flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-success" />
+                    Currently in Portfolio
+                  </div>
+                  <div className="flex items-start gap-4 p-4 bg-surface border border-border-light rounded-xl">
+                    {rawLinkedinData.picture ? (
+                      <img src={rawLinkedinData.picture} alt="Profile" className="w-12 h-12 rounded-full border border-border-strong object-cover" />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-surface-muted flex items-center justify-center border border-border-strong">
+                        <Briefcase className="w-5 h-5 text-text-muted" />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-bold text-text-primary text-sm truncate">{rawLinkedinData.name}</h4>
+                        <Badge variant="success" className="text-[9px] h-4">LIVE</Badge>
+                      </div>
+                      {rawLinkedinData.headline && (
+                        <p className="text-xs text-text-secondary mt-1 line-clamp-2">{rawLinkedinData.headline}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -576,7 +577,7 @@ function IntegrationCard({
         </p>
 
         {isConnected ? (
-          <div className="space-y-6">
+          <div className="flex-1 flex flex-col space-y-6">
             <div className="p-4 bg-surface-muted/50 border border-border-light rounded-xl space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-text-secondary flex items-center">
@@ -593,7 +594,7 @@ function IntegrationCard({
               {syncedData}
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 mt-auto">
               <Button variant="outline" className="w-full rounded-full bg-white shadow-sm font-bold" onClick={onConnect}>
                 <RefreshCw className="w-4 h-4 mr-2" /> Force Sync
               </Button>
