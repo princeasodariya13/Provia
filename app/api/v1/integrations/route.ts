@@ -13,6 +13,11 @@ export const GET = withAPIHandler(async () => {
       state: true,
       lastSyncAt: true,
       errorMessage: true,
+      rawSnapshots: {
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        select: { data: true }
+      }
     },
   });
 

@@ -170,49 +170,13 @@ export const POST = withAPIHandler(async (req, args: unknown) => {
                 },
               });
             }
-          } else {
-            // Deduplication: skip if the user already has a manual project with the same name
-            const nameMatch = await prisma.professionalProject.findFirst({
-              where: {
-                profileId: canonicalProfile.id,
-                name: { equals: repo.name, mode: "insensitive" },
-                isManuallyEdited: true,
-              },
-            });
-            if (!nameMatch) {
-              await prisma.professionalProject.create({
-                data: {
-                  profileId: canonicalProfile.id,
-                  name: repo.name,
-                  description: repo.description,
-                  repositoryUrl: repo.htmlUrl,
-                  url: repo.homepageUrl || null,
-                  technologies,
-                  source: "GITHUB",
-                  externalId: repo.htmlUrl,
-                },
-              });
-            }
           }
+          // REMOVED auto-creation of projects. The user will select them manually from the Integrations UI.
         }
       }
 
       // ── Skills ──────────────────────────────────────────────────────────────
-      if (githubData.derivedSkills && githubData.derivedSkills.length > 0) {
-        for (const skillName of githubData.derivedSkills) {
-          await prisma.professionalSkill.upsert({
-            where: {
-              profileId_name: { profileId: canonicalProfile.id, name: skillName },
-            },
-            update: {}, // never downgrade an existing manual/resume skill
-            create: {
-              profileId: canonicalProfile.id,
-              name: skillName,
-              source: "GITHUB",
-            },
-          });
-        }
-      }
+      // REMOVED auto-creation of skills. The user will select them manually from the Integrations UI.
 
       logger.info(
         {
