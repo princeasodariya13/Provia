@@ -68,15 +68,23 @@ export const POST = withAPIHandler(async (req) => {
     });
 
     if (existing) {
+      const updateData: any = {};
+      
+      // Always inherit missing links from GitHub even if manually edited
+      if (!existing.url && repo.homepage) updateData.url = repo.homepage;
+      if (!existing.repositoryUrl && repo.html_url) updateData.repositoryUrl = repo.html_url;
+
       if (!existing.isManuallyEdited) {
+        updateData.description = repo.description;
+        updateData.repositoryUrl = repo.html_url;
+        updateData.url = repo.homepage || null;
+        updateData.technologies = technologies;
+      }
+      
+      if (Object.keys(updateData).length > 0) {
         await prisma.professionalProject.update({
           where: { id: existing.id },
-          data: {
-            description: repo.description,
-            repositoryUrl: repo.html_url,
-            url: repo.homepage || null,
-            technologies,
-          },
+          data: updateData,
         });
       }
     } else {
@@ -93,6 +101,7 @@ export const POST = withAPIHandler(async (req) => {
         const updateData: any = {
           externalId: repo.html_url, // ALWAYS link it to github for future syncs
           repositoryUrl: nameMatch.repositoryUrl || repo.html_url,
+          url: nameMatch.url || repo.homepage || null, // Always add url if missing
         };
         
         if (!nameMatch.isManuallyEdited) {
