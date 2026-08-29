@@ -12,6 +12,7 @@ const importReposSchema = z.object({
     homepage: z.string().nullable().optional(),
     language: z.string().nullable().optional(),
     topics: z.array(z.string()).optional(),
+    all_languages: z.array(z.string()).optional(),
   }))
 });
 
@@ -46,6 +47,7 @@ export const POST = withAPIHandler(async (req) => {
     const technologies = [
       ...(repo.language ? [repo.language] : []),
       ...(repo.topics || []),
+      ...(repo.all_languages || []),
     ]
       .filter(Boolean)
       .slice(0, 10)

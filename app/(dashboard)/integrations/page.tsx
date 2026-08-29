@@ -130,19 +130,36 @@ export default function IntegrationsPage() {
   useEffect(() => {
     if (!profile) return;
     
-    const githubProjects = profile.projects?.filter((p: any) => p.source === "GITHUB") || [];
-    const githubSkills = profile.skills?.filter((s: any) => s.source === "GITHUB") || [];
+    // Check local raw snapshots to correctly identify merged items during initialization
+    const state = sessionStorage.getItem("oauth_state"); // just a dummy hook to keep React happy, we use the parsed raw data below in render, but for initialization we can just derive it again
     
-    const importedRepoUrls = new Set(githubProjects.map((p: any) => p.repositoryUrl || p.externalId));
-    const importedSkillNames = new Set(githubSkills.map((s: any) => s.name));
+    const githubState = connections.find((c) => c.provider === "GITHUB");
+    let rawSkills: string[] = [];
+    if (githubState?.rawSnapshots?.[0]?.data) {
+      try {
+        const rawData = JSON.parse(githubState.rawSnapshots[0].data);
+        rawSkills = rawData.derived_skills || [];
+      } catch(e) {}
+    }
 
-    if (githubProjects.length > 0 && selectedGithubRepos.length === 0) {
+    const ghProjects = profile.projects?.filter((p: any) => 
+      p.source === "GITHUB" || (p.externalId && p.externalId.includes("github.com"))
+    ) || [];
+    
+    const ghSkills = profile.skills?.filter((s: any) => 
+      s.source === "GITHUB" || rawSkills.includes(s.name)
+    ) || [];
+    
+    const importedRepoUrls = new Set(ghProjects.map((p: any) => p.repositoryUrl || p.externalId));
+    const importedSkillNames = new Set(ghSkills.map((s: any) => s.name));
+
+    if (ghProjects.length > 0 && selectedGithubRepos.length === 0) {
       setSelectedGithubRepos(Array.from(importedRepoUrls) as string[]);
     }
-    if (githubSkills.length > 0 && selectedGithubSkills.length === 0) {
+    if (ghSkills.length > 0 && selectedGithubSkills.length === 0) {
       setSelectedGithubSkills(Array.from(importedSkillNames) as string[]);
     }
-  }, [profile]);
+  }, [profile, connections]);
 
   if (isAuthLoading || isLoading) {
     return (
@@ -162,13 +179,7 @@ export default function IntegrationsPage() {
   const githubState = getProviderState("GITHUB");
   const linkedinState = getProviderState("LINKEDIN");
 
-  const githubProjects = profile?.projects?.filter((p: any) => p.source === "GITHUB") || [];
-  const githubSkills = profile?.skills?.filter((s: any) => s.source === "GITHUB") || [];
-  
-  const linkedinExperiences = profile?.experiences?.filter((e: any) => e.source === "LINKEDIN") || [];
-  const linkedinSkills = profile?.skills?.filter((s: any) => s.source === "LINKEDIN") || [];
-
-  // Parse raw github repositories
+  // Parse raw github repositories first to use them for accurate filtering
   let rawGithubRepos: any[] = [];
   let rawGithubSkills: string[] = [];
   if (githubState.rawSnapshots?.[0]?.data) {
@@ -180,6 +191,18 @@ export default function IntegrationsPage() {
       // ignore
     }
   }
+
+  // Include projects that were merged (have github externalId) and skills that overlap
+  const githubProjects = profile?.projects?.filter((p: any) => 
+    p.source === "GITHUB" || (p.externalId && p.externalId.includes("github.com"))
+  ) || [];
+  
+  const githubSkills = profile?.skills?.filter((s: any) => 
+    s.source === "GITHUB" || rawGithubSkills.includes(s.name)
+  ) || [];
+  
+  const linkedinExperiences = profile?.experiences?.filter((e: any) => e.source === "LINKEDIN") || [];
+  const linkedinSkills = profile?.skills?.filter((s: any) => s.source === "LINKEDIN") || [];
 
   // Pre-calculate which raw repos and skills are already imported
   const importedRepoUrls = new Set(githubProjects.map((p: any) => p.repositoryUrl || p.externalId));
@@ -308,16 +331,16 @@ export default function IntegrationsPage() {
                                           <span>{repo.language}</span>
                                         </div>
                                       )}
-                                      {repo.topics && repo.topics.length > 0 && (
+                                      {(repo.topics && repo.topics.length > 0) || (repo.all_languages && repo.all_languages.length > 0) ? (
                                         <div className="flex flex-wrap gap-2">
-                                          {repo.topics.map((topic: string) => (
+                                          {Array.from(new Set([...(repo.topics || []), ...(repo.all_languages || [])])).filter((t: any) => t !== repo.language).map((topic: any) => (
                                             <div key={topic} className="flex items-center gap-1">
                                               <div className="w-2 h-2 rounded-full bg-brand/50" />
                                               <span>{topic}</span>
                                             </div>
                                           ))}
                                         </div>
-                                      )}
+                                      ) : null}
                                       {repo.stargazers_count > 0 && (
                                         <div className="flex items-center gap-1">
                                           <span>⭐ {repo.stargazers_count}</span>

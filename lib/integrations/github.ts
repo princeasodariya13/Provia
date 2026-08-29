@@ -114,6 +114,8 @@ export class GitHubConnector implements SourceConnector {
             disabled: r.disabled,
             default_branch: r.default_branch,
             size: r.size,
+            owner_login: (r.owner as any)?.login,
+            all_languages: [],
           }))
           // Show non-forks first; include forks only if they have topics/description
           .filter(r => !r.archived && !r.disabled)
@@ -122,6 +124,22 @@ export class GitHubConnector implements SourceConnector {
             ((b.stargazers_count as number) - (a.stargazers_count as number))
           )
           .slice(0, 40);
+          
+        // Fetch exhaustive languages for each of the top 40 repos
+        await Promise.all(
+          repos.map(async (r) => {
+            if (!r.owner_login) return;
+            try {
+              const langRes = await fetch(`https://api.github.com/repos/${r.owner_login}/${r.name}/languages`, { headers });
+              if (langRes.ok) {
+                const langs = await langRes.json();
+                r.all_languages = Object.keys(langs);
+              }
+            } catch (err) {
+              // ignore individual repo failures
+            }
+          })
+        );
       }
     } catch (err) {
       logger.warn({ err }, "GitHub: failed to fetch repositories");
@@ -205,6 +223,9 @@ export class GitHubConnector implements SourceConnector {
         ) {
           skillsSet.add(topic);
         }
+      }
+      for (const lang of (repo.all_languages as string[]) || []) {
+        skillsSet.add(lang);
       }
     }
 
