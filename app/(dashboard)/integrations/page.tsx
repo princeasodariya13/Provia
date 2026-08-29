@@ -15,6 +15,7 @@ interface Connection {
   state: "NOT_CONNECTED" | "CONNECTED" | "IMPORTING" | "SYNCED" | "FAILED";
   lastSyncAt: string | null;
   errorMessage: string | null;
+  rawSnapshots?: { data: string }[];
 }
 
 export default function IntegrationsPage() {
