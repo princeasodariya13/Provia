@@ -102,13 +102,20 @@ export const POST = withAPIHandler(async (req, args: unknown) => {
       }
     }
 
+    const allowedFields = new Set([
+      "fullName", "headline", "bio", "location", "avatarUrl", 
+      "website", "currentCompany", "jobTitle", "githubUsername", 
+      "languages"
+    ]);
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const safeScalarUpdate: Record<string, any> = {};
     for (const [key, val] of Object.entries(normalized)) {
       // Non-scalar enrichment fields (arrays, objects) are handled separately below
       if (Array.isArray(val) || (typeof val === "object" && val !== null)) continue;
       
-      if (!userEdits[key]) {
+      // Only include fields that exist in the database schema
+      if (allowedFields.has(key) && !userEdits[key]) {
         safeScalarUpdate[key] = val;
       }
     }

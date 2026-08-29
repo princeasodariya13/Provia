@@ -20,6 +20,8 @@ interface Connection {
 export default function IntegrationsPage() {
   const { user, isLoading: isAuthLoading } = useAuth();
   const [connections, setConnections] = useState<Connection[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,12 +29,19 @@ export default function IntegrationsPage() {
     async function load() {
       if (!user) return;
       try {
-        const res = await apiClient.get<Connection[]>("/api/v1/integrations");
-        if (res.success && res.data) {
-          setConnections(res.data);
+        const [integrationsRes, profileRes] = await Promise.all([
+          apiClient.get<Connection[]>("/api/v1/integrations"),
+          apiClient.get<any>("/api/v1/profile")
+        ]);
+        
+        if (integrationsRes.success && integrationsRes.data) {
+          setConnections(integrationsRes.data);
+        }
+        if (profileRes.success && profileRes.data) {
+          setProfile(profileRes.data);
         }
       } catch (err) {
-        console.error("Failed to load integrations:", err);
+        console.error("Failed to load integrations or profile:", err);
       } finally {
         setIsLoading(false);
       }
@@ -87,6 +96,12 @@ export default function IntegrationsPage() {
   const githubState = getProviderState("GITHUB");
   const linkedinState = getProviderState("LINKEDIN");
 
+  const githubProjects = profile?.projects?.filter((p: any) => p.source === "GITHUB") || [];
+  const githubSkills = profile?.skills?.filter((s: any) => s.source === "GITHUB") || [];
+  
+  const linkedinExperiences = profile?.experiences?.filter((e: any) => e.source === "LINKEDIN") || [];
+  const linkedinSkills = profile?.skills?.filter((s: any) => s.source === "LINKEDIN") || [];
+
   return (
     <div className="space-y-12 max-w-7xl mx-auto pb-16">
       <PageHeader
@@ -105,7 +120,7 @@ export default function IntegrationsPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         
         {/* GitHub Integration */}
         <IntegrationCard
@@ -116,6 +131,34 @@ export default function IntegrationsPage() {
           onConnect={() => handleConnect("GITHUB")}
           connectedIcon={<GitBranch className="w-4 h-4 mr-2" />}
           connectedLabel="Synced Repositories"
+          syncedData={
+            githubState.state === "SYNCED" || githubState.state === "CONNECTED" ? (
+              <div className="mt-4 space-y-4">
+                {githubProjects.length > 0 ? (
+                  <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                    {githubProjects.map((p: any) => (
+                      <div key={p.id} className="p-3 bg-surface border border-border-light rounded-lg text-sm">
+                        <div className="font-bold text-text-primary truncate">{p.name}</div>
+                        {p.description && <div className="text-text-secondary text-xs truncate mt-1">{p.description}</div>}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-sm text-text-muted italic">No repositories imported yet.</div>
+                )}
+                {githubSkills.length > 0 && (
+                  <div className="pt-2 border-t border-border-light">
+                    <div className="text-xs font-bold text-text-secondary mb-2">IMPORTED LANGUAGES</div>
+                    <div className="flex flex-wrap gap-2">
+                      {githubSkills.map((s: any) => (
+                        <Badge key={s.id} variant="secondary" className="text-[10px]">{s.name}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : null
+          }
         />
 
         {/* LinkedIn Integration */}
@@ -127,6 +170,34 @@ export default function IntegrationsPage() {
           onConnect={() => handleConnect("LINKEDIN")}
           connectedIcon={<Briefcase className="w-4 h-4 mr-2" />}
           connectedLabel="Synced Experience"
+          syncedData={
+            linkedinState.state === "SYNCED" || linkedinState.state === "CONNECTED" ? (
+              <div className="mt-4 space-y-4">
+                {linkedinExperiences.length > 0 ? (
+                  <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                    {linkedinExperiences.map((e: any) => (
+                      <div key={e.id} className="p-3 bg-surface border border-border-light rounded-lg text-sm">
+                        <div className="font-bold text-text-primary truncate">{e.title}</div>
+                        <div className="text-text-secondary text-xs truncate mt-1">{e.company}</div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-sm text-text-muted italic">No experiences imported yet.</div>
+                )}
+                {linkedinSkills.length > 0 && (
+                  <div className="pt-2 border-t border-border-light">
+                    <div className="text-xs font-bold text-text-secondary mb-2">IMPORTED SKILLS</div>
+                    <div className="flex flex-wrap gap-2">
+                      {linkedinSkills.map((s: any) => (
+                        <Badge key={s.id} variant="secondary" className="text-[10px]">{s.name}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : null
+          }
         />
 
       </div>
@@ -150,7 +221,8 @@ function IntegrationCard({
   state: any,
   onConnect: () => void,
   connectedIcon: React.ReactNode,
-  connectedLabel: string
+  connectedLabel: string,
+  syncedData?: React.ReactNode
 }) {
   
   const isConnected = state.state === "CONNECTED" || state.state === "SYNCED";
@@ -195,6 +267,8 @@ function IntegrationCard({
                   Last synced: {new Date(state.lastSyncAt).toLocaleString()}
                 </div>
               )}
+              
+              {syncedData}
             </div>
 
             <div className="flex gap-3">
