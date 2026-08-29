@@ -28,6 +28,7 @@ export default function IntegrationsPage() {
   const [isImporting, setIsImporting] = useState(false);
   const [selectedGithubRepos, setSelectedGithubRepos] = useState<string[]>([]);
   const [selectedGithubSkills, setSelectedGithubSkills] = useState<string[]>([]);
+  const [expandedRepos, setExpandedRepos] = useState<string[]>([]);
 
   useEffect(() => {
     async function load() {
@@ -218,71 +219,108 @@ export default function IntegrationsPage() {
               <div className="mt-4 space-y-4">
                 {rawGithubRepos.length > 0 ? (
                   <div className="space-y-3">
-                    <div className="text-xs font-bold text-text-secondary flex justify-between items-center">
-                      <span>SELECT REPOSITORIES TO SYNC</span>
-                      <Button 
-                        size="sm" 
-                        onClick={() => {
-                          const reposToSync = rawGithubRepos.filter(r => selectedGithubRepos.includes(r.html_url));
-                          handleSyncRepos(reposToSync);
-                        }}
-                        disabled={isImporting}
-                        className="h-7 text-xs font-bold rounded-md px-3 bg-white text-brand border border-brand hover:bg-brand/10 hover:text-brand"
-                      >
-                        {isImporting ? "Saving..." : `Save Changes`}
-                      </Button>
+                    <div className="flex flex-col gap-2">
+                      <div className="text-xs font-bold text-text-secondary flex justify-between items-center">
+                        <span>SELECT REPOSITORIES TO SYNC</span>
+                        <div className="flex items-center gap-2">
+                          <button 
+                            className="text-[10px] text-text-muted hover:text-brand underline"
+                            onClick={() => {
+                              if (selectedGithubRepos.length === rawGithubRepos.length) {
+                                setSelectedGithubRepos([]);
+                              } else {
+                                setSelectedGithubRepos(rawGithubRepos.map((r: any) => r.html_url));
+                              }
+                            }}
+                          >
+                            {selectedGithubRepos.length === rawGithubRepos.length ? "Deselect All" : "Select All"}
+                          </button>
+                          <Button 
+                            size="sm" 
+                            onClick={() => {
+                              const reposToSync = rawGithubRepos.filter((r: any) => selectedGithubRepos.includes(r.html_url));
+                              handleSyncRepos(reposToSync);
+                            }}
+                            disabled={isImporting}
+                            className="h-7 text-xs font-bold rounded-md px-3 bg-white text-brand border border-brand hover:bg-brand/10 hover:text-brand"
+                          >
+                            {isImporting ? "Saving..." : `Save Changes`}
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                    <div className="space-y-2 max-h-[300px] overflow-y-auto overscroll-contain pr-2 custom-scrollbar">
+                    <div 
+                      className="space-y-2 max-h-[300px] overflow-y-auto overscroll-contain pr-2 custom-scrollbar"
+                      onWheel={(e) => e.stopPropagation()}
+                      onTouchMove={(e) => e.stopPropagation()}
+                    >
                       {rawGithubRepos.map((repo: any) => {
                         const isImported = importedRepoUrls.has(repo.html_url);
                         const isSelected = selectedGithubRepos.includes(repo.html_url);
+                        const isExpanded = expandedRepos.includes(repo.html_url);
                         
                         return (
                           <div 
                             key={repo.html_url} 
-                            onClick={() => {
-                              setSelectedGithubRepos(prev => 
-                                isSelected 
-                                  ? prev.filter(url => url !== repo.html_url)
-                                  : [...prev, repo.html_url]
-                              );
-                            }}
-                            className={`p-3 bg-surface border rounded-lg text-sm transition-colors cursor-pointer ${isSelected ? 'border-brand bg-brand/5 ring-1 ring-brand' : 'border-border-strong hover:border-brand/50'}`}
+                            className={`p-3 bg-surface border rounded-lg text-sm transition-colors ${isSelected ? 'border-brand bg-brand/5 ring-1 ring-brand' : 'border-border-strong hover:border-brand/50'}`}
                           >
                             <div className="flex items-start gap-3">
                               <div className="mt-0.5">
                                 <input 
                                   type="checkbox" 
                                   checked={isSelected} 
-                                  onChange={() => {}} // Handle change on parent div
+                                  onChange={() => {
+                                    setSelectedGithubRepos(prev => 
+                                      isSelected 
+                                        ? prev.filter(url => url !== repo.html_url)
+                                        : [...prev, repo.html_url]
+                                    );
+                                  }}
                                   className="w-4 h-4 rounded border-border-strong text-brand focus:ring-brand accent-brand cursor-pointer"
                                 />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <div className="flex items-center justify-between gap-2">
+                                <div 
+                                  className="flex items-center justify-between gap-2 cursor-pointer select-none"
+                                  onClick={() => {
+                                    setExpandedRepos(prev => 
+                                      isExpanded 
+                                        ? prev.filter(url => url !== repo.html_url)
+                                        : [...prev, repo.html_url]
+                                    );
+                                  }}
+                                >
                                   <div className="font-bold text-text-primary truncate">{repo.name}</div>
+                                  <div className="text-xs text-text-muted hover:text-text-primary">
+                                    {isExpanded ? "Hide Details" : "View Details"}
+                                  </div>
                                 </div>
-                                {repo.description && <div className="text-text-secondary text-xs truncate mt-1">{repo.description}</div>}
                                 
-                                {/* Real details row */}
-                                <div className="flex items-center gap-3 mt-2 text-[10px] font-medium text-text-muted">
-                                  {repo.language && (
-                                    <div className="flex items-center gap-1">
-                                      <div className="w-2 h-2 rounded-full bg-brand" />
-                                      <span>{repo.language}</span>
+                                {isExpanded && (
+                                  <div className="mt-3 pt-3 border-t border-border-light/50 animate-in slide-in-from-top-2">
+                                    {repo.description && <div className="text-text-secondary text-xs mb-3 leading-relaxed">{repo.description}</div>}
+                                    
+                                    {/* Real details row */}
+                                    <div className="flex items-center gap-3 text-[10px] font-medium text-text-muted bg-surface-muted p-2 rounded-md">
+                                      {repo.language && (
+                                        <div className="flex items-center gap-1">
+                                          <div className="w-2 h-2 rounded-full bg-brand" />
+                                          <span>{repo.language}</span>
+                                        </div>
+                                      )}
+                                      {repo.stargazers_count > 0 && (
+                                        <div className="flex items-center gap-1">
+                                          <span>⭐ {repo.stargazers_count}</span>
+                                        </div>
+                                      )}
+                                      {repo.forks_count > 0 && (
+                                        <div className="flex items-center gap-1">
+                                          <span>🔱 {repo.forks_count}</span>
+                                        </div>
+                                      )}
                                     </div>
-                                  )}
-                                  {repo.stargazers_count > 0 && (
-                                    <div className="flex items-center gap-1">
-                                      <span>⭐ {repo.stargazers_count}</span>
-                                    </div>
-                                  )}
-                                  {repo.forks_count > 0 && (
-                                    <div className="flex items-center gap-1">
-                                      <span>🔱 {repo.forks_count}</span>
-                                    </div>
-                                  )}
-                                </div>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -295,19 +333,35 @@ export default function IntegrationsPage() {
                 )}
                 {rawGithubSkills.length > 0 && (
                   <div className="pt-2 border-t border-border-light">
-                    <div className="text-xs font-bold text-text-secondary mb-3 flex justify-between items-center">
-                      <span>SELECT LANGUAGES & SKILLS</span>
-                      <Button 
-                        size="sm" 
-                        onClick={() => {
-                          const skillsToSync = rawGithubSkills.filter(s => selectedGithubSkills.includes(s));
-                          handleSyncSkills(skillsToSync);
-                        }}
-                        disabled={isImporting}
-                        className="h-7 text-xs font-bold rounded-md px-3 bg-white text-brand border border-brand hover:bg-brand/10 hover:text-brand"
-                      >
-                        {isImporting ? "Saving..." : `Save Changes`}
-                      </Button>
+                    <div className="flex flex-col gap-2 mb-3">
+                      <div className="text-xs font-bold text-text-secondary flex justify-between items-center">
+                        <span>SELECT LANGUAGES & SKILLS</span>
+                        <div className="flex items-center gap-2">
+                          <button 
+                            className="text-[10px] text-text-muted hover:text-brand underline"
+                            onClick={() => {
+                              if (selectedGithubSkills.length === rawGithubSkills.length) {
+                                setSelectedGithubSkills([]);
+                              } else {
+                                setSelectedGithubSkills([...rawGithubSkills]);
+                              }
+                            }}
+                          >
+                            {selectedGithubSkills.length === rawGithubSkills.length ? "Deselect All" : "Select All"}
+                          </button>
+                          <Button 
+                            size="sm" 
+                            onClick={() => {
+                              const skillsToSync = rawGithubSkills.filter(s => selectedGithubSkills.includes(s));
+                              handleSyncSkills(skillsToSync);
+                            }}
+                            disabled={isImporting}
+                            className="h-7 text-xs font-bold rounded-md px-3 bg-white text-brand border border-brand hover:bg-brand/10 hover:text-brand"
+                          >
+                            {isImporting ? "Saving..." : `Save Changes`}
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {rawGithubSkills.map((skillName: string) => {
@@ -340,6 +394,36 @@ export default function IntegrationsPage() {
                         );
                       })}
                     </div>
+                  </div>
+                )}
+                
+                {(githubProjects.length > 0 || githubSkills.length > 0) && (
+                  <div className="pt-6 mt-6 border-t border-border-strong border-dashed">
+                    <div className="text-sm font-bold text-text-primary mb-4 flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-success" />
+                      Currently in Portfolio
+                    </div>
+                    
+                    {githubProjects.length > 0 && (
+                      <div className="space-y-2 mb-4">
+                        {githubProjects.map((p: any) => (
+                          <div key={p.id} className="p-3 bg-surface-muted border border-border-light rounded-lg text-sm flex items-center justify-between">
+                            <div className="font-bold text-text-primary truncate">{p.name}</div>
+                            <Badge variant="success" className="text-[9px]">LIVE</Badge>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {githubSkills.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {githubSkills.map((s: any) => (
+                          <Badge key={s.id} variant="secondary" className="text-[10px] bg-brand/5 border-brand/20 text-brand">
+                            {s.name}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
