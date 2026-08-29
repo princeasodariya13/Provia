@@ -92,7 +92,7 @@ export default function IntegrationsPage() {
       });
       if (res.success) {
         // Refresh profile
-        const profileRes = await apiClient.get<any>("/api/v1/profile");
+        const profileRes = await apiClient.get<any>(`/api/v1/profile?t=${Date.now()}`);
         if (profileRes.success && profileRes.data) setProfile(profileRes.data);
       } else {
         setError(res.error || "Failed to sync repositories");
@@ -113,7 +113,7 @@ export default function IntegrationsPage() {
       });
       if (res.success) {
         // Refresh profile
-        const profileRes = await apiClient.get<any>("/api/v1/profile");
+        const profileRes = await apiClient.get<any>(`/api/v1/profile?t=${Date.now()}`);
         if (profileRes.success && profileRes.data) setProfile(profileRes.data);
       } else {
         setError(res.error || "Failed to sync languages");

@@ -8,8 +8,8 @@ const importReposSchema = z.object({
   repositories: z.array(z.object({
     name: z.string(),
     description: z.string().nullable().optional(),
-    htmlUrl: z.string(),
-    homepageUrl: z.string().nullable().optional(),
+    html_url: z.string(),
+    homepage: z.string().nullable().optional(),
     language: z.string().nullable().optional(),
     topics: z.array(z.string()).optional(),
   }))
@@ -30,7 +30,7 @@ export const POST = withAPIHandler(async (req) => {
 
   // First, delete any GITHUB projects that are NOT in the incoming list
   // but only if they haven't been manually edited.
-  const incomingUrls = data.repositories.map(r => r.htmlUrl);
+  const incomingUrls = data.repositories.map(r => r.html_url);
   await prisma.professionalProject.deleteMany({
     where: {
       profileId: profile.id,
@@ -53,7 +53,7 @@ export const POST = withAPIHandler(async (req) => {
 
     // Check if it exists
     const existing = await prisma.professionalProject.findFirst({
-      where: { profileId: profile.id, externalId: repo.htmlUrl },
+      where: { profileId: profile.id, externalId: repo.html_url },
     });
 
     if (existing) {
@@ -62,8 +62,8 @@ export const POST = withAPIHandler(async (req) => {
           where: { id: existing.id },
           data: {
             description: repo.description,
-            repositoryUrl: repo.htmlUrl,
-            url: repo.homepageUrl || null,
+            repositoryUrl: repo.html_url,
+            url: repo.homepage || null,
             technologies,
           },
         });
@@ -89,9 +89,9 @@ export const POST = withAPIHandler(async (req) => {
                 : technologies,
               // Only overwrite description if the existing one is empty or short
               description: (!nameMatch.description || nameMatch.description.length < 20) && repo.description ? repo.description : nameMatch.description,
-              repositoryUrl: repo.htmlUrl,
-              url: repo.homepageUrl || nameMatch.url || null,
-              externalId: repo.htmlUrl, // link it to github for future syncs
+              repositoryUrl: repo.html_url,
+              url: repo.homepage || nameMatch.url || null,
+              externalId: repo.html_url, // link it to github for future syncs
             },
           });
         }
@@ -101,11 +101,11 @@ export const POST = withAPIHandler(async (req) => {
             profileId: profile.id,
             name: repo.name,
             description: repo.description,
-            repositoryUrl: repo.htmlUrl,
-            url: repo.homepageUrl || null,
+            repositoryUrl: repo.html_url,
+            url: repo.homepage || null,
             technologies,
             source: "GITHUB",
-            externalId: repo.htmlUrl,
+            externalId: repo.html_url,
           },
         });
       }
