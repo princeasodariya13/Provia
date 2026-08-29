@@ -212,7 +212,8 @@ function IntegrationCard({
   state, 
   onConnect,
   connectedIcon,
-  connectedLabel
+  connectedLabel,
+  syncedData
 }: { 
   name: string, 
   icon: React.ReactNode, 
