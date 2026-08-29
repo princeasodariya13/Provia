@@ -125,6 +125,24 @@ export default function IntegrationsPage() {
     }
   };
 
+  // Initialize selection state based on imported data if it hasn't been modified yet
+  useEffect(() => {
+    if (!profile) return;
+    
+    const githubProjects = profile.projects?.filter((p: any) => p.source === "GITHUB") || [];
+    const githubSkills = profile.skills?.filter((s: any) => s.source === "GITHUB") || [];
+    
+    const importedRepoUrls = new Set(githubProjects.map((p: any) => p.repositoryUrl || p.externalId));
+    const importedSkillNames = new Set(githubSkills.map((s: any) => s.name));
+
+    if (githubProjects.length > 0 && selectedGithubRepos.length === 0) {
+      setSelectedGithubRepos(Array.from(importedRepoUrls) as string[]);
+    }
+    if (githubSkills.length > 0 && selectedGithubSkills.length === 0) {
+      setSelectedGithubSkills(Array.from(importedSkillNames) as string[]);
+    }
+  }, [profile]);
+
   if (isAuthLoading || isLoading) {
     return (
       <div className="space-y-12 max-w-7xl mx-auto">
@@ -165,16 +183,6 @@ export default function IntegrationsPage() {
   // Pre-calculate which raw repos and skills are already imported
   const importedRepoUrls = new Set(githubProjects.map((p: any) => p.repositoryUrl || p.externalId));
   const importedSkillNames = new Set(githubSkills.map((s: any) => s.name));
-
-  // Initialize selection state based on imported data if it hasn't been modified yet
-  useEffect(() => {
-    if (githubProjects.length > 0 && selectedGithubRepos.length === 0) {
-      setSelectedGithubRepos(Array.from(importedRepoUrls) as string[]);
-    }
-    if (githubSkills.length > 0 && selectedGithubSkills.length === 0) {
-      setSelectedGithubSkills(Array.from(importedSkillNames) as string[]);
-    }
-  }, [profile]);
 
   return (
     <div className="space-y-12 max-w-7xl mx-auto pb-16">
