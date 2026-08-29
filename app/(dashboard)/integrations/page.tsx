@@ -308,6 +308,16 @@ export default function IntegrationsPage() {
                                           <span>{repo.language}</span>
                                         </div>
                                       )}
+                                      {repo.topics && repo.topics.length > 0 && (
+                                        <div className="flex flex-wrap gap-2">
+                                          {repo.topics.map((topic: string) => (
+                                            <div key={topic} className="flex items-center gap-1">
+                                              <div className="w-2 h-2 rounded-full bg-brand/50" />
+                                              <span>{topic}</span>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
                                       {repo.stargazers_count > 0 && (
                                         <div className="flex items-center gap-1">
                                           <span>⭐ {repo.stargazers_count}</span>
