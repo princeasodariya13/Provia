@@ -83,47 +83,43 @@ export default function IntegrationsPage() {
     );
   };
 
-  const handleImportRepos = async (reposToImport: any[]) => {
-    if (reposToImport.length === 0) return;
+  const handleSyncRepos = async (reposToSync: any[]) => {
     setIsImporting(true);
     try {
-      const res = await apiClient.post("/api/v1/integrations/github/import-repos", {
-        repositories: reposToImport
+      const res = await apiClient.post("/api/v1/integrations/github/sync-repos", {
+        repositories: reposToSync
       });
       if (res.success) {
         // Refresh profile
         const profileRes = await apiClient.get<any>("/api/v1/profile");
         if (profileRes.success && profileRes.data) setProfile(profileRes.data);
-        setSelectedGithubRepos([]); // clear selection
       } else {
-        setError(res.error || "Failed to import repositories");
+        setError(res.error || "Failed to sync repositories");
       }
     } catch (err) {
       console.error(err);
-      setError("Failed to import repositories");
+      setError("Failed to sync repositories");
     } finally {
       setIsImporting(false);
     }
   };
 
-  const handleImportSkills = async (skillsToImport: string[]) => {
-    if (skillsToImport.length === 0) return;
+  const handleSyncSkills = async (skillsToSync: string[]) => {
     setIsImporting(true);
     try {
-      const res = await apiClient.post("/api/v1/integrations/github/import-skills", {
-        skills: skillsToImport
+      const res = await apiClient.post("/api/v1/integrations/github/sync-skills", {
+        skills: skillsToSync
       });
       if (res.success) {
         // Refresh profile
         const profileRes = await apiClient.get<any>("/api/v1/profile");
         if (profileRes.success && profileRes.data) setProfile(profileRes.data);
-        setSelectedGithubSkills([]); // clear selection
       } else {
-        setError(res.error || "Failed to import languages");
+        setError(res.error || "Failed to sync languages");
       }
     } catch (err) {
       console.error(err);
-      setError("Failed to import languages");
+      setError("Failed to sync languages");
     } finally {
       setIsImporting(false);
     }
@@ -170,6 +166,16 @@ export default function IntegrationsPage() {
   const importedRepoUrls = new Set(githubProjects.map((p: any) => p.repositoryUrl || p.externalId));
   const importedSkillNames = new Set(githubSkills.map((s: any) => s.name));
 
+  // Initialize selection state based on imported data if it hasn't been modified yet
+  useEffect(() => {
+    if (githubProjects.length > 0 && selectedGithubRepos.length === 0) {
+      setSelectedGithubRepos(Array.from(importedRepoUrls) as string[]);
+    }
+    if (githubSkills.length > 0 && selectedGithubSkills.length === 0) {
+      setSelectedGithubSkills(Array.from(importedSkillNames) as string[]);
+    }
+  }, [profile]);
+
   return (
     <div className="space-y-12 max-w-7xl mx-auto pb-16">
       <PageHeader
@@ -205,22 +211,20 @@ export default function IntegrationsPage() {
                 {rawGithubRepos.length > 0 ? (
                   <div className="space-y-3">
                     <div className="text-xs font-bold text-text-secondary flex justify-between items-center">
-                      <span>SELECT REPOSITORIES TO IMPORT</span>
-                      {selectedGithubRepos.length > 0 && (
-                        <Button 
-                          size="sm" 
-                          onClick={() => {
-                            const reposToImport = rawGithubRepos.filter(r => selectedGithubRepos.includes(r.html_url));
-                            handleImportRepos(reposToImport);
-                          }}
-                          disabled={isImporting}
-                          className="h-7 text-xs font-bold rounded-md px-3"
-                        >
-                          {isImporting ? "Importing..." : `Import ${selectedGithubRepos.length} Selected`}
-                        </Button>
-                      )}
+                      <span>SELECT REPOSITORIES TO SYNC</span>
+                      <Button 
+                        size="sm" 
+                        onClick={() => {
+                          const reposToSync = rawGithubRepos.filter(r => selectedGithubRepos.includes(r.html_url));
+                          handleSyncRepos(reposToSync);
+                        }}
+                        disabled={isImporting}
+                        className="h-7 text-xs font-bold rounded-md px-3 bg-white text-brand border border-brand hover:bg-brand/10 hover:text-brand"
+                      >
+                        {isImporting ? "Saving..." : `Save Changes`}
+                      </Button>
                     </div>
-                    <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                    <div className="space-y-2 max-h-[300px] overflow-y-auto overscroll-contain pr-2 custom-scrollbar">
                       {rawGithubRepos.map((repo: any) => {
                         const isImported = importedRepoUrls.has(repo.html_url);
                         const isSelected = selectedGithubRepos.includes(repo.html_url);
@@ -229,21 +233,19 @@ export default function IntegrationsPage() {
                           <div 
                             key={repo.html_url} 
                             onClick={() => {
-                              if (isImported) return;
                               setSelectedGithubRepos(prev => 
                                 isSelected 
                                   ? prev.filter(url => url !== repo.html_url)
                                   : [...prev, repo.html_url]
                               );
                             }}
-                            className={`p-3 bg-surface border rounded-lg text-sm transition-colors ${isImported ? 'border-border-light opacity-60' : 'border-border-strong hover:border-brand cursor-pointer'} ${isSelected && !isImported ? 'border-brand bg-brand/5 ring-1 ring-brand' : ''}`}
+                            className={`p-3 bg-surface border rounded-lg text-sm transition-colors cursor-pointer ${isSelected ? 'border-brand bg-brand/5 ring-1 ring-brand' : 'border-border-strong hover:border-brand/50'}`}
                           >
                             <div className="flex items-start gap-3">
                               <div className="mt-0.5">
                                 <input 
                                   type="checkbox" 
-                                  checked={isImported || isSelected} 
-                                  disabled={isImported}
+                                  checked={isSelected} 
                                   onChange={() => {}} // Handle change on parent div
                                   className="w-4 h-4 rounded border-border-strong text-brand focus:ring-brand accent-brand cursor-pointer"
                                 />
@@ -251,7 +253,6 @@ export default function IntegrationsPage() {
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between gap-2">
                                   <div className="font-bold text-text-primary truncate">{repo.name}</div>
-                                  {isImported && <Badge variant="secondary" className="text-[9px] shrink-0">IMPORTED</Badge>}
                                 </div>
                                 {repo.description && <div className="text-text-secondary text-xs truncate mt-1">{repo.description}</div>}
                                 
@@ -288,53 +289,45 @@ export default function IntegrationsPage() {
                   <div className="pt-2 border-t border-border-light">
                     <div className="text-xs font-bold text-text-secondary mb-3 flex justify-between items-center">
                       <span>SELECT LANGUAGES & SKILLS</span>
-                      {selectedGithubSkills.length > 0 && (
-                        <Button 
-                          size="sm" 
-                          onClick={() => {
-                            const skillsToImport = rawGithubSkills.filter(s => selectedGithubSkills.includes(s));
-                            handleImportSkills(skillsToImport);
-                          }}
-                          disabled={isImporting}
-                          className="h-7 text-xs font-bold rounded-md px-3"
-                        >
-                          {isImporting ? "Importing..." : `Import ${selectedGithubSkills.length} Selected`}
-                        </Button>
-                      )}
+                      <Button 
+                        size="sm" 
+                        onClick={() => {
+                          const skillsToSync = rawGithubSkills.filter(s => selectedGithubSkills.includes(s));
+                          handleSyncSkills(skillsToSync);
+                        }}
+                        disabled={isImporting}
+                        className="h-7 text-xs font-bold rounded-md px-3 bg-white text-brand border border-brand hover:bg-brand/10 hover:text-brand"
+                      >
+                        {isImporting ? "Saving..." : `Save Changes`}
+                      </Button>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {rawGithubSkills.map((skillName: string) => {
-                        const isImported = importedSkillNames.has(skillName);
                         const isSelected = selectedGithubSkills.includes(skillName);
                         
                         return (
                           <div 
                             key={skillName}
                             onClick={() => {
-                              if (isImported) return;
                               setSelectedGithubSkills(prev => 
                                 isSelected 
                                   ? prev.filter(s => s !== skillName)
                                   : [...prev, skillName]
                               );
                             }}
-                            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-                              isImported 
-                                ? 'bg-surface border-border-light text-text-muted opacity-60 cursor-not-allowed' 
-                                : isSelected 
-                                  ? 'bg-brand/10 border-brand text-brand ring-1 ring-brand cursor-pointer' 
-                                  : 'bg-surface border-border-strong text-text-primary hover:border-brand cursor-pointer'
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors cursor-pointer ${
+                              isSelected 
+                                ? 'bg-brand/10 border-brand text-brand ring-1 ring-brand' 
+                                : 'bg-surface border-border-strong text-text-primary hover:border-brand/50'
                             }`}
                           >
                             <input 
                               type="checkbox" 
-                              checked={isImported || isSelected} 
-                              disabled={isImported}
+                              checked={isSelected} 
                               onChange={() => {}} 
                               className="w-3 h-3 rounded-sm border-border-strong text-brand focus:ring-brand accent-brand cursor-pointer"
                             />
                             {skillName}
-                            {isImported && <span className="ml-1 text-[8px] uppercase tracking-wider font-bold">Imported</span>}
                           </div>
                         );
                       })}

@@ -28,6 +28,20 @@ export const POST = withAPIHandler(async (req) => {
     return NextResponse.json({ success: false, error: "Profile not found" }, { status: 404 });
   }
 
+  // First, delete any GITHUB projects that are NOT in the incoming list
+  // but only if they haven't been manually edited.
+  const incomingUrls = data.repositories.map(r => r.htmlUrl);
+  await prisma.professionalProject.deleteMany({
+    where: {
+      profileId: profile.id,
+      source: "GITHUB",
+      isManuallyEdited: false,
+      externalId: {
+        notIn: incomingUrls
+      }
+    }
+  });
+
   for (const repo of data.repositories) {
     const technologies = [
       ...(repo.language ? [repo.language] : []),
@@ -55,14 +69,33 @@ export const POST = withAPIHandler(async (req) => {
         });
       }
     } else {
+      // Find ANY existing project with the same name, regardless of source (e.g. from RESUME)
       const nameMatch = await prisma.professionalProject.findFirst({
         where: {
           profileId: profile.id,
           name: { equals: repo.name, mode: "insensitive" },
-          isManuallyEdited: true,
         },
       });
-      if (!nameMatch) {
+      
+      if (nameMatch) {
+        // Merge GitHub rich data into the existing project
+        if (!nameMatch.isManuallyEdited) {
+          await prisma.professionalProject.update({
+            where: { id: nameMatch.id },
+            data: {
+              // Combine technologies if both exist
+              technologies: nameMatch.technologies 
+                ? Array.from(new Set([...nameMatch.technologies.split(",").map(t => t.trim()), ...technologies.split(",").map(t => t.trim())])).filter(Boolean).join(", ") 
+                : technologies,
+              // Only overwrite description if the existing one is empty or short
+              description: (!nameMatch.description || nameMatch.description.length < 20) && repo.description ? repo.description : nameMatch.description,
+              repositoryUrl: repo.htmlUrl,
+              url: repo.homepageUrl || nameMatch.url || null,
+              externalId: repo.htmlUrl, // link it to github for future syncs
+            },
+          });
+        }
+      } else {
         await prisma.professionalProject.create({
           data: {
             profileId: profile.id,

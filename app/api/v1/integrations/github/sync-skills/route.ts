@@ -21,6 +21,17 @@ export const POST = withAPIHandler(async (req) => {
     return NextResponse.json({ success: false, error: "Profile not found" }, { status: 404 });
   }
 
+  // Delete skills that are not in the new list, but ONLY ones from GITHUB
+  await prisma.professionalSkill.deleteMany({
+    where: {
+      profileId: profile.id,
+      source: "GITHUB",
+      name: {
+        notIn: data.skills
+      }
+    }
+  });
+
   for (const skillName of data.skills) {
     await prisma.professionalSkill.upsert({
       where: {
