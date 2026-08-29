@@ -90,22 +90,23 @@ export const POST = withAPIHandler(async (req) => {
       
       if (nameMatch) {
         // Merge GitHub rich data into the existing project
+        const updateData: any = {
+          externalId: repo.html_url, // ALWAYS link it to github for future syncs
+          repositoryUrl: nameMatch.repositoryUrl || repo.html_url,
+        };
+        
         if (!nameMatch.isManuallyEdited) {
-          await prisma.professionalProject.update({
-            where: { id: nameMatch.id },
-            data: {
-              // Combine technologies if both exist
-              technologies: nameMatch.technologies 
-                ? Array.from(new Set([...nameMatch.technologies.split(",").map(t => t.trim()), ...technologies.split(",").map(t => t.trim())])).filter(Boolean).join(", ") 
-                : technologies,
-              // Only overwrite description if the existing one is empty or short
-              description: (!nameMatch.description || nameMatch.description.length < 20) && repo.description ? repo.description : nameMatch.description,
-              repositoryUrl: repo.html_url,
-              url: repo.homepage || nameMatch.url || null,
-              externalId: repo.html_url, // link it to github for future syncs
-            },
-          });
+          updateData.technologies = nameMatch.technologies 
+            ? Array.from(new Set([...nameMatch.technologies.split(",").map(t => t.trim()), ...technologies.split(",").map(t => t.trim())])).filter(Boolean).join(", ") 
+            : technologies;
+          updateData.description = (!nameMatch.description || nameMatch.description.length < 20) && repo.description ? repo.description : nameMatch.description;
+          updateData.url = repo.homepage || nameMatch.url || null;
         }
+
+        await prisma.professionalProject.update({
+          where: { id: nameMatch.id },
+          data: updateData,
+        });
       } else {
         await prisma.professionalProject.create({
           data: {
