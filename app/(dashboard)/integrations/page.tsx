@@ -192,6 +192,13 @@ export default function IntegrationsPage() {
     }
   }
 
+  let rawLinkedinData: any = null;
+  if (linkedinState.rawSnapshots?.[0]?.data) {
+    try {
+      rawLinkedinData = JSON.parse(linkedinState.rawSnapshots[0].data);
+    } catch(e) {}
+  }
+
   // Include projects that were merged (have github externalId) and skills that overlap
   const githubProjects = profile?.projects?.filter((p: any) => 
     p.source === "GITHUB" || (p.externalId && p.externalId.includes("github.com"))
@@ -468,36 +475,47 @@ export default function IntegrationsPage() {
         <IntegrationCard
           name="LinkedIn"
           icon={<Briefcase className="w-6 h-6 text-[#0A66C2]" />}
-          description="Sync your professional timeline, validated experience, and skills directly into your profile data."
+          description="Verify your professional identity and instantly sync your basic profile data (Name, Photo, Headline)."
           state={linkedinState}
           onConnect={() => handleConnect("LINKEDIN")}
-          connectedIcon={<Briefcase className="w-4 h-4 mr-2" />}
-          connectedLabel="Synced Experience"
+          connectedIcon={<CheckCircle2 className="w-4 h-4 mr-2" />}
+          connectedLabel="Identity Verified"
           syncedData={
-            linkedinState.state === "SYNCED" || linkedinState.state === "CONNECTED" ? (
+            (linkedinState.state === "SYNCED" || linkedinState.state === "CONNECTED") && rawLinkedinData ? (
               <div className="mt-4 space-y-4">
-                {linkedinExperiences.length > 0 ? (
-                  <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                    {linkedinExperiences.map((e: any) => (
-                      <div key={e.id} className="p-3 bg-surface border border-border-light rounded-lg text-sm">
-                        <div className="font-bold text-text-primary truncate">{e.title}</div>
-                        <div className="text-text-secondary text-xs truncate mt-1">{e.company}</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-sm text-text-muted italic">No experiences imported yet.</div>
-                )}
-                {linkedinSkills.length > 0 && (
-                  <div className="pt-2 border-t border-border-light">
-                    <div className="text-xs font-bold text-text-secondary mb-2">IMPORTED SKILLS</div>
-                    <div className="flex flex-wrap gap-2">
-                      {linkedinSkills.map((s: any) => (
-                        <Badge key={s.id} variant="secondary" className="text-[10px]">{s.name}</Badge>
-                      ))}
+                <div className="flex items-start gap-4 p-4 bg-surface border border-border-light rounded-xl">
+                  {rawLinkedinData.picture ? (
+                    <img src={rawLinkedinData.picture} alt="Profile" className="w-12 h-12 rounded-full border border-border-strong object-cover" />
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-surface-muted flex items-center justify-center border border-border-strong">
+                      <Briefcase className="w-5 h-5 text-text-muted" />
                     </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-bold text-text-primary text-sm truncate">{rawLinkedinData.name}</h4>
+                      <Badge variant="success" className="text-[9px] h-4">VERIFIED</Badge>
+                    </div>
+                    {rawLinkedinData.headline && (
+                      <p className="text-xs text-text-secondary mt-1 line-clamp-2">{rawLinkedinData.headline}</p>
+                    )}
+                    {rawLinkedinData.linkedin_profile_url && (
+                      <a href={rawLinkedinData.linkedin_profile_url} target="_blank" rel="noreferrer" className="text-xs text-brand hover:underline mt-1 inline-block">
+                        View LinkedIn Profile
+                      </a>
+                    )}
                   </div>
-                )}
+                </div>
+
+                <div className="p-3 bg-brand/5 border border-brand/20 rounded-lg flex items-start gap-3">
+                  <div className="p-1.5 bg-brand/10 rounded-md">
+                    <Briefcase className="w-4 h-4 text-brand" />
+                  </div>
+                  <div className="text-xs text-text-secondary leading-relaxed">
+                    <span className="font-bold text-text-primary block mb-0.5">Where is my timeline?</span>
+                    LinkedIn strictly limits 3rd-party access to full professional timelines. To import your complete work experience and education, we recommend using our <span className="font-bold text-brand">Smart Resume Upload</span> in the Portfolio Studio.
+                  </div>
+                </div>
               </div>
             ) : null
           }
