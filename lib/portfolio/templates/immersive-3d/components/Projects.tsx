@@ -83,7 +83,7 @@ export default function Projects() {
 
                   <div className="flex items-center gap-5 text-sm">
                     {p.link && p.link !== "#" && (
-                      <a href={p.link} className="inline-flex items-center gap-1.5 text-ink hover:text-cyan transition-colors">
+                      <a href={p.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-ink hover:text-cyan transition-colors">
                         Live Demo <ExternalLink size={14} />
                       </a>
                     )}

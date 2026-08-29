@@ -18,7 +18,7 @@ interface TrendData {
 
 interface PortfolioData {
   portfolioId: string;
-  slug: string;
+  url: string;
   recentViews: number;
 }
 
@@ -190,13 +190,13 @@ export default function AnalyticsPage() {
                           </span>
                         </div>
                         <a
-                          href={`/p/${portfolio.slug}`}
+                          href={portfolio.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs font-mono text-text-secondary hover:text-brand flex items-center gap-1 transition-colors"
+                          className="text-xs font-mono text-text-secondary hover:text-brand flex items-center gap-1 transition-colors truncate max-w-[200px] sm:max-w-[300px]"
                         >
-                          /p/{portfolio.slug}
-                          <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                          {portfolio.url}
+                          <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                         </a>
                       </div>
                     ))}

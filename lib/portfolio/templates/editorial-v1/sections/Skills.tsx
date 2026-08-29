@@ -28,7 +28,7 @@ export function Skills({ data }: { data: PortfolioDocumentDTO["skills"] }) {
             {group.category && (
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-2 h-2 bg-[#CC2936] shrink-0" aria-hidden />
-                <h4 className="text-xs font-black uppercase tracking-[0.2em] text-[#111]">
+                <h4 className="text-xs font-black uppercase tracking-[0.2em] text-[#111] ">
                   {group.category}
                 </h4>
                 <span className="text-[10px] font-bold text-[#AAA] tabular-nums ml-auto">
@@ -40,7 +40,7 @@ export function Skills({ data }: { data: PortfolioDocumentDTO["skills"] }) {
               {group.skills.map((skill, j) => (
                 <li
                   key={j}
-                  className="group flex items-center justify-between py-2.5 px-3 -mx-3 cursor-default hover:bg-[#111] transition-all duration-200"
+                  className="group flex items-center justify-between py-2.5 px-3 -mx-3 cursor-default hover:bg-[#111]  transition-all duration-200"
                 >
                   <span className="text-sm font-semibold text-[#333] group-hover:text-[#F5F0EA] uppercase tracking-wider transition-colors">
                     {skill}
@@ -54,12 +54,15 @@ export function Skills({ data }: { data: PortfolioDocumentDTO["skills"] }) {
       </div>
 
       {/* Total count footer */}
-      <div className="mt-8 pt-6 border-t border-[#D9D2C9] flex items-center gap-2">
+      <div className="mt-8 pt-6 border-t border-[#D9D2C9]  flex items-center gap-2">
         <div className="w-4 h-[2px] bg-[#CC2936]" />
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#888]">
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#888] ">
           {totalSkills} skills across {data.length} categories
         </p>
       </div>
     </motion.section>
   );
 }
+
+
+

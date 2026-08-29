@@ -34,7 +34,7 @@ export function EditorialV1({ document }: TemplateProps) {
 
   return (
     <div
-      className="min-h-screen bg-[#F5F0EA] text-[#111] selection:bg-[#CC2936] selection:text-white"
+      className="min-h-screen bg-[#F5F0EA]  text-[#111]  selection:bg-[#CC2936] selection:text-white"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
     >
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');`}</style>
@@ -52,28 +52,28 @@ export function EditorialV1({ document }: TemplateProps) {
 
       {/* ── About ── */}
       {!isHidden("about") && (
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9]">
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9] ">
           <About data={document.about} />
         </div>
       )}
 
       {/* ── Experience ── (full width, editorial newspaper feel) */}
       {!isHidden("experience") && (
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9]">
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9] ">
           <Experience data={document.experience} />
         </div>
       )}
 
       {/* ── Projects ── */}
       {!isHidden("projects") && (
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9]">
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9] ">
           <Projects data={document.projects} />
         </div>
       )}
 
       {/* ── Skills + Education + Certifications — 2-column sidebar layout ── */}
       {showSidebarGrid && (
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9]">
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 md:px-16 py-24 md:py-32 border-b border-[#D9D2C9] ">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
             <div className="lg:col-span-4 space-y-20">
               {showSkills && <Skills data={document.skills} />}
@@ -110,3 +110,6 @@ export const editorialV1 = {
   },
   component: EditorialV1,
 };
+
+
+

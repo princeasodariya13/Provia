@@ -18,7 +18,7 @@ export function Contact({
       <div className="flex items-center gap-4 mb-12">
         <span className="text-[10px] font-black text-[#CC2936] tracking-[0.25em] uppercase">07</span>
         <div className="w-8 h-[2px] bg-[#CC2936]" aria-hidden />
-        <h3 className="text-xs font-black tracking-[0.25em] uppercase text-[#111]">Get in Touch</h3>
+        <h3 className="text-xs font-black tracking-[0.25em] uppercase text-[#111] ">Get in Touch</h3>
       </div>
 
       {/* Main contact block */}
@@ -27,7 +27,7 @@ export function Contact({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="bg-[#111] text-[#F5F0EA] p-10 md:p-16 relative overflow-hidden"
+        className="bg-[#111]  text-[#F5F0EA] p-10 md:p-16 relative overflow-hidden"
       >
         {/* Geometric accent */}
         <div
@@ -55,7 +55,7 @@ export function Contact({
             {contact?.email && (
               <a
                 href={`mailto:${contact.email}`}
-                className="group inline-flex items-center gap-3 px-7 py-4 bg-[#CC2936] text-white text-sm font-bold uppercase tracking-widest hover:bg-white hover:text-[#111] transition-all duration-300"
+                className="group inline-flex items-center gap-3 px-7 py-4 bg-[#CC2936] text-white text-sm font-bold uppercase tracking-widest hover:bg-white hover:text-[#111]  transition-all duration-300"
               >
                 <Mail className="w-4 h-4" />
                 Send an Email
@@ -63,7 +63,7 @@ export function Contact({
               </a>
             )}
             {contact?.location && (
-              <div className="flex items-center gap-2 mt-6 text-sm text-[#888] font-medium">
+              <div className="flex items-center gap-2 mt-6 text-sm text-[#888]  font-medium">
                 <MapPin className="w-3.5 h-3.5" />
                 {contact.location}
               </div>
@@ -87,7 +87,7 @@ export function Contact({
                   <span className="text-xl font-black uppercase tracking-tight text-white group-hover:text-[#CC2936] transition-colors">
                     {link.title?.trim() || link.url?.trim().replace(/^https?:\/\//, '').split('/')[0] || "Link"}
                   </span>
-                  <ArrowUpRight className="w-5 h-5 text-[#555] group-hover:text-[#CC2936] transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 duration-300" />
+                  <ArrowUpRight className="w-5 h-5 text-[#555]  group-hover:text-[#CC2936] transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 duration-300" />
                 </a>
               ))}
             </div>
@@ -96,7 +96,7 @@ export function Contact({
       </motion.div>
 
       {/* Footer bar */}
-      <div className="mt-12 pt-6 border-t border-[#D9D2C9] flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div className="mt-12 pt-6 border-t border-[#D9D2C9]  flex flex-col sm:flex-row items-center justify-between gap-2">
         <p className="text-[10px] font-bold uppercase tracking-widest text-[#AAA]">Built with Provia</p>
         <p className="text-[10px] font-bold uppercase tracking-widest text-[#AAA]">
           &copy; {new Date().getFullYear()} All rights reserved
@@ -105,3 +105,6 @@ export function Contact({
     </section>
   );
 }
+
+
+

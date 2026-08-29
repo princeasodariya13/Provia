@@ -1,13 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
 import { TemplateRegistry } from "@/lib/portfolio/templates/registry";
 import { PreviewDevice, StudioTab } from "../page";
-import { LayoutTemplate, Zap, ArrowLeft } from "lucide-react";
+import { LayoutTemplate, Zap, ArrowLeft, Minimize } from "lucide-react";
 
 import { TemplateGallery } from "./TemplateGallery";
 import { mockPortfolioDocument } from "@/lib/portfolio/templates/shared/mock";
+import { TemplateLoader } from "@/components/ui/template-loader";
 
 interface Props {
   document: PortfolioDocumentDTO | null;
@@ -32,6 +34,36 @@ const DEVICE_SCALE: Record<PreviewDevice, string> = {
 
 export function StudioPreview({ document, templateId, previewDevice, activeTab, setActiveTab, onSelectTemplate }: Props) {
   const templateDef = TemplateRegistry.getTemplate(templateId) || TemplateRegistry.getTemplate(TemplateRegistry.getDefaultTemplateId());
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [deviceScale, setDeviceScale] = useState(1);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!window.document.fullscreenElement);
+    };
+    window.document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => window.document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const height = entry.contentRect.height;
+        if (previewDevice === "mobile") {
+          setDeviceScale(Math.min(1, (height - 60) / 852));
+        } else if (previewDevice === "tablet") {
+          setDeviceScale(Math.min(1, (height - 60) / 1180));
+        } else {
+          setDeviceScale(1);
+        }
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [previewDevice]);
 
   // Design tab: show full-screen template gallery
   if (activeTab === "design") {
@@ -97,18 +129,140 @@ export function StudioPreview({ document, templateId, previewDevice, activeTab, 
         <ArrowLeft className="w-3 h-3" /> Back to Design
       </button>
 
-      <div className="w-full h-full pt-12 pb-6 flex justify-center overflow-hidden">
-        <div
-          className={`${deviceWidth} h-full bg-background shadow-2xl transition-all duration-300 origin-top relative overflow-y-auto`}
-          style={previewDevice !== "desktop" ? { transform: previewDevice === "tablet" ? "scale(0.85)" : "scale(0.7)", transformOrigin: "top center" } : { transform: 'scale(1)', transformOrigin: "top center" }}
-          data-lenis-prevent
-        >
-          <TemplateBoundary templateName={templateDef.metadata.name}>
-            <TemplateComponent document={document} />
-          </TemplateBoundary>
-        </div>
+      <div id="studio-preview-pane" ref={containerRef} className="w-full h-full flex justify-center items-center overflow-hidden relative bg-surface-muted" data-lenis-prevent>
+        {isFullscreen && (
+          <button
+            onClick={() => window.document.exitFullscreen()}
+            className="absolute top-6 right-6 z-[9999] flex items-center gap-2 bg-black/60 hover:bg-black/80 backdrop-blur-md text-white px-4 py-2 rounded-full font-semibold text-sm transition-all shadow-xl border border-white/10"
+          >
+            <Minimize className="w-4 h-4" />
+            Exit Fullscreen
+          </button>
+        )}
+        
+        {previewDevice === "desktop" ? (
+          <div
+            className="w-full h-full bg-background shadow-2xl transition-all duration-300 relative overflow-y-auto"
+            style={{ transform: "scale(1)", transformOrigin: "top center" }}
+            data-lenis-prevent
+          >
+            <TemplateLoader />
+            <TemplateBoundary templateName={templateDef.metadata.name}>
+              <TemplateComponent document={document} />
+            </TemplateBoundary>
+          </div>
+        ) : previewDevice === "mobile" ? (
+          <div 
+            className="flex-shrink-0 w-[393px] h-[852px] bg-[#000] rounded-[3.5rem] p-4 shadow-[0_0_0_2px_#333,0_20px_40px_rgba(0,0,0,0.4)] relative transition-all duration-300 border-[4px] border-[#111]"
+            style={{ transform: `scale(${deviceScale})`, transformOrigin: "center center" }}
+          >
+            {/* Dynamic Island / Notch */}
+            <div className="absolute top-4 inset-x-0 h-7 flex justify-center z-20 pointer-events-none">
+              <div className="w-32 h-7 bg-black rounded-full"></div>
+            </div>
+            
+            <ResponsiveIframe
+              theme={document?.configuration?.theme}
+              className="w-full h-full bg-background rounded-[2.25rem] overflow-hidden border-none relative"
+            >
+              <TemplateLoader />
+              <TemplateBoundary templateName={templateDef.metadata.name}>
+                <TemplateComponent document={document} />
+              </TemplateBoundary>
+            </ResponsiveIframe>
+          </div>
+        ) : (
+          <div 
+            className="flex-shrink-0 w-[820px] h-[1180px] bg-[#000] rounded-[2rem] p-4 shadow-[0_0_0_2px_#333,0_20px_40px_rgba(0,0,0,0.4)] relative transition-all duration-300 border-[4px] border-[#111]"
+            style={{ transform: `scale(${deviceScale})`, transformOrigin: "center center" }}
+          >
+            {/* Camera dot */}
+            <div className="absolute top-0 inset-x-0 h-4 flex justify-center items-center z-20 pointer-events-none">
+              <div className="w-1.5 h-1.5 bg-neutral-800 rounded-full"></div>
+            </div>
+            
+            <ResponsiveIframe
+              theme={document?.configuration?.theme}
+              className="w-full h-full bg-background rounded-[1.75rem] overflow-hidden border-none relative"
+            >
+              <TemplateLoader />
+              <TemplateBoundary templateName={templateDef.metadata.name}>
+                <TemplateComponent document={document} />
+              </TemplateBoundary>
+            </ResponsiveIframe>
+          </div>
+        )}
       </div>
     </div>
+  );
+}
+
+function ResponsiveIframe({
+  children,
+  className,
+  style,
+  theme
+}: {
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  theme?: string;
+}) {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [mountNode, setMountNode] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+    const doc = iframe.contentDocument;
+    if (!doc) return;
+
+    // Copy all style and link tags from parent document
+    const updateHead = () => {
+      doc.head.innerHTML = "";
+      document.head.querySelectorAll("style, link[rel='stylesheet']").forEach(node => {
+        doc.head.appendChild(node.cloneNode(true));
+      });
+    };
+    
+    updateHead();
+
+    // In Next.js dev mode, styles can be injected dynamically. Observe head changes.
+    const observer = new MutationObserver(() => {
+      updateHead();
+    });
+    observer.observe(document.head, { childList: true, subtree: true });
+
+    // Copy parent document themes (e.g. dark mode classes)
+    doc.documentElement.className = "";
+    doc.documentElement.style.cssText = document.documentElement.style.cssText;
+    doc.body.className = "";
+    doc.body.style.cssText = document.body.style.cssText;
+    doc.body.style.overflow = "auto";
+    doc.body.style.height = "100%";
+
+    let container = doc.getElementById("preview-root");
+    if (!container) {
+      container = doc.createElement("div");
+      container.id = "preview-root";
+      doc.body.appendChild(container);
+    }
+    setMountNode(container);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Remove dynamic theme updates
+  useEffect(() => {
+    // Theme functionality temporarily disabled per user request
+  }, [theme]);
+
+  return (
+    <iframe ref={iframeRef} className={className} style={style} title="Mobile Preview">
+      {mountNode && createPortal(children, mountNode)}
+    </iframe>
   );
 }
 

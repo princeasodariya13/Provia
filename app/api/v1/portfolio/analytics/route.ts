@@ -20,6 +20,12 @@ export const GET = withAPIHandler(async () => {
     throw new APIError("Too many requests. Please try again later.", 429);
   }
 
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { username: true }
+  });
+  const currentUsername = dbUser?.username || "unknown";
+
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -67,7 +73,7 @@ export const GET = withAPIHandler(async () => {
     trendMap[dateStr] = 0;
   }
 
-  const portfolioMap: Record<string, { views: number; slug: string }> = {};
+  const portfolioMap: Record<string, { views: number; url: string }> = {};
 
   for (const event of recentEvents) {
     const dateStr = event.createdAt.toISOString().split("T")[0];
@@ -75,22 +81,30 @@ export const GET = withAPIHandler(async () => {
       trendMap[dateStr]++;
     }
 
-    // Safely parse metadata to get slug if entityId didn't exist before
-    let slug = "Unknown";
+    // Safely parse metadata to get the URL path
+    let url = "/p/Unknown";
+    let portId = event.entityId || "unknown";
+    
     if (event.metadata) {
       try {
         const meta = JSON.parse(event.metadata);
-        if (meta.slug) {
-          slug = meta.slug;
+        if (meta.username && meta.publicCode) {
+          url = `/${meta.username}/${meta.publicCode}`;
+          portId = meta.publicCode;
+        } else if (meta.publicCode) {
+          url = `/${currentUsername}/${meta.publicCode}`;
+          portId = meta.publicCode;
+        } else if (meta.slug) {
+          url = `/p/${meta.slug}`;
+          portId = meta.slug;
         }
       } catch {
         // Ignore metadata parse errors
       }
     }
 
-    const portId = event.entityId || slug; // Fallback to slug if old event
     if (!portfolioMap[portId]) {
-      portfolioMap[portId] = { views: 0, slug };
+      portfolioMap[portId] = { views: 0, url };
     }
     portfolioMap[portId].views++;
   }
@@ -105,7 +119,7 @@ export const GET = withAPIHandler(async () => {
   const portfolios = Object.keys(portfolioMap)
     .map(id => ({
       portfolioId: id,
-      slug: portfolioMap[id].slug,
+      url: portfolioMap[id].url,
       recentViews: portfolioMap[id].views
     }))
     .sort((a, b) => b.recentViews - a.recentViews);

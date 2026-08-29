@@ -65,7 +65,7 @@ export default function Hero() {
 
           <motion.h1
             variants={item}
-            className="font-display font-bold text-[11vw] leading-[1.02] sm:text-5xl md:text-6xl tracking-tight"
+            className="font-display font-bold text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] leading-[1.02] tracking-tight break-words"
           >
             {(profile.headline || profile.name || "Professional").split(" ").map((w: string, i: number) =>
               i === 1 ? (

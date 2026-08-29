@@ -29,8 +29,8 @@ export function StudioSeoEditor({ document, onChange, publicUrl }: Props) {
 
   // SEO Health Score Calculation
   let score = 0;
-  let titleFeedback = "Missing custom title.";
-  if (document.seo?.title) {
+  let titleFeedback = "Title is missing.";
+  if (title) {
     score += 30;
     if (title.length >= 40 && title.length <= 60) {
       score += 10;
@@ -40,8 +40,8 @@ export function StudioSeoEditor({ document, onChange, publicUrl }: Props) {
     }
   }
 
-  let descFeedback = "Missing custom description.";
-  if (document.seo?.description) {
+  let descFeedback = "Description is missing.";
+  if (description) {
     score += 30;
     if (description.length >= 120 && description.length <= 160) {
       score += 10;
@@ -117,14 +117,14 @@ export function StudioSeoEditor({ document, onChange, publicUrl }: Props) {
 
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  {document.seo?.title ? <CheckCircle2 className="w-4 h-4 text-success mt-0.5 shrink-0" /> : <AlertCircle className="w-4 h-4 text-warning mt-0.5 shrink-0" />}
+                  {title ? <CheckCircle2 className="w-4 h-4 text-success mt-0.5 shrink-0" /> : <AlertCircle className="w-4 h-4 text-warning mt-0.5 shrink-0" />}
                   <div>
                     <div className="text-xs font-bold text-text-primary">Meta Title</div>
                     <div className="text-[11px] text-text-secondary mt-0.5">{titleFeedback}</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  {document.seo?.description ? <CheckCircle2 className="w-4 h-4 text-success mt-0.5 shrink-0" /> : <AlertCircle className="w-4 h-4 text-warning mt-0.5 shrink-0" />}
+                  {description ? <CheckCircle2 className="w-4 h-4 text-success mt-0.5 shrink-0" /> : <AlertCircle className="w-4 h-4 text-warning mt-0.5 shrink-0" />}
                   <div>
                     <div className="text-xs font-bold text-text-primary">Meta Description</div>
                     <div className="text-[11px] text-text-secondary mt-0.5">{descFeedback}</div>
@@ -165,8 +165,8 @@ export function StudioSeoEditor({ document, onChange, publicUrl }: Props) {
                 <div className="space-y-2 relative">
                   <label className="text-[11px] font-bold uppercase tracking-wider text-text-secondary flex justify-between">
                     Meta Title
-                    <span className={title.length > 60 ? "text-error" : "text-text-muted"}>
-                      {title.length} / 60
+                    <span className={(document.seo?.title || "").length > 60 ? "text-error" : "text-text-muted"}>
+                      {(document.seo?.title || "").length} / 60
                     </span>
                   </label>
                   <input
@@ -177,7 +177,7 @@ export function StudioSeoEditor({ document, onChange, publicUrl }: Props) {
                     className="flex h-10 w-full border border-border-light bg-white px-3 py-2 text-sm font-medium text-text-primary placeholder:text-text-muted outline-none focus:border-border-strong rounded-xl transition-colors"
                   />
                   <div className="w-full h-1 bg-surface-muted mt-1.5 rounded-full overflow-hidden">
-                    <div className={`h-full transition-all ${getBarColor(title.length > 60 ? 0 : title.length * 1.66)}`} style={{ width: `${Math.min((title.length / 60) * 100, 100)}%` }} />
+                    <div className={`h-full transition-all ${getBarColor((document.seo?.title || "").length > 60 ? 0 : (document.seo?.title || "").length * 1.66)}`} style={{ width: `${Math.min(((document.seo?.title || "").length / 60) * 100, 100)}%` }} />
                   </div>
                 </div>
 
@@ -185,8 +185,8 @@ export function StudioSeoEditor({ document, onChange, publicUrl }: Props) {
                 <div className="space-y-2 relative">
                   <label className="text-[11px] font-bold uppercase tracking-wider text-text-secondary flex justify-between">
                     Meta Description
-                    <span className={description.length > 160 ? "text-error" : "text-text-muted"}>
-                      {description.length} / 160
+                    <span className={(document.seo?.description || "").length > 160 ? "text-error" : "text-text-muted"}>
+                      {(document.seo?.description || "").length} / 160
                     </span>
                   </label>
                   <textarea
@@ -196,7 +196,7 @@ export function StudioSeoEditor({ document, onChange, publicUrl }: Props) {
                     className="flex w-full border border-border-light bg-white px-3 py-2 text-sm font-medium text-text-primary placeholder:text-text-muted outline-none focus:border-border-strong rounded-xl min-h-[100px] resize-none leading-relaxed transition-colors"
                   />
                   <div className="w-full h-1 bg-surface-muted mt-1.5 rounded-full overflow-hidden">
-                    <div className={`h-full transition-all ${getBarColor(description.length > 160 ? 0 : description.length * 0.625)}`} style={{ width: `${Math.min((description.length / 160) * 100, 100)}%` }} />
+                    <div className={`h-full transition-all ${getBarColor((document.seo?.description || "").length > 160 ? 0 : (document.seo?.description || "").length * 0.625)}`} style={{ width: `${Math.min(((document.seo?.description || "").length / 160) * 100, 100)}%` }} />
                   </div>
                 </div>
 
@@ -272,19 +272,19 @@ export function StudioSeoEditor({ document, onChange, publicUrl }: Props) {
                       <div className="w-8 h-8 rounded-full bg-surface-muted flex items-center justify-center border border-border-light shadow-sm shrink-0">
                         <Globe className="w-4 h-4 text-text-muted" />
                       </div>
-                      <div className="min-w-0">
-                        <div className="text-sm text-[#202124] truncate" style={{ fontFamily: 'arial, sans-serif' }}>{url}</div>
+                      <div className="min-w-0 flex-1">
+                        <a href={url} target="_blank" rel="noopener noreferrer" className="block text-sm text-[#202124] hover:underline truncate" style={{ fontFamily: 'arial, sans-serif' }}>{url}</a>
                       </div>
                     </div>
-                    <div className="text-xl text-[#1a0dab] cursor-pointer hover:underline truncate" style={{ fontFamily: 'arial, sans-serif' }}>
+                    <a href={url} target="_blank" rel="noopener noreferrer" className="block text-xl text-[#1a0dab] hover:underline truncate" style={{ fontFamily: 'arial, sans-serif' }}>
                       {title}
-                    </div>
+                    </a>
                     <div className="text-[14px] text-[#4d5156] mt-1 leading-snug break-words line-clamp-2" style={{ fontFamily: 'arial, sans-serif' }}>
                       {description}
                     </div>
                   </div>
                 ) : (
-                  <div className="w-full max-w-[420px] bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+                  <a href={url} target="_blank" rel="noopener noreferrer" className="block w-full max-w-[420px] bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-shadow cursor-pointer">
                     {/* Simulated OG Image Background */}
                     <div className="w-full h-[220px] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 relative group overflow-hidden">
                       {/* Premium Grid Pattern */}
@@ -312,7 +312,7 @@ export function StudioSeoEditor({ document, onChange, publicUrl }: Props) {
                       <div className="text-[15px] font-bold text-[#0F1419] truncate leading-tight mb-0.5">{title}</div>
                       <div className="text-[14px] text-[#536471] truncate line-clamp-2 leading-snug">{description}</div>
                     </div>
-                  </div>
+                  </a>
                 )}
               </div>
             </div>

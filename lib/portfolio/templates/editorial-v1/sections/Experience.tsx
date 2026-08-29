@@ -35,7 +35,7 @@ function ExperienceItem({ exp, index }: { exp: Exp; index: number }) {
     >
       {/* Diamond marker */}
       <div
-        className="absolute -left-[49px] top-3 w-4 h-4 rotate-45 bg-[#111] group-hover:bg-[#CC2936] transition-colors duration-300"
+        className="absolute -left-[49px] top-3 w-4 h-4 rotate-45 bg-[#111]  group-hover:bg-[#CC2936] transition-colors duration-300"
         aria-hidden
       />
 
@@ -43,17 +43,17 @@ function ExperienceItem({ exp, index }: { exp: Exp; index: number }) {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 mb-3">
           <h4
-            className="font-black uppercase tracking-tight text-[#111] leading-tight"
+            className="font-black uppercase tracking-tight text-[#111]  leading-tight"
             style={{ fontSize: "clamp(1.25rem, 3vw, 1.875rem)" }}
           >
             {exp.title}
           </h4>
           <div className="flex items-center gap-3 shrink-0">
-            <span className="text-xs font-bold text-[#888] uppercase tracking-widest font-mono">
+            <span className="text-xs font-bold text-[#888]  uppercase tracking-widest font-mono">
               {formatYear(exp.startDate)} — {exp.isCurrent ? "Present" : formatYear(exp.endDate)}
             </span>
             {duration && (
-              <span className="text-[10px] font-bold text-[#F5F0EA] bg-[#111] px-2 py-0.5 uppercase tracking-widest">
+              <span className="text-[10px] font-bold text-[#F5F0EA] bg-[#111]  px-2 py-0.5 uppercase tracking-widest">
                 {duration}
               </span>
             )}
@@ -70,7 +70,7 @@ function ExperienceItem({ exp, index }: { exp: Exp; index: number }) {
             </span>
           )}
           {exp.location && (
-            <span className="flex items-center gap-1 text-sm text-[#888] font-medium">
+            <span className="flex items-center gap-1 text-sm text-[#888]  font-medium">
               <MapPin className="w-3 h-3" />
               {exp.location}
             </span>
@@ -79,7 +79,7 @@ function ExperienceItem({ exp, index }: { exp: Exp; index: number }) {
 
         {/* Description */}
         {exp.description && (
-          <p className="text-base md:text-lg text-[#555] font-light leading-relaxed max-w-2xl">
+          <p className="text-base md:text-lg text-[#555]  font-light leading-relaxed max-w-2xl">
             {exp.description}
           </p>
         )}
@@ -94,7 +94,7 @@ export function Experience({ data }: { data: PortfolioDocumentDTO["experience"] 
   return (
     <section>
       <SectionLabel label="Experience" index="02" />
-      <div className="border-l-[2px] border-[#111] pl-12 md:pl-16">
+      <div className="border-l-[2px] border-[#111]  pl-12 md:pl-16">
         {data.map((exp, i) => (
           <ExperienceItem key={i} exp={exp} index={i} />
         ))}
@@ -102,3 +102,6 @@ export function Experience({ data }: { data: PortfolioDocumentDTO["experience"] 
     </section>
   );
 }
+
+
+

@@ -75,6 +75,7 @@ export default function Projects() {
                     {p.caseStudyUrl && (
                       <a
                         href={p.caseStudyUrl}
+                        target="_blank" rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 hover:text-accent transition-colors"
                       >
                         Case Study <FileText size={14} />
@@ -82,12 +83,14 @@ export default function Projects() {
                     )}
                     <a
                       href={p.liveUrl}
+                      target="_blank" rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 hover:text-accent transition-colors"
                     >
                       Live Demo <ExternalLink size={14} />
                     </a>
                     <a
                       href={p.codeUrl}
+                      target="_blank" rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-muted hover:text-accent transition-colors"
                     >
                       Code <Github size={14} />

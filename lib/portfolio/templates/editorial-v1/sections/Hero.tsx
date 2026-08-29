@@ -40,7 +40,7 @@ export function Hero({
       variants={stagger}
       initial="hidden"
       animate="show"
-      className="relative pt-28 pb-20 border-b-[3px] border-[#111]"
+      className="relative pt-28 pb-20 border-b-[3px] border-[#111] "
     >
       {/* Geometric accent — top-right corner block */}
       <div
@@ -59,7 +59,7 @@ export function Hero({
             Portfolio — {new Date().getFullYear()}
           </p>
           <h1
-            className="font-black tracking-tighter uppercase leading-[0.85] text-[#111]"
+            className="font-black tracking-tighter uppercase leading-[0.85] text-[#111] "
             style={{ fontSize: "clamp(3.5rem, 10vw, 9rem)" }}
           >
             {data.name.split(" ").map((word, i) => (
@@ -72,7 +72,7 @@ export function Hero({
         {data.avatarUrl && (
           <motion.div
             variants={fadeUp}
-            className="relative w-36 h-36 md:w-52 md:h-52 shrink-0 border-[3px] border-[#111] overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 group"
+            className="relative w-36 h-36 md:w-52 md:h-52 shrink-0 border-[3px] border-[#111]  overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 group"
           >
             <Image
               src={data.avatarUrl}
@@ -90,7 +90,7 @@ export function Hero({
       {/* ── Headline / Role ── */}
       <motion.div variants={fadeUp} className="flex items-center gap-5 mb-8">
         <div className="w-10 h-[3px] bg-[#CC2936] shrink-0" aria-hidden />
-        <h2 className="text-xl md:text-3xl font-semibold text-[#444] tracking-tight leading-tight">
+        <h2 className="text-xl md:text-3xl font-semibold text-[#444]  tracking-tight leading-tight">
           {data.headline}
         </h2>
       </motion.div>
@@ -99,7 +99,7 @@ export function Hero({
       {data.shortIntroduction && (
         <motion.p
           variants={fadeUp}
-          className="text-base md:text-xl font-light text-[#555] leading-relaxed max-w-3xl mb-10"
+          className="text-base md:text-xl font-light text-[#555]  leading-relaxed max-w-3xl mb-10"
         >
           {data.shortIntroduction}
         </motion.p>
@@ -109,12 +109,12 @@ export function Hero({
       {stats && stats.length > 0 && (
         <motion.div
           variants={fadeUp}
-          className="flex flex-wrap gap-0 mb-10 border border-[#111] divide-x divide-[#111] w-fit"
+          className="flex flex-wrap gap-0 mb-10 border border-[#111]  divide-x divide-[#111]  w-fit"
         >
           {stats.map((s, i) => (
             <div key={i} className="px-6 py-4">
-              <p className="text-2xl md:text-3xl font-black text-[#111] tabular-nums">{s.value}</p>
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#888] mt-1">{s.label}</p>
+              <p className="text-2xl md:text-3xl font-black text-[#111]  tabular-nums">{s.value}</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#888]  mt-1">{s.label}</p>
             </div>
           ))}
         </motion.div>
@@ -125,7 +125,7 @@ export function Hero({
         {contact?.email && (
           <a
             href={`mailto:${contact.email}`}
-            className="group inline-flex items-center gap-2.5 px-7 py-3.5 bg-[#111] text-[#F5F0EA] text-sm font-bold uppercase tracking-widest hover:bg-[#CC2936] transition-colors duration-300"
+            className="group inline-flex items-center gap-2.5 px-7 py-3.5 bg-[#111]  text-[#F5F0EA]  text-sm font-bold uppercase tracking-widest hover:bg-[#CC2936]   transition-colors duration-300"
           >
             <Mail className="w-4 h-4" />
             Hire Me
@@ -138,7 +138,7 @@ export function Hero({
             href={getSafeUrl(link.url) || "#"}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest border-b-2 border-[#111] pb-0.5 hover:border-[#CC2936] hover:text-[#CC2936] transition-all duration-300"
+            className="group inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest border-b-2 border-[#111]  pb-0.5 hover:border-[#CC2936] hover:text-[#CC2936] transition-all duration-300"
           >
             {link.title?.trim() || link.url?.trim().replace(/^https?:\/\//, '').split('/')[0] || "Link"}
             <span className="transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#CC2936]">
@@ -147,7 +147,7 @@ export function Hero({
           </a>
         ))}
         {contact?.location && (
-          <span className="flex items-center gap-1.5 text-sm text-[#888] font-medium ml-auto">
+          <span className="flex items-center gap-1.5 text-sm text-[#888]  font-medium ml-auto">
             <MapPin className="w-3.5 h-3.5" />
             {contact.location}
           </span>
@@ -156,3 +156,6 @@ export function Hero({
     </motion.header>
   );
 }
+
+
+

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { StudioTab, ContentSection } from "../page";
 import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
 import { TemplateRegistry } from "@/lib/portfolio/templates/registry";
@@ -88,13 +88,7 @@ export function StudioInspector({
                 placeholder="e.g. Senior Software Engineer"
               />
             </Field>
-            <Field label="Profile Image URL">
-              <Input
-                value={document.hero.avatarUrl || ""}
-                onChange={(e) => onChange(doc => ({ ...doc, hero: { ...doc.hero, avatarUrl: e.target.value } }))}
-                placeholder="https://..."
-              />
-            </Field>
+
             <Field label="Short Introduction">
               <Textarea
                 value={document.hero.shortIntroduction}
@@ -506,22 +500,39 @@ export function StudioInspector({
     );
   };
 
+  const [restoringId, setRestoringId] = useState<string | null>(null);
+
+  const handleRestore = async (vId: string) => {
+    setRestoringId(vId);
+    await onRestore(vId);
+    setRestoringId(null);
+  };
+
   const renderHistory = () => {
     if (versions.length === 0) {
       return <EmptyState message="No versions yet" hint="Generate your portfolio to create the first version." />;
     }
     return (
       <div className="space-y-3">
-        {versions.map(v => {
+        {versions.map((v, index) => {
           const isLive = publication?.portfolioDocumentId === v.id && publication?.isActive;
+          const isCurrent = index === 0;
           return (
-            <div key={v.id} className="p-4 border border-border-light rounded-xl space-y-2.5 relative">
-              {isLive && (
-                <div className="absolute top-4 right-4 flex items-center gap-1 text-[10px] font-bold text-success">
-                  <div className="w-1.5 h-1.5 rounded-full bg-success" />
-                  Live
-                </div>
-              )}
+            <div key={v.id} className={`p-4 border ${isCurrent ? 'border-brand/40 bg-brand/5' : 'border-border-light'} rounded-xl space-y-2.5 relative`}>
+              <div className="absolute top-4 right-4 flex items-center gap-2">
+                {isCurrent && (
+                  <div className="flex items-center gap-1 text-[10px] font-bold text-brand">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" />
+                    Current
+                  </div>
+                )}
+                {isLive && (
+                  <div className="flex items-center gap-1 text-[10px] font-bold text-success">
+                    <span className="w-1.5 h-1.5 rounded-full bg-success" />
+                    Live
+                  </div>
+                )}
+              </div>
               <div>
                 <span className="font-bold text-sm text-text-primary">Version {v.version}</span>
                 <div className="flex items-center gap-2 mt-1">
@@ -537,14 +548,17 @@ export function StudioInspector({
                   </span>
                 </div>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onRestore(v.id)}
-                className="w-full text-xs font-bold h-8"
-              >
-                Restore this version
-              </Button>
+              {!isCurrent && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleRestore(v.id)}
+                  disabled={restoringId !== null}
+                  className="w-full text-xs font-bold h-8"
+                >
+                  {restoringId === v.id ? "Restoring..." : "Restore this version"}
+                </Button>
+              )}
             </div>
           );
         })}
@@ -579,18 +593,23 @@ export function StudioInspector({
         {publicUrl && (
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Public URL</label>
-            <div className="p-3 border border-border-light rounded-lg bg-surface-muted/30">
-              <p className="text-xs text-text-secondary break-all font-mono">{publicUrl}</p>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={onCopyLink} className="flex-1 text-xs font-bold h-8">
-                <Copy className="w-3.5 h-3.5 mr-1.5" /> Copy
-              </Button>
-              <Button variant="outline" size="sm" asChild className="flex-1 text-xs font-bold h-8">
-                <a href={publicUrl} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> Open
-                </a>
-              </Button>
+            <div className="relative group">
+              <input
+                readOnly
+                value={publicUrl}
+                onClick={(e) => (e.target as HTMLInputElement).select()}
+                className="w-full h-10 pl-3 pr-20 bg-surface-muted/30 border border-border-light rounded-lg text-xs font-mono text-text-secondary outline-none focus:border-brand/50 transition-colors cursor-text"
+              />
+              <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5 opacity-70 group-hover:opacity-100 transition-opacity">
+                <Button size="icon" variant="ghost" onClick={onCopyLink} className="w-7 h-7 rounded hover:bg-white hover:text-text-primary shadow-none">
+                  <Copy className="w-3.5 h-3.5" />
+                </Button>
+                <Button size="icon" variant="ghost" asChild className="w-7 h-7 rounded hover:bg-white hover:text-text-primary shadow-none">
+                  <a href={publicUrl} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </Button>
+              </div>
             </div>
             <Button
               variant="outline"
@@ -635,29 +654,7 @@ export function StudioInspector({
     if (!document) return <EmptyState message="Generate portfolio first" hint="" />;
     return (
       <div className="space-y-6">
-        <div className="space-y-2">
-          <label className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Theme</label>
-          <div className="flex gap-2">
-            {["light", "dark"].map(theme => (
-              <button
-                key={theme}
-                onClick={() => onChange(doc => ({
-                  ...doc,
-                  configuration: { ...doc.configuration, theme } as any
-                }))}
-                className={`flex-1 p-3 rounded-lg border text-xs font-bold capitalize transition-all ${
-                  (document.configuration?.theme || "light") === theme
-                    ? 'border-brand bg-brand/5 text-brand'
-                    : 'border-border-light text-text-secondary hover:border-border-strong'
-                }`}
-              >
-                {theme}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-2 pt-4 border-t border-border-light">
+        <div className="space-y-2 pt-4">
           <p className="text-[10px] font-bold uppercase tracking-widest text-error">Danger Zone</p>
           <p className="text-xs text-text-secondary">Unpublishing removes your portfolio from the web without deleting any data.</p>
           <Button

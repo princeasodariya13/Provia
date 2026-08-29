@@ -78,7 +78,7 @@ export default function Projects() {
 
             <div className="flex items-center gap-4">
               {p.link && p.link !== "#" && (
-                <a href={p.link} className="eyebrow flex items-center gap-1 hover:text-accent transition-colors">
+                <a href={p.link} target="_blank" rel="noopener noreferrer" className="eyebrow flex items-center gap-1 hover:text-accent transition-colors">
                   Live Demo <ArrowUpRight className="h-3.5 w-3.5" />
                 </a>
               )}

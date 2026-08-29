@@ -17,7 +17,7 @@ import {
   Layout, Type, Palette, Settings, History,
   Layers, CheckCircle2, Eye, Link as LinkIcon,
   Share2, Copy, ExternalLink, Zap, RefreshCw,
-  RotateCcw, X, Circle, ArrowRight, Lock
+  RotateCcw, X, Circle, ArrowRight, Lock, Maximize
 } from "lucide-react";
 
 import { StudioSidebar } from "./components/StudioSidebar";
@@ -354,6 +354,25 @@ export default function PortfolioStudioPage() {
               </button>
             );
           })}
+          
+          <div className="w-px h-4 bg-border mx-1" />
+          
+          <button
+            onClick={() => {
+              const pane = window.document.getElementById("studio-preview-pane");
+              if (pane) {
+                if (window.document.fullscreenElement) {
+                  window.document.exitFullscreen();
+                } else {
+                  pane.requestFullscreen();
+                }
+              }
+            }}
+            className="p-1.5 rounded-md transition-colors text-text-secondary hover:text-text-primary hover:bg-surface"
+            title="Toggle Fullscreen"
+          >
+            <Maximize className="w-3.5 h-3.5" />
+          </button>
         </div>
 
         {/* Right: action buttons */}

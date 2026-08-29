@@ -58,7 +58,7 @@ export default function Hero() {
           variants={container}
           initial="hidden"
           animate="show"
-          className="font-display text-[11vw] sm:text-[8vw] md:text-[6.5vw] lg:text-[5.5rem] leading-[0.92] font-black tracking-tight max-w-5xl mb-8"
+          className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] leading-[0.92] font-black tracking-tight max-w-5xl mb-8 break-words"
         >
           {words.map((w: string, i: number) => (
             <span key={i} className="inline-block overflow-hidden mr-[0.22em] last:mr-0">
