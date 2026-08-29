@@ -571,7 +571,7 @@ function IntegrationCard({
           </div>
         </div>
 
-        <p className="text-sm text-text-secondary mb-8 flex-1 leading-relaxed">
+        <p className="text-sm text-text-secondary mb-8 leading-relaxed">
           {description}
         </p>
 
