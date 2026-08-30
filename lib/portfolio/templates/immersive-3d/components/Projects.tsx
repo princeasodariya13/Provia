@@ -60,6 +60,7 @@ export default function Projects() {
                     src={p.image || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600&h=400&fit=crop"}
                     alt={p.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   {p.featured && (

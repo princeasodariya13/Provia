@@ -52,7 +52,7 @@ export default function Projects() {
             <Reveal key={p.title} delay={i * 0.08}>
               <div className="glass rounded-3xl overflow-hidden grid md:grid-cols-2">
                 <div className="relative aspect-[16/10] md:aspect-auto">
-                  <Image src={p.image} alt={p.title} fill className="object-cover" />
+                  <Image src={p.image} alt={p.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
                 </div>
                 <div className="p-8 flex flex-col justify-center">
                   <div className="eyebrow mb-2">{p.period}</div>

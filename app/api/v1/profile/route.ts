@@ -198,6 +198,8 @@ export const PUT = withAPIHandler(async (req: Request) => {
         }
       }
     }
+  }, {
+    timeout: 20000,
   });
 
   return NextResponse.json({

@@ -51,7 +51,7 @@ export default function About() {
           <Reveal delay={0.15}>
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden glass p-2">
               <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden">
-                <Image src={about.image || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070"} alt="Workstation" fill className="object-cover" />
+                <Image src={about.image || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070"} alt="Workstation" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
               </div>
             </div>
           </Reveal>

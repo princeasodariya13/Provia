@@ -10,8 +10,11 @@ import countries from "@/data/globe.json";
 if (typeof console !== "undefined") {
   const originalWarn = console.warn;
   console.warn = (...args) => {
-    if (typeof args[0] === "string" && args[0].includes("THREE.Clock: This module has been deprecated")) {
-      return;
+    if (typeof args[0] === "string") {
+      if (args[0].includes("THREE.Clock: This module has been deprecated")) return;
+      if (args[0].includes("THREE.WebGLProgram: Program Info Log")) return;
+      if (args[0].includes("warning X4122")) return;
+      if (args[0].includes("cannot be represented accurately in double precision")) return;
     }
     originalWarn(...args);
   };

@@ -63,18 +63,17 @@ const getSkillIconUrl = (skillName: string) => {
   };
   
   const normalized = skillName.toLowerCase().trim();
+  const cdnBase = "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons";
   
   // 1. Check exact map
-  if (map[normalized]) return `https://cdn.simpleicons.org/${map[normalized]}`;
+  if (map[normalized]) return `${cdnBase}/${map[normalized]}.svg`;
   
   // 2. Try stripping ".js" (e.g. "three.js" -> "three")
   const noJs = normalized.replace(/\.js$/, '');
-  if (map[noJs]) return `https://cdn.simpleicons.org/${map[noJs]}`;
+  if (map[noJs]) return `${cdnBase}/${map[noJs]}.svg`;
   
-  // 3. Ultimate fallback: remove all spaces and special characters 
-  // (works for 90% of technologies like "redux", "jenkins", "rabbitmq")
-  const slug = normalized.replace(/[^a-z0-9]/g, '');
-  return `https://cdn.simpleicons.org/${slug}`;
+  // Return null if no mapped icon is found to prevent 404 network errors
+  return null;
 };
 
 
@@ -162,40 +161,45 @@ export default function Skills() {
               >
                 <div className="eyebrow mb-6 text-lg">{g.title}</div>
                 <div className="flex flex-wrap gap-3 md:gap-4">
-                  {(g.items || []).map((s, idx) => (
-                    <motion.span 
-                      key={s} 
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: idx * 0.03, type: "spring", stiffness: 300, damping: 20 }}
-                      whileHover={{ 
-                        scale: 1.1, 
-                        y: -3,
-                        boxShadow: "0 10px 25px -10px rgba(94, 247, 240, 0.5)",
-                        borderColor: "rgba(94, 247, 240, 0.5)",
-                        background: "linear-gradient(135deg, rgba(94,247,240,0.1) 0%, rgba(167,139,250,0.1) 100%)",
-                        transition: { duration: 0.2, delay: 0 }
-                      }}
-                      className="px-4 py-2.5 bg-gradient-to-br from-[#0f0f15] to-[#151520] border border-border/40 rounded-xl text-sm md:text-base text-ink flex items-center gap-3 cursor-default shadow-inner shadow-white/5"
-                    >
-                      <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                        <img 
-                          src={getSkillIconUrl(s)} 
-                          alt={`${s} logo`} 
-                          className="w-full h-full object-contain"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                            if (e.currentTarget.nextElementSibling) {
-                              e.currentTarget.nextElementSibling.classList.remove('hidden');
-                            }
-                          }}
-                        />
-                        <span className="hidden w-2 h-2 rounded-full bg-cyan shadow-[0_0_10px_rgba(94,247,240,0.8)]" />
-                      </div>
-                      <span className="font-medium tracking-wide">{s}</span>
-                    </motion.span>
-                  ))}
+                  {(g.items || []).map((s, idx) => {
+                    const iconUrl = getSkillIconUrl(s);
+                    return (
+                      <motion.span 
+                        key={s} 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: idx * 0.03, type: "spring", stiffness: 300, damping: 20 }}
+                        whileHover={{ 
+                          scale: 1.1, 
+                          y: -3,
+                          boxShadow: "0 10px 25px -10px rgba(94, 247, 240, 0.5)",
+                          borderColor: "rgba(94, 247, 240, 0.5)",
+                          background: "linear-gradient(135deg, rgba(94,247,240,0.1) 0%, rgba(167,139,250,0.1) 100%)",
+                          transition: { duration: 0.2, delay: 0 }
+                        }}
+                        className="px-4 py-2.5 bg-gradient-to-br from-[#0f0f15] to-[#151520] border border-border/40 rounded-xl text-sm md:text-base text-ink flex items-center gap-3 cursor-default shadow-inner shadow-white/5"
+                      >
+                        <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                          {iconUrl ? (
+                            <img 
+                              src={iconUrl} 
+                              alt={`${s} logo`} 
+                              className="w-full h-full object-contain"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                if (e.currentTarget.nextElementSibling) {
+                                  e.currentTarget.nextElementSibling.classList.remove('hidden');
+                                }
+                              }}
+                            />
+                          ) : null}
+                          <span className={`${iconUrl ? 'hidden ' : ''}w-2 h-2 rounded-full bg-cyan shadow-[0_0_10px_rgba(94,247,240,0.8)]`} />
+                        </div>
+                        <span className="font-medium tracking-wide">{s}</span>
+                      </motion.span>
+                    );
+                  })}
                 </div>
               </motion.div>
             </Reveal>

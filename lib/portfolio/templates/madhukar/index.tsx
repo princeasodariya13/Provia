@@ -22,20 +22,23 @@ import Footer from "./components/Footer";
 
 export function madhukarTemplate({ document }: TemplateProps) {
   const data = mapProviaToTemplate(document);
+  const hidden = (data as any).hiddenSections || [];
+  const isHidden = (id: string) => hidden.includes(id);
+
   return (
     <div className="madhukar-theme bg-background min-h-screen text-foreground font-sans">
       <TemplateProvider data={data}>
         <ThemeProvider>
           <Header />
-          <Hero />
-          <About />
-          <Experience />
-          <Resume />
-          <Services />
-          <Skills />
-          <Education />
-          <Projects />
-          <Contact />
+          {!isHidden("hero") && <Hero />}
+          {!isHidden("about") && <About />}
+          {!isHidden("experience") && <Experience />}
+          {!isHidden("experience") && <Resume />}
+          {!isHidden("skills") && <Services />}
+          {!isHidden("skills") && <Skills />}
+          {!isHidden("education") && <Education />}
+          {!isHidden("projects") && <Projects />}
+          {!isHidden("contact") && <Contact />}
           <Footer />
         </ThemeProvider>
       </TemplateProvider>

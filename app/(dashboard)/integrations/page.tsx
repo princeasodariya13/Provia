@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/ui/page-header";
 import { CardSkeleton } from "@/components/ui/skeleton";
 import { GitBranch, RefreshCw, CheckCircle2, AlertCircle, Briefcase, Plus, Link as LinkIcon, Unlink } from "lucide-react";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
+import { useToast } from "@/components/ui/toast";
 
 interface Connection {
   provider: "GITHUB" | "LINKEDIN";
@@ -29,6 +31,8 @@ export default function IntegrationsPage() {
   const [selectedGithubRepos, setSelectedGithubRepos] = useState<string[]>([]);
   const [selectedGithubSkills, setSelectedGithubSkills] = useState<string[]>([]);
   const [expandedRepos, setExpandedRepos] = useState<string[]>([]);
+  const [disconnectingProvider, setDisconnectingProvider] = useState<string | null>(null);
+  const toast = useToast();
 
   useEffect(() => {
     async function load() {
@@ -70,6 +74,27 @@ export default function IntegrationsPage() {
       setError(
         res.error || `Failed to initiate ${provider} connection. Provider might not be configured.`
       );
+    }
+  };
+
+  const handleDisconnect = async () => {
+    if (!disconnectingProvider) return;
+    try {
+      const res = await apiClient.post(`/api/v1/integrations/${disconnectingProvider.toLowerCase()}/disconnect`, {});
+      if (res.success) {
+        toast.success(`${disconnectingProvider === "GITHUB" ? "GitHub" : "LinkedIn"} disconnected successfully`);
+        setConnections(prev => prev.map(c => 
+          c.provider === disconnectingProvider 
+            ? { ...c, state: "NOT_CONNECTED", lastSyncAt: null, rawSnapshots: [] } 
+            : c
+        ));
+      } else {
+        toast.error(res.error || "Failed to disconnect");
+      }
+    } catch (err) {
+      toast.error("Failed to disconnect");
+    } finally {
+      setDisconnectingProvider(null);
     }
   };
 
@@ -242,6 +267,7 @@ export default function IntegrationsPage() {
           description="Import your top public repositories, languages, and contribution statistics directly into your portfolio projects."
           state={githubState}
           onConnect={() => handleConnect("GITHUB")}
+          onDisconnect={() => setDisconnectingProvider("GITHUB")}
           connectedIcon={<GitBranch className="w-4 h-4 mr-2" />}
           connectedLabel="Synced Repositories"
           syncedData={
@@ -478,6 +504,7 @@ export default function IntegrationsPage() {
           description="Verify your professional identity and instantly sync your basic profile data (Name, Photo, Headline)."
           state={linkedinState}
           onConnect={() => handleConnect("LINKEDIN")}
+          onDisconnect={() => setDisconnectingProvider("LINKEDIN")}
           connectedIcon={<CheckCircle2 className="w-4 h-4 mr-2" />}
           connectedLabel="Identity Verified"
           syncedData={
@@ -523,6 +550,15 @@ export default function IntegrationsPage() {
         />
 
       </div>
+
+      <ConfirmModal
+        isOpen={!!disconnectingProvider}
+        onClose={() => setDisconnectingProvider(null)}
+        onConfirm={handleDisconnect}
+        title="Disconnect Integration"
+        description={`Are you sure you want to disconnect ${disconnectingProvider === "GITHUB" ? "GitHub" : "LinkedIn"}? We will stop syncing your data.`}
+        confirmText="Disconnect"
+      />
     </div>
   );
 }
@@ -533,6 +569,7 @@ function IntegrationCard({
   description, 
   state, 
   onConnect,
+  onDisconnect,
   connectedIcon,
   connectedLabel,
   syncedData
@@ -543,6 +580,7 @@ function IntegrationCard({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   state: any,
   onConnect: () => void,
+  onDisconnect?: () => void,
   connectedIcon: React.ReactNode,
   connectedLabel: string,
   syncedData?: React.ReactNode
@@ -598,7 +636,7 @@ function IntegrationCard({
               <Button variant="outline" className="w-full rounded-full bg-white shadow-sm font-bold" onClick={onConnect}>
                 <RefreshCw className="w-4 h-4 mr-2" /> Force Sync
               </Button>
-              <Button variant="outline" className="w-full rounded-full text-error hover:bg-error-muted hover:border-error transition-colors font-bold hover:text-error">
+              <Button variant="outline" className="w-full rounded-full text-error hover:bg-error-muted hover:border-error transition-colors font-bold hover:text-error" onClick={onDisconnect}>
                 <Unlink className="w-4 h-4 mr-2" /> Disconnect
               </Button>
             </div>

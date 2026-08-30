@@ -12,6 +12,7 @@ import { TemplateRegistry } from "@/lib/portfolio/templates/registry";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
 import {
   Monitor, Smartphone, Tablet, ChevronLeft, Globe,
   Layout, Type, Palette, Settings, History,
@@ -48,7 +49,7 @@ export default function PortfolioStudioPage() {
   const [publication, setPublication] = useState<any>(null);
   const [versions, setVersions] = useState<any[]>([]);
 
-  const [activeTab, setActiveTab] = useState<StudioTab>("content");
+  const [activeTab, setActiveTab] = useState<StudioTab>("design");
   const [activeSection, setActiveSection] = useState<ContentSection>("hero");
   const [previewDevice, setPreviewDevice] = useState<PreviewDevice>("desktop");
 
@@ -61,6 +62,7 @@ export default function PortfolioStudioPage() {
 
   // Share/Publish modal
   const [publishSuccessOpen, setPublishSuccessOpen] = useState(false);
+  const [unpublishModalOpen, setUnpublishModalOpen] = useState(false);
   const [publishedUrl, setPublishedUrl] = useState("");
 
   const loadStudio = useCallback(async () => {
@@ -74,7 +76,7 @@ export default function PortfolioStudioPage() {
         setTemplateId(res.data.templateId || "editorial-v1");
         setPublication(res.data.publication);
         setVersions(res.data.versions || []);
-        if (!res.data.content) setActiveTab("design");
+
       }
     } catch {
       toast.error("Failed to load Portfolio Studio.");
@@ -186,7 +188,12 @@ export default function PortfolioStudioPage() {
     }
   };
 
-  const handleUnpublish = async () => {
+  const handleUnpublish = () => {
+    if (!portfolioId) return;
+    setUnpublishModalOpen(true);
+  };
+
+  const executeUnpublish = async () => {
     if (!portfolioId) return;
     setPublishing(true);
     try {
@@ -483,6 +490,17 @@ export default function PortfolioStudioPage() {
         isOpen={readinessOpen}
         onClose={() => setReadinessOpen(false)}
         checks={readinessChecks}
+      />
+
+      <ConfirmModal
+        isOpen={unpublishModalOpen}
+        onClose={() => setUnpublishModalOpen(false)}
+        onConfirm={executeUnpublish}
+        title="Unpublish Portfolio"
+        description="Are you sure you want to unpublish your portfolio? It will no longer be publicly accessible, but your data will not be deleted."
+        confirmText="Unpublish"
+        cancelText="Cancel"
+        variant="danger"
       />
 
       {/* Publish Success Modal */}

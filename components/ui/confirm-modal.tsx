@@ -15,6 +15,8 @@ interface ConfirmModalProps {
   confirmText?: string;
   cancelText?: string;
   variant?: "danger" | "warning" | "default";
+  children?: React.ReactNode;
+  isConfirmDisabled?: boolean;
 }
 
 export function ConfirmModal({
@@ -26,6 +28,8 @@ export function ConfirmModal({
   confirmText = "Confirm",
   cancelText = "Cancel",
   variant = "danger",
+  children,
+  isConfirmDisabled = false,
 }: ConfirmModalProps) {
   const [mounted, setMounted] = useState(false);
 
@@ -50,6 +54,7 @@ export function ConfirmModal({
             <div className="flex-1 min-w-0">
               <h2 className="text-xl font-extrabold text-text-primary mb-2 tracking-tight">{title}</h2>
               <p className="text-sm text-text-secondary leading-relaxed font-medium">{description}</p>
+              {children && <div className="mt-6">{children}</div>}
             </div>
           </div>
         </div>
@@ -59,9 +64,11 @@ export function ConfirmModal({
           </Button>
           <Button 
             onClick={() => {
+              if (isConfirmDisabled) return;
               onConfirm();
               onClose();
-            }} 
+            }}
+            disabled={isConfirmDisabled}
             className={`rounded-full shadow-sm font-bold ${variant === 'danger' ? 'bg-error hover:bg-error-strong text-white' : 'bg-brand hover:bg-brand-hover'}`}
           >
             {confirmText}

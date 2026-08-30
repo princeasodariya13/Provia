@@ -81,6 +81,7 @@ export function mapProviaToTemplate(doc: PortfolioDocumentDTO) {
       email: contact.email || "",
       location: contact.location || "",
     },
+    hiddenSections: doc.configuration?.hiddenSections || [],
     certifications: doc.certifications || [],
     skills: doc.skills || [],
   };

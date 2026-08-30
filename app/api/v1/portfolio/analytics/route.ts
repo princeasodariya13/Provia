@@ -5,8 +5,15 @@ import { prisma } from "@/lib/db";
 import { RateLimiterService } from "@/lib/rate-limit";
 import { APIError } from "@/lib/errors";
 
-export const GET = withAPIHandler(async () => {
+export const GET = withAPIHandler(async (req) => {
   const user = await requireAuth();
+  
+  // Extract days parameter (default to 30)
+  const url = new URL(req.url);
+  const daysParam = url.searchParams.get("days");
+  const days = daysParam ? parseInt(daysParam, 10) : 30;
+  // Cap at 90 days for performance
+  const safeDays = Math.min(Math.max(days, 7), 90);
 
   // Use generic API rate limit for analytics queries (e.g. 30 requests per minute)
   // Assuming a generic pattern if no specific AUTH limit applies, but we can reuse a moderate one
@@ -26,8 +33,8 @@ export const GET = withAPIHandler(async () => {
   });
   const currentUsername = dbUser?.username || "unknown";
 
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const pastDate = new Date();
+  pastDate.setDate(pastDate.getDate() - safeDays);
 
   // Fetch only the strictly necessary fields to minimize memory footprint
   const recentEvents = await prisma.analyticsEvent.findMany({
@@ -35,7 +42,7 @@ export const GET = withAPIHandler(async () => {
       userId: user.id,
       eventName: "portfolio.public_viewed",
       createdAt: {
-        gte: thirtyDaysAgo,
+        gte: pastDate,
       },
     },
     select: {
@@ -65,8 +72,8 @@ export const GET = withAPIHandler(async () => {
   // Aggregate views per day for the last 30 days
   const trendMap: Record<string, number> = {};
   
-  // Initialize last 30 days with 0 to ensure continuous timeline
-  for (let i = 29; i >= 0; i--) {
+  // Initialize trend array based on requested days
+  for (let i = safeDays - 1; i >= 0; i--) {
     const d = new Date();
     d.setDate(d.getDate() - i);
     const dateStr = d.toISOString().split("T")[0];

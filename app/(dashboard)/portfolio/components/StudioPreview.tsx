@@ -53,9 +53,9 @@ export function StudioPreview({ document, templateId, previewDevice, activeTab, 
       for (const entry of entries) {
         const height = entry.contentRect.height;
         if (previewDevice === "mobile") {
-          setDeviceScale(Math.min(1, (height - 60) / 852));
+          setDeviceScale(Math.max(0.3, Math.min(1, (height - 60) / 852)));
         } else if (previewDevice === "tablet") {
-          setDeviceScale(Math.min(1, (height - 60) / 1180));
+          setDeviceScale(Math.max(0.3, Math.min(1, (height - 60) / 1180)));
         } else {
           setDeviceScale(1);
         }
@@ -63,7 +63,7 @@ export function StudioPreview({ document, templateId, previewDevice, activeTab, 
     });
     observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, [previewDevice]);
+  }, [previewDevice, activeTab]);
 
   // Design tab: show full-screen template gallery
   if (activeTab === "design") {

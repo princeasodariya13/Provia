@@ -6,7 +6,10 @@ import { PageHeader } from "@/components/ui/page-header";
 import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ShieldAlert, Download, Trash2, Key, CheckCircle2, AlertCircle, Laptop } from "lucide-react";
+import { ShieldAlert, Download, Trash2, Key, CheckCircle2, AlertCircle, Laptop, Eye, EyeOff } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
+import { apiClient } from "@/lib/api-client";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -14,85 +17,117 @@ export default function SettingsPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
-  const [pwStatus, setPwStatus] = useState<{ type: "success" | "error"; msg: string } | null>(null);
-  const [deleteStatus, setDeleteStatus] = useState<{ type: "success" | "error"; msg: string } | null>(null);
   const [pwLoading, setPwLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showDeleteSection, setShowDeleteSection] = useState(false);
-  const [logoutAllStatus, setLogoutAllStatus] = useState<{ type: "success" | "error"; msg: string } | null>(null);
   const [logoutAllLoading, setLogoutAllLoading] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isConfirmingPasswordUpdate, setIsConfirmingPasswordUpdate] = useState(false);
+  const [isConfirmingLogoutAll, setIsConfirmingLogoutAll] = useState(false);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const toast = useToast();
 
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault();
     if (newPassword !== confirmNewPassword) {
-      setPwStatus({ type: "error", msg: "New passwords do not match." });
+      toast.error("New passwords do not match.");
       return;
     }
+    setIsConfirmingPasswordUpdate(true);
+  }
+
+  async function confirmPasswordUpdate() {
+    setIsConfirmingPasswordUpdate(false);
     setPwLoading(true);
-    setPwStatus(null);
     try {
-      const res = await fetch("/api/v1/auth/change-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ currentPassword, newPassword }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setPwStatus({ type: "error", msg: data.error || "Failed to change password." });
+      const res = await apiClient.post<any>("/api/v1/auth/change-password", { currentPassword, newPassword });
+      if (!res.success) {
+        const detailMsg = Array.isArray(res.details) && res.details.length > 0 ? res.details[0].message : null;
+        toast.error(detailMsg || res.error || "Failed to change password.");
       } else {
-        setPwStatus({ type: "success", msg: "Password changed successfully. Redirecting to login..." });
+        toast.success("Password changed successfully. Redirecting to login...");
         setCurrentPassword("");
         setNewPassword("");
         setConfirmNewPassword("");
         setTimeout(() => router.push("/login"), 2000);
       }
     } catch {
-      setPwStatus({ type: "error", msg: "An unexpected error occurred." });
+      toast.error("An unexpected error occurred.");
     } finally {
       setPwLoading(false);
     }
   }
 
-  async function handleDeleteAccount(e: React.FormEvent) {
-    e.preventDefault();
+  async function confirmDeleteAccount() {
+    setIsConfirmingDelete(false);
     setDeleteLoading(true);
-    setDeleteStatus(null);
     try {
-      const res = await fetch("/api/v1/auth/account", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ confirmEmail }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setDeleteStatus({ type: "error", msg: data.error || "Failed to delete account." });
+      const res = await apiClient.delete<any>("/api/v1/auth/account", { body: JSON.stringify({ confirmEmail }) });
+      if (!res.success) {
+        toast.error(res.error || "Failed to delete account.");
       } else {
-        setDeleteStatus({ type: "success", msg: "Account deleted. Redirecting..." });
+        toast.success("Account deleted. Redirecting...");
         setTimeout(() => router.push("/"), 2000);
       }
     } catch {
-      setDeleteStatus({ type: "error", msg: "An unexpected error occurred." });
+      toast.error("An unexpected error occurred.");
     } finally {
       setDeleteLoading(false);
     }
   }
 
-  async function handleLogoutAll() {
+  async function confirmLogoutAll() {
+    setIsConfirmingLogoutAll(false);
     setLogoutAllLoading(true);
-    setLogoutAllStatus(null);
     try {
-      const res = await fetch("/api/v1/auth/logout-all", { method: "POST" });
-      const data = await res.json();
-      if (!res.ok) {
-        setLogoutAllStatus({ type: "error", msg: data.error || "Failed to log out of devices." });
+      const res = await apiClient.post<any>("/api/v1/auth/logout-all", {});
+      if (!res.success) {
+        toast.error(res.error || "Failed to log out of devices.");
       } else {
-        setLogoutAllStatus({ type: "success", msg: "Successfully logged out of all devices. Redirecting..." });
+        toast.success("Successfully logged out of all devices. Redirecting...");
         setTimeout(() => router.push("/login"), 2000);
       }
     } catch {
-      setLogoutAllStatus({ type: "error", msg: "An unexpected error occurred." });
+      toast.error("An unexpected error occurred.");
     } finally {
       setLogoutAllLoading(false);
+    }
+  }
+
+  async function handleExportData() {
+    setExportLoading(true);
+    toast.success("Preparing your account data for download...");
+    try {
+      const response = await fetch("/api/v1/account/export");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.error || "Failed to export data");
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      // Get filename from Content-Disposition header if possible, else fallback
+      const contentDisposition = response.headers.get("Content-Disposition");
+      let filename = `provia_export_${new Date().toISOString().split("T")[0]}.json`;
+      if (contentDisposition && contentDisposition.includes("filename=")) {
+        filename = contentDisposition.split("filename=")[1].replace(/"/g, "");
+      }
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      toast.success("Account data exported successfully!");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to export data");
+    } finally {
+      setExportLoading(false);
     }
   }
 
@@ -119,42 +154,61 @@ export default function SettingsPage() {
             <form onSubmit={handleChangePassword} className="space-y-5 max-w-lg">
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-widest text-text-secondary">Current Password</label>
-                <Input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  required
-                />
+                <div className="relative">
+                  <Input
+                    type={showCurrentPassword ? "text" : "password"}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    required
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-text-muted hover:text-text-primary transition-colors"
+                  >
+                    {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-widest text-text-secondary">New Password</label>
-                <Input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  required
-                />
+                <div className="relative">
+                  <Input
+                    type={showNewPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-text-muted hover:text-text-primary transition-colors"
+                  >
+                    {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-widest text-text-secondary">Confirm New Password</label>
-                <Input
-                  type="password"
-                  value={confirmNewPassword}
-                  onChange={(e) => setConfirmNewPassword(e.target.value)}
-                  required
-                />
-              </div>
-
-              {pwStatus && (
-                <div className={`p-4 flex items-start gap-3 rounded-xl border text-sm font-semibold ${
-                  pwStatus.type === "success" 
-                    ? "bg-success-muted border-success/30 text-success" 
-                    : "bg-error-muted border-error/30 text-error"
-                }`}>
-                  {pwStatus.type === "success" ? <CheckCircle2 className="w-5 h-5 shrink-0" /> : <AlertCircle className="w-5 h-5 shrink-0" />}
-                  <span>{pwStatus.msg}</span>
+                <div className="relative">
+                  <Input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmNewPassword}
+                    onChange={(e) => setConfirmNewPassword(e.target.value)}
+                    required
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-text-muted hover:text-text-primary transition-colors"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
-              )}
+              </div>
 
               <div className="pt-2">
                 <Button type="submit" disabled={pwLoading} className="rounded-full px-6 font-bold">
@@ -181,21 +235,11 @@ export default function SettingsPage() {
                   This will log you out of all devices, including this one. You will need to log back in.
                 </p>
               </div>
-              <Button variant="outline" onClick={handleLogoutAll} disabled={logoutAllLoading} className="shrink-0 rounded-full font-bold">
+              <Button variant="outline" onClick={() => setIsConfirmingLogoutAll(true)} disabled={logoutAllLoading} className="shrink-0 rounded-full font-bold">
                 {logoutAllLoading ? "Revoking..." : "Log out all devices"}
               </Button>
             </div>
             
-            {logoutAllStatus && (
-              <div className={`mt-6 p-4 flex items-start gap-3 rounded-xl border text-sm font-semibold ${
-                logoutAllStatus.type === "success" 
-                  ? "bg-success-muted border-success/30 text-success" 
-                  : "bg-error-muted border-error/30 text-error"
-              }`}>
-                {logoutAllStatus.type === "success" ? <CheckCircle2 className="w-5 h-5 shrink-0" /> : <AlertCircle className="w-5 h-5 shrink-0" />}
-                <span>{logoutAllStatus.msg}</span>
-              </div>
-            )}
           </CardContent>
         </section>
 
@@ -214,10 +258,13 @@ export default function SettingsPage() {
                 Download a complete JSON export of your canonical profile, connected integrations, and published portfolios.
               </p>
             </div>
-            <Button variant="outline" asChild className="shrink-0 rounded-full font-bold shadow-sm">
-              <a href="/api/v1/account/export" download="provia_export.json">
-                Download JSON
-              </a>
+            <Button 
+              variant="outline" 
+              onClick={handleExportData} 
+              disabled={exportLoading} 
+              className="shrink-0 rounded-full font-bold shadow-sm"
+            >
+              {exportLoading ? "Preparing Download..." : "Download JSON"}
             </Button>
           </CardContent>
         </section>
@@ -231,7 +278,7 @@ export default function SettingsPage() {
             <p className="text-sm text-error/80 mt-1">Irreversible destructive actions.</p>
           </div>
           <CardContent className="p-6 sm:p-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div>
                 <h4 className="font-bold text-text-primary mb-1">Delete Account</h4>
                 <p className="text-sm text-text-secondary max-w-md">
@@ -240,55 +287,60 @@ export default function SettingsPage() {
               </div>
               <Button 
                 variant="destructive" 
-                onClick={() => setShowDeleteSection(!showDeleteSection)}
+                onClick={() => setIsConfirmingDelete(true)}
+                disabled={deleteLoading}
                 className="shrink-0 rounded-full font-bold bg-error hover:bg-[#A31D27] text-white shadow-sm"
               >
-                <Trash2 className="w-4 h-4 mr-2" /> Delete Account
+                {deleteLoading ? (
+                  "Deleting..."
+                ) : (
+                  <><Trash2 className="w-4 h-4 mr-2" /> Delete Account</>
+                )}
               </Button>
             </div>
-
-            {showDeleteSection && (
-              <div className="mt-8 p-6 bg-error-muted/30 border border-error/30 rounded-xl max-w-xl">
-                <h4 className="font-bold text-error mb-2">Are you absolutely sure?</h4>
-                <p className="text-sm text-text-secondary mb-6">
-                  Please type your email address below to confirm account deletion. This will instantly destroy all your data.
-                </p>
-                <form onSubmit={handleDeleteAccount} className="space-y-4">
-                  <Input
-                    type="email"
-                    placeholder="Enter your email to confirm"
-                    value={confirmEmail}
-                    onChange={(e) => setConfirmEmail(e.target.value)}
-                    required
-                    className="border-error/30 focus-visible:ring-error"
-                  />
-                  
-                  {deleteStatus && (
-                    <div className={`p-4 flex items-start gap-3 rounded-lg text-sm font-semibold ${
-                      deleteStatus.type === "success" 
-                        ? "bg-success-muted text-success" 
-                        : "bg-error-muted text-error"
-                    }`}>
-                      {deleteStatus.type === "success" ? <CheckCircle2 className="w-5 h-5 shrink-0" /> : <AlertCircle className="w-5 h-5 shrink-0" />}
-                      <span>{deleteStatus.msg}</span>
-                    </div>
-                  )}
-
-                  <div className="flex justify-end gap-3 pt-2">
-                    <Button type="button" variant="ghost" onClick={() => setShowDeleteSection(false)} className="rounded-full">
-                      Cancel
-                    </Button>
-                    <Button type="submit" disabled={deleteLoading} className="rounded-full bg-error hover:bg-[#A31D27] text-white font-bold">
-                      {deleteLoading ? "Deleting..." : "Confirm Deletion"}
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            )}
           </CardContent>
         </section>
 
       </div>
+
+      <ConfirmModal
+        isOpen={isConfirmingPasswordUpdate}
+        onClose={() => setIsConfirmingPasswordUpdate(false)}
+        onConfirm={confirmPasswordUpdate}
+        title="Update Password"
+        description="Are you sure you want to change your password? You will be logged out of all active sessions and required to log in again."
+        confirmText="Update Password"
+      />
+
+      <ConfirmModal
+        isOpen={isConfirmingLogoutAll}
+        onClose={() => setIsConfirmingLogoutAll(false)}
+        onConfirm={confirmLogoutAll}
+        title="Revoke All Sessions"
+        description="Are you sure you want to log out of all active devices? You will be immediately logged out of this device and required to log in again."
+        confirmText="Log Out All Devices"
+      />
+
+      <ConfirmModal
+        isOpen={isConfirmingDelete}
+        onClose={() => {
+          setIsConfirmingDelete(false);
+          setConfirmEmail("");
+        }}
+        onConfirm={confirmDeleteAccount}
+        title="Delete Account"
+        description="Please type your email address below to confirm account deletion. This action is irreversible and will instantly destroy all your data."
+        confirmText="Permanently Delete"
+        isConfirmDisabled={!confirmEmail}
+      >
+        <Input
+          type="email"
+          placeholder="Enter your email to confirm"
+          value={confirmEmail}
+          onChange={(e) => setConfirmEmail(e.target.value)}
+          className="border-error/30 focus-visible:ring-error mt-2 w-full"
+        />
+      </ConfirmModal>
     </div>
   );
 }

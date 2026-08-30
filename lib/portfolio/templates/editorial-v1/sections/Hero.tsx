@@ -78,6 +78,7 @@ export function Hero({
               src={data.avatarUrl}
               alt={data.name}
               fill
+              sizes="(max-width: 768px) 150px, 200px"
               className="object-cover"
               priority
             />

@@ -11,28 +11,30 @@ export function LandingPreloader() {
     // Lock scroll while loading
     document.body.style.overflow = "hidden";
     
-    // Simulate loading for heavy 3D assets and Spline scenes
     const loadDuration = 3000;
-    const intervalTime = 30;
-    const totalTicks = loadDuration / intervalTime;
-    let tick = 0;
+    const startTime = Date.now();
+    let animationFrameId: number;
 
-    const interval = setInterval(() => {
-      tick++;
-      setProgress(Math.min(Math.round((tick / totalTicks) * 100), 100));
-      if (tick >= totalTicks) {
-        clearInterval(interval);
+    const updateProgress = () => {
+      const elapsed = Date.now() - startTime;
+      const currentProgress = Math.min(Math.round((elapsed / loadDuration) * 100), 100);
+      setProgress(currentProgress);
+
+      if (elapsed < loadDuration) {
+        animationFrameId = requestAnimationFrame(updateProgress);
+      } else {
+        // Once 100% is reached, wait a brief moment then hide
+        setTimeout(() => {
+          setLoading(false);
+          document.body.style.overflow = "";
+        }, 500);
       }
-    }, intervalTime);
+    };
 
-    const timer = setTimeout(() => {
-      setLoading(false);
-      document.body.style.overflow = "";
-    }, 3500);
+    animationFrameId = requestAnimationFrame(updateProgress);
 
     return () => {
-      clearInterval(interval);
-      clearTimeout(timer);
+      cancelAnimationFrame(animationFrameId);
       document.body.style.overflow = "";
     };
   }, []);
