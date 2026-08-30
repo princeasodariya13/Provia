@@ -49,8 +49,8 @@ export default function Home() {
               </h1>
 
               <div className="text-base sm:text-xl md:text-2xl text-text-secondary mb-8 md:mb-12 font-medium leading-relaxed max-w-lg border-l-2 border-brand pl-4 md:pl-6">
-                <TextGenerateEffect 
-                  words="Connect your GitHub and LinkedIn. We normalize the data into a sophisticated, premium portfolio ready for top-tier recruiters." 
+                <TextGenerateEffect
+                  words="Connect your GitHub and LinkedIn. We normalize the data into a sophisticated, premium portfolio ready for top-tier recruiters."
                   className="font-medium"
                 />
               </div>
@@ -73,7 +73,7 @@ export default function Home() {
             <div className="hidden lg:flex w-[45%] flex-col items-end relative z-20">
               <CardContainer className="inter-var w-full pb-0 pt-0" containerClassName="py-0">
                 <CardBody className="bg-surface/90 backdrop-blur-md relative group/card border-border-strong w-full aspect-[4/5] rounded-none p-6 border shadow-[0_20px_40px_rgba(0,0,0,0.08)] flex flex-col">
-                  
+
                   {/* Top Taupe Accent Dot */}
                   <CardItem translateZ="30" className="w-6 h-6 rounded-full bg-taupe absolute -top-3 -left-3 shadow-sm" />
 
@@ -83,7 +83,7 @@ export default function Home() {
                   >
                     Automated Editorial
                   </CardItem>
-                  
+
                   <CardItem
                     as="p"
                     translateZ="60"
@@ -91,7 +91,7 @@ export default function Home() {
                   >
                     Interactive, typography-first portfolios generated instantly.
                   </CardItem>
-                  
+
                   <CardItem translateZ="100" className="w-full mt-6 flex-1 relative">
                     <img
                       src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2672&auto=format&fit=crop"
@@ -99,7 +99,7 @@ export default function Home() {
                       alt="Provia Portfolio Preview"
                     />
                   </CardItem>
-                  
+
                   <div className="flex justify-between items-end mt-6 w-full">
                     <CardItem
                       translateZ={40}

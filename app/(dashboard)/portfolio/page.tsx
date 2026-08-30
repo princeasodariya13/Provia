@@ -366,7 +366,7 @@ export default function PortfolioStudioPage() {
           
           <button
             onClick={() => {
-              const pane = window.document.getElementById("studio-preview-pane");
+              const pane = window.document.getElementById("studio-preview-pane") || window.document.getElementById("gallery-preview-pane");
               if (pane) {
                 if (window.document.fullscreenElement) {
                   window.document.exitFullscreen();

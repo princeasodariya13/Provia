@@ -38,9 +38,9 @@ export function Navbar() {
               <MenuItem setActive={setActive} active={active} item="Home" href="/" />
               <MenuItem setActive={setActive} active={active} item="Features">
                 <div className="flex flex-col space-y-4 text-sm p-4">
-                  <HoveredLink href="/#portfolio">Portfolio Generation</HoveredLink>
-                  <HoveredLink href="/#ai">AI Extraction</HoveredLink>
-                  <HoveredLink href="/#design">Premium Designs</HoveredLink>
+                  <HoveredLink href="/features/portfolio-generation">Portfolio Generation</HoveredLink>
+                  <HoveredLink href="/features/ai-extraction">AI Extraction</HoveredLink>
+                  <HoveredLink href="/features/premium-designs">Premium Designs</HoveredLink>
                 </div>
               </MenuItem>
               <MenuItem setActive={setActive} active={active} item="How it Works" href="/how-it-works" />

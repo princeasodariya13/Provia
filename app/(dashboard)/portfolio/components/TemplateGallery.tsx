@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
 import { TemplateRegistry } from "@/lib/portfolio/templates/registry";
-import { CheckCircle2, Search, LayoutTemplate, Eye } from "lucide-react";
+import { CheckCircle2, Search, LayoutTemplate, Eye, Monitor, Smartphone, Tablet, Maximize, Minimize } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ResponsiveIframe } from "./StudioPreview";
+import { PreviewDevice } from "../page";
 
 // Error boundary to isolate individual template preview failures
 class TemplateThumbnailBoundary extends React.Component<
@@ -34,17 +36,48 @@ class TemplateThumbnailBoundary extends React.Component<
 interface Props {
   document: PortfolioDocumentDTO;
   currentTemplateId: string;
+  previewDevice: PreviewDevice;
   onSelectTemplate: (id: string) => void;
   onClose: () => void;
 }
 
-export function TemplateGallery({ document, currentTemplateId, onSelectTemplate, onClose }: Props) {
+export function TemplateGallery({ document, currentTemplateId, previewDevice, onSelectTemplate, onClose }: Props) {
   const templates = TemplateRegistry.getAllMetadata();
   const [search, setSearch] = useState("");
   const [previewing, setPreviewing] = useState<string | null>(null);
 
-  const filtered = templates.filter(t => 
-    t.name.toLowerCase().includes(search.toLowerCase()) || 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [deviceScale, setDeviceScale] = useState(1);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!window.document.fullscreenElement);
+    };
+    window.document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => window.document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const height = entry.contentRect.height;
+        if (previewDevice === "mobile") {
+          setDeviceScale(Math.max(0.3, Math.min(1, (height - 60) / 852)));
+        } else if (previewDevice === "tablet") {
+          setDeviceScale(Math.max(0.3, Math.min(1, (height - 60) / 1180)));
+        } else {
+          setDeviceScale(1);
+        }
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [previewDevice, previewing]);
+
+  const filtered = templates.filter(t =>
+    t.name.toLowerCase().includes(search.toLowerCase()) ||
     t.category?.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -56,16 +89,17 @@ export function TemplateGallery({ document, currentTemplateId, onSelectTemplate,
     return (
       <div className="absolute inset-0 bg-background z-50 flex flex-col animate-in fade-in zoom-in-95 duration-200">
         {/* Top bar */}
-        <div className="h-16 border-b border-border-light bg-surface shrink-0 flex items-center justify-between px-6 shadow-sm">
+        <div className="h-16 border-b border-border-light bg-surface shrink-0 flex items-center justify-between px-6 shadow-sm z-10 relative">
           <div className="flex items-center gap-4">
             <h2 className="font-bold text-lg text-text-primary">{activeDef.metadata.name}</h2>
             <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-brand/10 text-brand">Live Preview</span>
           </div>
+
           <div className="flex items-center gap-3">
             <Button variant="outline" onClick={() => setPreviewing(null)} className="h-9">
               Cancel
             </Button>
-            <Button 
+            <Button
               className="h-9 bg-brand hover:bg-brand text-white shadow-md"
               onClick={() => {
                 onSelectTemplate(previewing);
@@ -77,14 +111,65 @@ export function TemplateGallery({ document, currentTemplateId, onSelectTemplate,
             </Button>
           </div>
         </div>
-        
-        {/* Live rendering */}
-        <div className="flex-1 overflow-y-auto bg-surface-muted flex justify-center shadow-inner" data-lenis-prevent>
-          <div className="w-full max-w-[1920px] bg-background shadow-2xl origin-top transition-all min-h-full">
-            <TemplateThumbnailBoundary templateName={activeDef.metadata.name}>
-              <TemplateComponent document={document} />
-            </TemplateThumbnailBoundary>
-          </div>
+
+        {/* Live rendering isolated in an iframe to prevent fixed elements from bleeding out */}
+        <div id="gallery-preview-pane" ref={containerRef} className="flex-1 bg-surface-muted flex justify-center items-center overflow-hidden shadow-inner relative" data-lenis-prevent>
+          {isFullscreen && (
+            <button
+              onClick={() => window.document.exitFullscreen()}
+              className="absolute top-6 right-6 z-[9999] flex items-center gap-2 bg-black/60 hover:bg-black/80 backdrop-blur-md text-white px-4 py-2 rounded-full font-semibold text-sm transition-all shadow-xl border border-white/10"
+            >
+              <Minimize className="w-4 h-4" />
+              Exit Fullscreen
+            </button>
+          )}
+
+          {previewDevice === "desktop" ? (
+            <ResponsiveIframe
+              theme={document?.configuration?.theme}
+              className="w-full h-full bg-background shadow-2xl origin-top transition-all border-none"
+            >
+              <TemplateThumbnailBoundary templateName={activeDef.metadata.name}>
+                <TemplateComponent document={document} />
+              </TemplateThumbnailBoundary>
+            </ResponsiveIframe>
+          ) : previewDevice === "mobile" ? (
+            <div
+              className="flex-shrink-0 w-[393px] h-[852px] bg-[#000] rounded-[3.5rem] p-4 shadow-[0_0_0_2px_#333,0_20px_40px_rgba(0,0,0,0.4)] relative transition-all duration-300 border-[4px] border-[#111]"
+              style={{ transform: `scale(${deviceScale})`, transformOrigin: "center center" }}
+            >
+              {/* Dynamic Island / Notch */}
+              <div className="absolute top-4 inset-x-0 h-7 flex justify-center z-20 pointer-events-none">
+                <div className="w-32 h-7 bg-black rounded-full"></div>
+              </div>
+              <ResponsiveIframe
+                theme={document?.configuration?.theme}
+                className="w-full h-full bg-background rounded-[2.25rem] overflow-hidden border-none relative"
+              >
+                <TemplateThumbnailBoundary templateName={activeDef.metadata.name}>
+                  <TemplateComponent document={document} />
+                </TemplateThumbnailBoundary>
+              </ResponsiveIframe>
+            </div>
+          ) : (
+            <div
+              className="flex-shrink-0 w-[820px] h-[1180px] bg-[#000] rounded-[2rem] p-4 shadow-[0_0_0_2px_#333,0_20px_40px_rgba(0,0,0,0.4)] relative transition-all duration-300 border-[4px] border-[#111]"
+              style={{ transform: `scale(${deviceScale})`, transformOrigin: "center center" }}
+            >
+              {/* Camera dot */}
+              <div className="absolute top-0 inset-x-0 h-4 flex justify-center items-center z-20 pointer-events-none">
+                <div className="w-1.5 h-1.5 bg-neutral-800 rounded-full"></div>
+              </div>
+              <ResponsiveIframe
+                theme={document?.configuration?.theme}
+                className="w-full h-full bg-background rounded-[1.75rem] overflow-hidden border-none relative"
+              >
+                <TemplateThumbnailBoundary templateName={activeDef.metadata.name}>
+                  <TemplateComponent document={document} />
+                </TemplateThumbnailBoundary>
+              </ResponsiveIframe>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -103,7 +188,7 @@ export function TemplateGallery({ document, currentTemplateId, onSelectTemplate,
           </div>
           <div className="relative w-full md:w-72">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-            <input 
+            <input
               type="text"
               placeholder="Search templates..."
               value={search}
@@ -123,14 +208,14 @@ export function TemplateGallery({ document, currentTemplateId, onSelectTemplate,
             const isSelected = currentTemplateId === t.id;
 
             return (
-              <div 
+              <div
                 key={t.id}
                 className={`group relative flex flex-col bg-surface border rounded-2xl overflow-hidden transition-all duration-300 ${isSelected ? 'border-brand shadow-lg ring-1 ring-brand' : 'border-border-light hover:border-border-strong hover:shadow-xl'}`}
               >
                 {/* Scaled down Live Preview Thumbnail */}
                 <div className="relative h-72 bg-surface-muted overflow-hidden border-b border-border-light">
                   <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
-                    <div 
+                    <div
                       className="absolute top-0 left-0 bg-background origin-top-left overflow-hidden"
                       style={{ width: '400%', height: '400%', transform: 'scale(0.25)' }}
                     >
@@ -141,15 +226,15 @@ export function TemplateGallery({ document, currentTemplateId, onSelectTemplate,
                   </div>
                   {/* Overlay on hover */}
                   <div className="absolute inset-0 bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       onClick={() => setPreviewing(t.id)}
                       className="bg-surface text-text-primary border-border hover:bg-surface-muted shadow-sm"
                     >
                       <Eye className="w-4 h-4 mr-2" /> Live Preview
                     </Button>
                     {!isSelected && (
-                      <Button 
+                      <Button
                         onClick={() => {
                           onSelectTemplate(t.id);
                           onClose();
@@ -180,11 +265,11 @@ export function TemplateGallery({ document, currentTemplateId, onSelectTemplate,
                       {t.category}
                     </span>
                   </div>
-                  
+
                   <p className="text-sm text-text-secondary leading-relaxed mb-6 flex-1">
                     {t.description}
                   </p>
-                  
+
                   <div className="flex flex-wrap gap-2 pt-4 border-t border-border-light">
                     {t.tags?.slice(0, 3).map((tag: string) => (
                       <span key={tag} className="text-[10px] font-medium text-text-muted bg-surface-muted/50 border border-border-light px-2 py-0.5 rounded-full">

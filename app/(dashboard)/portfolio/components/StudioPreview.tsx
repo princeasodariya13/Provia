@@ -72,6 +72,7 @@ export function StudioPreview({ document, templateId, previewDevice, activeTab, 
         <TemplateGallery
           document={document || mockPortfolioDocument}
           currentTemplateId={templateId}
+          previewDevice={previewDevice}
           onSelectTemplate={onSelectTemplate}
           onClose={() => {}}
         />
@@ -141,16 +142,16 @@ export function StudioPreview({ document, templateId, previewDevice, activeTab, 
         )}
         
         {previewDevice === "desktop" ? (
-          <div
-            className="w-full h-full bg-background shadow-2xl transition-all duration-300 relative overflow-y-auto"
+          <ResponsiveIframe
+            theme={document?.configuration?.theme}
+            className="w-full h-full bg-background shadow-2xl transition-all duration-300 relative border-none"
             style={{ transform: "scale(1)", transformOrigin: "top center" }}
-            data-lenis-prevent
           >
             <TemplateLoader />
             <TemplateBoundary templateName={templateDef.metadata.name}>
               <TemplateComponent document={document} />
             </TemplateBoundary>
-          </div>
+          </ResponsiveIframe>
         ) : previewDevice === "mobile" ? (
           <div 
             className="flex-shrink-0 w-[393px] h-[852px] bg-[#000] rounded-[3.5rem] p-4 shadow-[0_0_0_2px_#333,0_20px_40px_rgba(0,0,0,0.4)] relative transition-all duration-300 border-[4px] border-[#111]"
@@ -197,7 +198,7 @@ export function StudioPreview({ document, templateId, previewDevice, activeTab, 
   );
 }
 
-function ResponsiveIframe({
+export function ResponsiveIframe({
   children,
   className,
   style,

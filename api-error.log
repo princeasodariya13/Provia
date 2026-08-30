@@ -1406,4 +1406,920 @@ Timed out fetching a new connection from the connection pool. More info: http://
     at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
     at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
     at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:13:57.189Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:90:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:18:27.069Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:90:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:18:49.554Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:90:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:21:22.366Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0f1xsk3._.js:235:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0f_ir0s._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0f_ir0s._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0f_ir0s._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:21:27.387Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__19pi_rg._.js:100:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1xezety._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1xezety._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1xezety._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:21:32.388Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0s6z7h-._.js:90:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_19up-ql._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_19up-ql._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_19up-ql._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:36:35.709Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0tkbhg3._.js:92:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1ay3ael._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1ay3ael._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1ay3ael._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:37:09.707Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0ufdgjs._.js:94:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0l_kyvn._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0l_kyvn._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0l_kyvn._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:37:09.753Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0f1xsk3._.js:235:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0f_ir0s._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0f_ir0s._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0f_ir0s._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:37:09.771Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__18g79by._.js:127:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1jm5s6v._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1jm5s6v._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1jm5s6v._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:37:14.727Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0s6z7h-._.js:90:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_19up-ql._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_19up-ql._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_19up-ql._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:37:14.769Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__19pi_rg._.js:100:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1xezety._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1xezety._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1xezety._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:37:14.786Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0tkbhg3._.js:92:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1ay3ael._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1ay3ael._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1ay3ael._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:37:24.740Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0ufdgjs._.js:94:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0l_kyvn._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0l_kyvn._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0l_kyvn._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:37:24.836Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0f1xsk3._.js:235:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0f_ir0s._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0f_ir0s._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0f_ir0s._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:37:25.029Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__18g79by._.js:127:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1jm5s6v._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1jm5s6v._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1jm5s6v._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:37:34.780Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0s6z7h-._.js:90:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_19up-ql._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_19up-ql._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_19up-ql._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:37:34.851Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__19pi_rg._.js:100:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1xezety._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1xezety._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1xezety._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:37:34.931Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async requireAuth (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:361:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0tkbhg3._.js:92:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1ay3ael._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1ay3ael._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_1ay3ael._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:44:06.542Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:90:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:44:11.759Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:90:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:44:39.654Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:90:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:44:44.906Z\nPrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:90:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:45:58.853Z\nPrismaClientInitializationError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7615)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:90:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
+    at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n2026-08-30T18:46:03.896Z\nPrismaClientInitializationError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique()` invocation in
+C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:147
+
+  338 async function getCurrentUser() {
+  339     const session = await getSession();
+  340     if (!session) return null;
+→ 341     const user = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].user.findUnique(
+Can't reach database server at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`
+
+Please make sure your database server is running at `ep-solitary-water-ax5g5ew6.c-4.us-east-2.aws.neon.tech:5432`.
+    at $n.handleRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:7615)
+    at $n.handleAndLogRequestError (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async getCurrentUser (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:341:18)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:90:18
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\[root-of-the-server]__0dqy24f._.js:181:30
+    at async AppRouteRouteModule.do (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:42793)
+    at async AppRouteRouteModule.handle (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:5:50547)
+    at async responseGenerator (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4709:30)
+    at async AppRouteRouteModule.handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js:1:250160)
+    at async handleResponse (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4781:32)
+    at async Module.handler (C:\Users\Prince\Desktop\Provia\Provia\my-app\.next\dev\server\chunks\node_modules_next_0tyj8lk._.js:4901:9)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1537:9)
+    at async DevServer.renderPageComponent (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1589:24)
+    at async DevServer.renderToResponseImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1639:32)
+    at async DevServer.pipeImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:1088:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\next-server.js:338:17)
+    at async DevServer.handleRequestImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\base-server.js:979:17)
+    at async C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:426:20
+    at async Span.traceAsyncFn (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\trace\trace.js:164:20)
+    at async DevServer.handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\dev\next-dev-server.js:422:24)
+    at async invokeRender (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:306:21)
+    at async handleRequest (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:508:24)
+    at async requestHandlerImpl (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\router-server.js:565:13)
     at async Server.requestListener (C:\Users\Prince\Desktop\Provia\Provia\my-app\node_modules\next\dist\server\lib\start-server.js:225:13)\n\n
