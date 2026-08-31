@@ -18,6 +18,7 @@ export function ResumeIntelligence() {
   const [uploadSuccessMsg, setUploadSuccessMsg] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [removing, setRemoving] = useState(false);
+  const [processingTime, setProcessingTime] = useState(0);
   const toast = useToast();
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,6 +41,20 @@ export function ResumeIntelligence() {
   const [applySuccess, setApplySuccess] = useState(false);
   const [applyingText, setApplyingText] = useState("Importing Data");
   const [applyProgress, setApplyProgress] = useState(0);
+
+  useEffect(() => {
+    let timerInterval: NodeJS.Timeout;
+    if (status === "QUEUED" || status === "PROCESSING") {
+      timerInterval = setInterval(() => {
+        setProcessingTime((prev) => prev + 1);
+      }, 1000);
+    } else {
+      if (status === "COMPLETED") {
+        setExpanded(true);
+      }
+    }
+    return () => clearInterval(timerInterval);
+  }, [status]);
 
   useEffect(() => {
     if (!applying) {
@@ -87,6 +102,12 @@ export function ResumeIntelligence() {
       if (res.success && res.data) {
         setResumeData(res.data);
         setStatus(res.data.status);
+        
+        // Auto-recover: If the resume is stuck in QUEUED or PROCESSING on Vercel,
+        // kick off the trigger endpoint automatically so it doesn't stay stuck forever.
+        if (res.data.status === "QUEUED" || res.data.status === "PROCESSING") {
+          fetch("/api/v1/jobs/trigger", { method: "POST" }).catch(() => {});
+        }
       } else {
         setStatus("NONE");
       }
@@ -98,8 +119,6 @@ export function ResumeIntelligence() {
     let interval: NodeJS.Timeout;
     if (status === "QUEUED" || status === "PROCESSING") {
       interval = setInterval(fetchResumeStatus, 3000);
-    } else if (status === "COMPLETED") {
-      setExpanded(true);
     }
     return () => clearInterval(interval);
   }, [status]);
@@ -117,6 +136,7 @@ export function ResumeIntelligence() {
     setError(null);
     setUploadProgress(0);
     setUploadSuccessMsg(false);
+    setProcessingTime(0);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -135,20 +155,24 @@ export function ResumeIntelligence() {
       if (xhr.status >= 200 && xhr.status < 300) {
         const data = JSON.parse(xhr.responseText);
         setUploadProgress(100);
-        setUploadSuccessMsg(true);
         setFile(null);
         toast.success("Resume uploaded successfully");
         
-        // Fire-and-forget request to immediately trigger the background worker on Vercel
-        fetch("/api/v1/jobs/trigger", { method: "POST" }).catch(() => {});
+        // Hide upload UI, show AI Processing UI
+        setUploading(false);
+        setUploadSuccessMsg(false);
+        setUploadProgress(null);
+        setStatus(data.data.status); // Will set to QUEUED/PROCESSING, starting timer
+
+        // Crucial for Vercel: We MUST await the trigger call so the serverless function stays alive
+        // and completes the processing.
+        try {
+          await fetch("/api/v1/jobs/trigger", { method: "POST" });
+        } catch (e) {
+          console.error("Trigger failed", e);
+        }
         
-        setTimeout(async () => {
-          setUploadSuccessMsg(false);
-          setStatus(data.data.status);
-          await fetchResumeStatus();
-          setUploading(false);
-          setUploadProgress(null);
-        }, 2000);
+        await fetchResumeStatus();
       } else {
         try {
           const data = JSON.parse(xhr.responseText);
@@ -381,6 +405,7 @@ export function ResumeIntelligence() {
                 <div>
                   <p className="font-bold text-sm text-brand">AI Processing</p>
                   <p className="text-xs text-brand/70 mt-1">Extracting structured data from your PDF...</p>
+                  <p className="text-[10px] font-mono text-brand/50 mt-2">Time elapsed: {processingTime}s</p>
                 </div>
               </div>
             ) : status === "COMPLETED" ? (
