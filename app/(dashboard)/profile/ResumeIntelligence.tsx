@@ -104,9 +104,9 @@ export function ResumeIntelligence() {
         setStatus(res.data.status);
         
         // Auto-recover: If the resume is stuck in QUEUED or PROCESSING on Vercel,
-        // kick off the trigger endpoint automatically so it doesn't stay stuck forever.
+        // force direct extraction so it doesn't stay stuck forever.
         if (res.data.status === "QUEUED" || res.data.status === "PROCESSING") {
-          fetch("/api/v1/jobs/trigger", { method: "POST" }).catch(() => {});
+          fetch("/api/v1/profile/resume/extract", { method: "POST" }).then(() => fetchResumeStatus()).catch(() => {});
         }
       } else {
         setStatus("NONE");
@@ -164,12 +164,12 @@ export function ResumeIntelligence() {
         setUploadProgress(null);
         setStatus(data.data.status); // Will set to QUEUED/PROCESSING, starting timer
 
-        // Crucial for Vercel: We MUST await the trigger call so the serverless function stays alive
-        // and completes the processing.
+        // Directly invoke the extraction endpoint to completely bypass the brittle background job queue on Vercel.
+        // We await this so Vercel keeps the function alive until the AI finishes processing (usually ~10s).
         try {
-          await fetch("/api/v1/jobs/trigger", { method: "POST" });
+          await fetch("/api/v1/profile/resume/extract", { method: "POST" });
         } catch (e) {
-          console.error("Trigger failed", e);
+          console.error("Direct extraction failed", e);
         }
         
         await fetchResumeStatus();
