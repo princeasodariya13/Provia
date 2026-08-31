@@ -139,6 +139,9 @@ export function ResumeIntelligence() {
         setFile(null);
         toast.success("Resume uploaded successfully");
         
+        // Fire-and-forget request to immediately trigger the background worker on Vercel
+        fetch("/api/v1/jobs/trigger", { method: "POST" }).catch(() => {});
+        
         setTimeout(async () => {
           setUploadSuccessMsg(false);
           setStatus(data.data.status);
