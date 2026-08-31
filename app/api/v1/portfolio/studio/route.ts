@@ -46,6 +46,13 @@ export const GET = withAPIHandler(async () => {
     });
   }
 
+  const profile = await prisma.professionalProfile.findFirst({
+    where: { userId: user.id },
+    select: { avatarUrl: true }
+  });
+
+  const latestAvatar = profile?.avatarUrl || user.image;
+
   // Treat "{}" as a stub document (ungenerated)
   const isStub = record.content === "{}";
   let parsedContent = null;
@@ -54,9 +61,9 @@ export const GET = withAPIHandler(async () => {
     try {
       parsedContent = JSON.parse(record.content);
       // Auto-sync avatar from user profile if it's missing or outdated
-      if (user.image && parsedContent.hero) {
-        if (!parsedContent.hero.avatarUrl || parsedContent.hero.avatarUrl !== user.image) {
-          parsedContent.hero.avatarUrl = user.image;
+      if (latestAvatar && parsedContent.hero) {
+        if (!parsedContent.hero.avatarUrl || parsedContent.hero.avatarUrl !== latestAvatar) {
+          parsedContent.hero.avatarUrl = latestAvatar;
           // Optionally save it back silently in the background so it persists
           prisma.portfolioDocument.update({
             where: { id: record.id },

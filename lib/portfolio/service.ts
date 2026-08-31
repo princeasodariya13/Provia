@@ -117,7 +117,7 @@ export const PortfolioContentService = {
           name: displayName,
           headline: profile.headline || profile.jobTitle || "",
           shortIntroduction: aiSummary?.substring(0, 240) || profile.bio?.substring(0, 240) || "",
-          avatarUrl: profile.user?.image || profile.avatarUrl || null,
+          avatarUrl: profile.avatarUrl || profile.user?.image || null,
           primaryLinks,
         },
         about: {
