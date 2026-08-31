@@ -10,6 +10,7 @@ export function mapProviaToTemplate(doc: PortfolioDocumentDTO) {
       name: hero.name || "Professional",
       headline: hero.headline || "Software Engineer",
       subhead: hero.shortIntroduction || about.summary || "",
+      avatar: hero.avatarUrl || "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=200&h=200&fit=crop",
       availability: "Available for opportunities",
       email: contact.email || "",
       location: contact.location || "",

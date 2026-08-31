@@ -53,14 +53,27 @@ export default function Hero() {
           {profile.headline}
         </motion.h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.25 }}
-          className="mt-6 text-muted text-lg max-w-xl leading-relaxed"
-        >
-          {profile.subhead}
-        </motion.p>
+        <div className="flex flex-col md:flex-row gap-8 items-start md:items-center mt-6">
+          {profile.avatar && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-surface shadow-xl shrink-0"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={profile.avatar} alt={profile.name} className="w-full h-full object-cover" />
+            </motion.div>
+          )}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="text-muted text-lg max-w-xl leading-relaxed"
+          >
+            {profile.subhead}
+          </motion.p>
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 16 }}

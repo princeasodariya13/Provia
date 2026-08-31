@@ -48,6 +48,26 @@ export const GET = withAPIHandler(async () => {
 
   // Treat "{}" as a stub document (ungenerated)
   const isStub = record.content === "{}";
+  let parsedContent = null;
+  
+  if (!isStub) {
+    try {
+      parsedContent = JSON.parse(record.content);
+      // Auto-sync avatar from user profile if it's missing or outdated
+      if (user.image && parsedContent.hero) {
+        if (!parsedContent.hero.avatarUrl || parsedContent.hero.avatarUrl !== user.image) {
+          parsedContent.hero.avatarUrl = user.image;
+          // Optionally save it back silently in the background so it persists
+          prisma.portfolioDocument.update({
+            where: { id: record.id },
+            data: { content: JSON.stringify(parsedContent) }
+          }).catch(console.error);
+        }
+      }
+    } catch {
+      // Ignore parse errors
+    }
+  }
 
   return NextResponse.json({
     success: true,
@@ -55,7 +75,7 @@ export const GET = withAPIHandler(async () => {
       id: record.id,
       version: record.version,
       status: record.status,
-      content: isStub ? null : JSON.parse(record.content),
+      content: parsedContent,
       templateId: record.templateId,
       createdAt: record.createdAt,
       publication: publication ? {
