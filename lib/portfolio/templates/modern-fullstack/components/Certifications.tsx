@@ -53,7 +53,7 @@ export default function Certifications() {
       <div className="grid md:grid-cols-2 gap-6">
         {certifications.map((c, i) => (
           <motion.div
-            key={c.name}
+            key={i}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

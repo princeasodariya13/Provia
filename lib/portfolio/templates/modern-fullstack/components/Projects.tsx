@@ -52,7 +52,7 @@ export default function Projects() {
       <div className="grid md:grid-cols-2 gap-6">
         {projects.map((p, i) => (
           <motion.div
-            key={p.title}
+            key={i}
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -69,8 +69,8 @@ export default function Projects() {
             <p className="text-muted text-sm leading-relaxed mb-6 whitespace-pre-wrap break-words">{p.description}</p>
 
             <div className="flex flex-wrap gap-2 mb-6">
-              {p.tags.map((t) => (
-                <span key={t} className="eyebrow rounded-full border border-border px-3 py-1">
+              {p.tags.map((t, ti) => (
+                <span key={ti} className="eyebrow rounded-full border border-border px-3 py-1">
                   {t}
                 </span>
               ))}

@@ -63,9 +63,9 @@ export default function Skills() {
           >
             <h3 className="font-display text-lg font-semibold text-deep mb-4">{g.title}</h3>
             <div className="flex flex-wrap gap-2">
-              {g.skills.map((s) => (
+              {g.skills.map((s, si) => (
                 <span
-                  key={s}
+                  key={si}
                   className="eyebrow rounded-full border border-border bg-surface2 px-3 py-1.5 text-ink/80"
                 >
                   {s}

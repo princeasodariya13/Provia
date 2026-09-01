@@ -76,9 +76,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         {/* Tech tags */}
         {project.technologies && project.technologies.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-auto pt-5 border-t border-[#D9D2C9]  group-hover:border-[#333] transition-colors">
-            {project.technologies.slice(0, isWide ? 8 : 5).map((tech, j) => (
+            {project.technologies.slice(0, isWide ? 8 : 5).map((tech, ti) => (
               <span
-                key={j}
+                key={ti}
                 className="text-[10px] font-black uppercase tracking-widest border border-[#111]  group-hover:border-[#555] px-3 py-1.5 text-[#111]  group-hover:text-[#EEE] transition-all duration-200"
               >
                 {tech}
