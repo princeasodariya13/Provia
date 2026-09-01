@@ -10,9 +10,9 @@ type Props = {
 };
 
 const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 36 },
+  initial: { opacity: 1, y: 0 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.8, ease: "easeOut" as const, delay },
+  transition: { duration: 0, delay: 0 }
 });
 
 export function PremiumHero({ hero, contact, stats }: Props) {
