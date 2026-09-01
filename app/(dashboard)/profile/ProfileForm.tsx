@@ -277,30 +277,46 @@ export function ProfileForm() {
             <div key={cert.id || i} className="relative group/item border border-border-light rounded-xl p-5 hover:border-border-strong transition-colors bg-surface/50">
               <SourceBadge source={cert.source} />
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
+              <div className="grid grid-cols-1 gap-5 mt-2">
                 <div className="space-y-2">
                   <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Certification Name</label>
                   <Input value={cert.name || ""} onChange={e => updateArrayItem("certifications", i, "name", e.target.value)} className="bg-surface/50 border-border-light hover:border-border transition-colors" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Issuing Organization</label>
-                  <Input value={cert.organization || ""} onChange={e => updateArrayItem("certifications", i, "organization", e.target.value)} className="bg-surface/50 border-border-light hover:border-border transition-colors" />
+                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Description</label>
+                  <Textarea value={cert.organization || ""} onChange={e => updateArrayItem("certifications", i, "organization", e.target.value)} className="min-h-[80px] bg-surface/50 border-border-light hover:border-border transition-colors" placeholder="Briefly describe what this certificate covers..." />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Issue Date</label>
-                  <Input type="date" value={cert.issueDate ? new Date(cert.issueDate).toISOString().split('T')[0] : ""} onChange={e => updateArrayItem("certifications", i, "issueDate", e.target.value ? new Date(e.target.value).toISOString() : null)} />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Expiration Date</label>
-                  <Input type="date" value={cert.expirationDate ? new Date(cert.expirationDate).toISOString().split('T')[0] : ""} onChange={e => updateArrayItem("certifications", i, "expirationDate", e.target.value ? new Date(e.target.value).toISOString() : null)} />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Credential ID</label>
-                  <Input value={cert.credentialId || ""} onChange={e => updateArrayItem("certifications", i, "credentialId", e.target.value)} className="bg-surface/50 border-border-light hover:border-border transition-colors" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Credential URL</label>
-                  <Input value={cert.credentialUrl || ""} onChange={e => updateArrayItem("certifications", i, "credentialUrl", e.target.value)} type="url" placeholder="https://..." className="bg-surface/50 border-border-light hover:border-border transition-colors" />
+                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Upload Certificate Image</label>
+                  <div className="flex items-center gap-4">
+                    {cert.credentialUrl && (
+                      <img src={cert.credentialUrl} alt="Certificate" className="w-16 h-16 object-cover rounded-lg border border-border-light shadow-sm" />
+                    )}
+                    <Input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        
+                        const formData = new FormData();
+                        formData.append("file", file);
+                        
+                        try {
+                          const res = await fetch("/api/v1/upload/image", { method: "POST", body: formData });
+                          const data = await res.json();
+                          if (res.ok && data.data?.url) {
+                            updateArrayItem("certifications", i, "credentialUrl", data.data.url);
+                          } else {
+                            toast.error(data.error || "Upload failed");
+                          }
+                        } catch (err) {
+                          toast.error("Upload failed");
+                        }
+                      }}
+                      className="bg-surface/50 border-border-light hover:border-border transition-colors text-xs" 
+                    />
+                  </div>
                 </div>
               </div>
               <div className="flex justify-end mt-4 pt-4 border-t border-border-light transition-opacity">

@@ -101,8 +101,8 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.4 }}
           className="mt-16 flex gap-4"
         >
-          {skills?.slice(0, 3).map((skill: any, i: number) => (
-            <PlatformCard key={i} label={skill.name?.trim() || "Skill"} sub={skill.level?.trim() || ""} delay={i * 0.4} />
+          {skills?.flatMap((s: any) => s.skills || []).slice(0, 3).map((skillName: string, i: number) => (
+            <PlatformCard key={i} label={skillName || "Skill"} sub="Proficient" delay={i * 0.4} />
           ))}
         </motion.div>
       </div>

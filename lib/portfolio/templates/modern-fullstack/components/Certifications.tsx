@@ -48,7 +48,7 @@ export default function Certifications() {
         Certifications.
       </h2>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-6">
         {certifications.map((c, i) => (
           <motion.div
             key={c.name}
@@ -56,14 +56,23 @@ export default function Certifications() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: i * 0.08 }}
-            className="flex items-start gap-4 rounded-2xl border border-border bg-surface p-6"
+            className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-6 hover:shadow-lg transition-all"
           >
-            <div className="h-10 w-10 rounded-full bg-surface2 flex items-center justify-center shrink-0">
-              <Award className="h-5 w-5 text-accent" />
-            </div>
+            {c.url && c.url !== "#" ? (
+              <div className="w-full h-48 rounded-xl overflow-hidden bg-surface2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={c.url} alt={c.name} className="w-full h-full object-cover" />
+              </div>
+            ) : (
+              <div className="w-full h-48 rounded-xl bg-surface2 flex items-center justify-center">
+                <Award className="h-10 w-10 text-border" />
+              </div>
+            )}
             <div>
-              <p className="font-display font-semibold text-deep">{c.name}</p>
-              <p className="eyebrow mt-1">{c.issuer}</p>
+              <p className="font-display font-bold text-lg text-deep">{c.name}</p>
+              {c.organization && (
+                <p className="text-muted text-sm mt-2 leading-relaxed">{c.organization}</p>
+              )}
             </div>
           </motion.div>
         ))}

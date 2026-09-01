@@ -40,18 +40,24 @@ export default function About() {
         >
           <p className="eyebrow mb-4">About</p>
           <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight text-deep leading-snug">
-            {profile.subrole} building for both screens.
+            {profile.headline || "Developer"} building for both screens.
           </h2>
         </motion.div>
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-muted leading-relaxed text-lg self-end"
+          className="text-muted leading-relaxed text-lg self-end space-y-4"
         >
-          {profile.bio}
-        </motion.p>
+          {about.paragraphs?.length > 0 ? (
+            about.paragraphs.map((p: string, i: number) => (
+              <p key={i}>{p}</p>
+            ))
+          ) : (
+            <p>{profile.subhead}</p>
+          )}
+        </motion.div>
       </div>
     </section>
   );
