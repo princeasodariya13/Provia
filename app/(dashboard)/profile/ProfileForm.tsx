@@ -111,7 +111,7 @@ export function ProfileForm() {
     setIsDirty(true);
     setData((prev: any) => ({
       ...prev,
-      [arrayField]: [...(prev[arrayField] || []), defaultItem]
+      [arrayField]: [defaultItem, ...(prev[arrayField] || [])]
     }));
   };
 
