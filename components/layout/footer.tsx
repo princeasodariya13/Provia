@@ -3,7 +3,7 @@ import Link from "next/link"
 export function Footer() {
   return (
     <footer className="border-t border-border-strong bg-background py-12 md:py-16 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 md:px-12 xl:px-24 flex flex-col gap-10 md:flex-row md:justify-between md:items-start md:gap-12">
+      <div className="max-w-[1600px] mx-auto px-4 md:px-12 xl:px-24 flex flex-col gap-10 md:flex-row md:justify-between md:items-start md:gap-12">
         <div className="flex flex-col gap-4 md:gap-6 max-w-sm">
           <Link href="/" className="flex items-center space-x-3">
             <div className="w-6 h-6 bg-brand flex items-center justify-center">
@@ -35,7 +35,7 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-4 md:px-12 xl:px-24 mt-10 md:mt-16 pt-6 md:pt-8 border-t border-border-light text-xs font-semibold tracking-widest uppercase text-text-secondary flex flex-col sm:flex-row justify-between gap-2 sm:gap-0">
+      <div className="max-w-[1600px] mx-auto px-4 md:px-12 xl:px-24 mt-10 md:mt-16 pt-6 md:pt-8 border-t border-border-light text-xs font-semibold tracking-widest uppercase text-text-secondary flex flex-col sm:flex-row justify-between gap-2 sm:gap-0">
         <span>&copy; {new Date().getFullYear()} Provia.</span>
         <span>Editorial Output Engine</span>
       </div>

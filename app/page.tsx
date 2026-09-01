@@ -36,7 +36,7 @@ export default function Home() {
 
         {/* Hero Section - Asymmetrical & Editorial */}
         <section className="w-full relative z-10 pt-28 pb-16 md:pt-48 md:pb-32 px-4 md:px-12 xl:px-24">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8 md:gap-12 relative z-10">
+          <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row items-start justify-between gap-8 md:gap-12 relative z-10">
 
             <div className="flex flex-col items-start w-full md:max-w-2xl">
               <div className="mb-6 md:mb-8 border border-border-strong px-3 md:px-4 py-1.5 text-[10px] md:text-xs font-semibold uppercase tracking-widest text-text-primary bg-surface inline-block">
@@ -130,7 +130,7 @@ export default function Home() {
 
         {/* Feature Grid */}
         <section id="features" className="w-full relative z-10 py-16 md:py-24 px-4 md:px-12 xl:px-24 bg-surface border-y border-border-light">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-[1600px] mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-24 gap-4">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-text-primary max-w-md">
                 Everything you need to stand out.
