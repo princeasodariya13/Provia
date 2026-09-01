@@ -57,3 +57,32 @@ export const POST = withAPIHandler(async (req) => {
     }
   }, { status: 200 });
 });
+
+export const DELETE = withAPIHandler(async (req) => {
+  const user = await requireAuth();
+  
+  const body = await req.json();
+  const url = body.url;
+  
+  if (!url || typeof url !== 'string' || !url.includes("cloudinary.com/")) {
+    throw new APIError("Invalid Cloudinary URL provided", 400);
+  }
+  
+  // Extract public ID from Cloudinary URL
+  // Matches everything after /v123456789/ up to the file extension
+  const matches = url.match(/\/v\d+\/(.+)\.[a-zA-Z]+$/);
+  if (!matches || !matches[1]) {
+    throw new APIError("Could not extract public ID from URL", 400);
+  }
+  
+  const publicId = matches[1];
+  
+  // Basic security check: ensure the user is only deleting their own files
+  if (!publicId.startsWith(`provia/users/${user.id}/`)) {
+    throw new APIError("Unauthorized to delete this asset", 403);
+  }
+  
+  await CloudinaryService.destroyAsset(publicId, "image");
+  
+  return NextResponse.json({ success: true }, { status: 200 });
+});
