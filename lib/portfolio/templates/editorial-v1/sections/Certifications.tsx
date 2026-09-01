@@ -33,15 +33,27 @@ export function Certifications({ data }: { data: PortfolioDocumentDTO["certifica
                 className="group border-[2px] border-[#111] bg-white p-0 hover:bg-[#111] transition-all duration-400 overflow-hidden"
               >
                 {cert.credentialUrl && cert.credentialUrl !== "#" && (
-                  <div 
-                    className="w-full h-40 border-b-[2px] border-[#111] overflow-hidden bg-[#F5F0EA] cursor-pointer relative"
-                    onClick={() => setSelectedImage(cert.credentialUrl!)}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={cert.credentialUrl} alt={cert.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors pointer-events-none">
-                      <span className="opacity-0 group-hover:opacity-100 text-white font-bold tracking-wider text-sm uppercase drop-shadow-md transition-opacity">View</span>
+                  <div className="w-full relative bg-[#F5F0EA] border-b-[2px] border-[#111] overflow-hidden">
+                    <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar">
+                      {cert.credentialUrl.split(",").filter(Boolean).map((url: string, imgIdx: number) => (
+                        <div 
+                          key={imgIdx}
+                          className="w-full h-40 shrink-0 snap-center cursor-pointer relative"
+                          onClick={() => setSelectedImage(url)}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={url} alt={`${cert.name} page ${imgIdx + 1}`} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors pointer-events-none">
+                            <span className="opacity-0 group-hover:opacity-100 text-white font-bold tracking-wider text-sm uppercase drop-shadow-md transition-opacity">View</span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
+                    {cert.credentialUrl.split(",").filter(Boolean).length > 1 && (
+                      <div className="absolute bottom-2 right-2 bg-black/70 text-white text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm pointer-events-none">
+                        {cert.credentialUrl.split(",").filter(Boolean).length} Pages
+                      </div>
+                    )}
                   </div>
                 )}
                 <div className="p-5">

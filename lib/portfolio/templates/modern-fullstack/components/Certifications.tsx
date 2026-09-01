@@ -58,18 +58,30 @@ export default function Certifications() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: i * 0.08 }}
-            className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-6 hover:shadow-lg transition-all"
+            className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-6 hover:shadow-lg transition-all group"
           >
             {c.url && c.url !== "#" ? (
-              <div 
-                className="w-full h-48 rounded-xl overflow-hidden bg-surface2 cursor-pointer group relative"
-                onClick={() => setSelectedImage(c.url)}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={c.url} alt={c.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center pointer-events-none">
-                  <span className="opacity-0 group-hover:opacity-100 text-white font-medium drop-shadow-md transition-opacity">Click to view</span>
+              <div className="w-full relative bg-surface2 border-b border-border overflow-hidden rounded-xl">
+                <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar">
+                  {c.url.split(",").filter(Boolean).map((url: string, imgIdx: number) => (
+                    <div 
+                      key={imgIdx}
+                      className="w-full h-48 shrink-0 snap-center cursor-pointer relative"
+                      onClick={() => setSelectedImage(url)}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={url} alt={`${c.name} page ${imgIdx + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors pointer-events-none">
+                        <span className="opacity-0 group-hover:opacity-100 text-white font-medium drop-shadow-md transition-opacity">View</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+                {c.url.split(",").filter(Boolean).length > 1 && (
+                  <div className="absolute bottom-2 right-2 bg-black/70 text-white text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm pointer-events-none">
+                    {c.url.split(",").filter(Boolean).length} Pages
+                  </div>
+                )}
               </div>
             ) : (
               <div className="w-full h-48 rounded-xl bg-surface2 flex items-center justify-center">

@@ -18,7 +18,7 @@ export function CertificationsSection({ data }: { data: PortfolioDocumentDTO["ce
         <SectionHeader index="06" label="Certifications" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
           {data.map((cert, i) => (
-            <CertCard key={i} cert={cert} index={i} onSelect={() => setSelectedImage(cert.credentialUrl || null)} />
+            <CertCard key={i} cert={cert} index={i} onSelect={(url) => setSelectedImage(url)} />
           ))}
         </div>
       </section>
@@ -59,7 +59,7 @@ export function CertificationsSection({ data }: { data: PortfolioDocumentDTO["ce
   );
 }
 
-function CertCard({ cert, index, onSelect }: { cert: Cert; index: number; onSelect: () => void }) {
+function CertCard({ cert, index, onSelect }: { cert: Cert; index: number; onSelect: (url: string) => void }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
 
@@ -75,15 +75,27 @@ function CertCard({ cert, index, onSelect }: { cert: Cert; index: number; onSele
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
 
       {cert.credentialUrl && cert.credentialUrl !== "#" && (
-        <div 
-          className="w-full h-48 border-b border-amber-500/20 overflow-hidden cursor-pointer relative shrink-0 bg-black/20"
-          onClick={onSelect}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={cert.credentialUrl} alt={cert.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-          <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-colors pointer-events-none">
-            <span className="opacity-0 group-hover:opacity-100 text-white font-bold tracking-wider text-sm uppercase drop-shadow-lg transition-opacity">View</span>
+        <div className="w-full relative border-b border-amber-500/20 overflow-hidden shrink-0 bg-black/20">
+          <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar">
+            {cert.credentialUrl.split(",").filter(Boolean).map((url: string, imgIdx: number) => (
+              <div 
+                key={imgIdx}
+                className="w-full h-48 shrink-0 snap-center cursor-pointer relative"
+                onClick={() => onSelect(url)}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={url} alt={`${cert.name} page ${imgIdx + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-colors pointer-events-none">
+                  <span className="opacity-0 group-hover:opacity-100 text-white font-bold tracking-wider text-sm uppercase drop-shadow-lg transition-opacity">View</span>
+                </div>
+              </div>
+            ))}
           </div>
+          {cert.credentialUrl.split(",").filter(Boolean).length > 1 && (
+            <div className="absolute bottom-2 right-2 bg-black/70 text-amber-400 text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm pointer-events-none border border-amber-400/20">
+              {cert.credentialUrl.split(",").filter(Boolean).length} Pages
+            </div>
+          )}
         </div>
       )}
 

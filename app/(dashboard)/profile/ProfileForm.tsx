@@ -19,19 +19,20 @@ export function ProfileForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
-  const [deletingImageIndex, setDeletingImageIndex] = useState<number | null>(null);
+  const [deletingImageIndex, setDeletingImageIndex] = useState<string | null>(null);
   const toast = useToast();
 
-  const handleDeleteImage = async (i: number, url: string) => {
+  const handleDeleteImage = async (i: number, urlToDelete: string, fullUrlStr: string) => {
     try {
       const res = await fetch("/api/v1/upload/image", { 
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url })
+        body: JSON.stringify({ url: urlToDelete })
       });
       const data = await res.json();
       if (res.ok) {
-        updateArrayItem("certifications", i, "credentialUrl", "");
+        const urls = fullUrlStr.split(",").filter(u => u && u !== urlToDelete).join(",");
+        updateArrayItem("certifications", i, "credentialUrl", urls);
         toast.success("Certificate image deleted successfully");
       } else {
         toast.error(data.error || "Failed to delete image");
@@ -309,15 +310,15 @@ export function ProfileForm() {
                   <Textarea value={cert.organization || ""} onChange={e => updateArrayItem("certifications", i, "organization", e.target.value)} className="min-h-[80px] bg-surface/50 border-border-light hover:border-border transition-colors" placeholder="Briefly describe what this certificate covers..." />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Upload Certificate Image</label>
-                  <div className="flex items-center gap-4">
-                    {cert.credentialUrl ? (
-                      <div className="flex items-center gap-4">
+                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Upload Certificate Images</label>
+                  <div className="flex flex-wrap items-center gap-4">
+                    {cert.credentialUrl && cert.credentialUrl.split(",").filter(Boolean).map((url: string, imgIdx: number) => (
+                      <div key={imgIdx} className="flex items-center gap-4">
                         <div className="relative group/img flex-shrink-0">
-                          <img src={cert.credentialUrl} alt="Certificate" className="w-16 h-16 object-cover rounded-lg border border-border-light shadow-sm" />
-                          {deletingImageIndex !== i && (
+                          <img src={url} alt={`Certificate ${imgIdx + 1}`} className="w-16 h-16 object-cover rounded-lg border border-border-light shadow-sm" />
+                          {deletingImageIndex !== `${i}-${imgIdx}` && (
                             <button 
-                              onClick={() => setDeletingImageIndex(i)}
+                              onClick={() => setDeletingImageIndex(`${i}-${imgIdx}` as any)}
                               className="absolute -top-2 -right-2 bg-error text-white rounded-full p-1 shadow-md opacity-0 group-hover/img:opacity-100 transition-opacity"
                               title="Remove image"
                             >
@@ -325,43 +326,47 @@ export function ProfileForm() {
                             </button>
                           )}
                         </div>
-                        {deletingImageIndex === i && (
+                        {deletingImageIndex === `${i}-${imgIdx}` && (
                           <div className="flex items-center gap-3 bg-error-muted/30 border border-error-muted rounded-lg px-3 py-2 animate-in fade-in slide-in-from-left-2 duration-200">
                             <span className="text-xs font-semibold text-error">Delete this image?</span>
                             <div className="flex gap-2 border-l border-error-muted/50 pl-3">
                               <button onClick={() => setDeletingImageIndex(null)} className="text-xs font-medium text-text-secondary hover:text-text-primary transition-colors">Cancel</button>
-                              <button onClick={() => handleDeleteImage(i, cert.credentialUrl)} className="text-xs font-bold text-error hover:text-error/80 transition-colors">Confirm</button>
+                              <button onClick={() => handleDeleteImage(i, url, cert.credentialUrl)} className="text-xs font-bold text-error hover:text-error/80 transition-colors">Confirm</button>
                             </div>
                           </div>
                         )}
                       </div>
-                    ) : (
-                      <Input 
-                        type="file" 
-                        accept="image/*"
-                        onChange={async (e) => {
-                          const file = e.target.files?.[0];
-                          if (!file) return;
-                          
-                          const formData = new FormData();
-                          formData.append("file", file);
-                          
-                          try {
-                            const res = await fetch("/api/v1/upload/image", { method: "POST", body: formData });
-                            const data = await res.json();
-                            if (res.ok && data.data?.url) {
-                              updateArrayItem("certifications", i, "credentialUrl", data.data.url);
-                              toast.success("Certificate image uploaded successfully!");
-                            } else {
-                              toast.error(data.error || "Upload failed");
-                            }
-                          } catch (err) {
-                            toast.error("Upload failed");
+                    ))}
+                    
+                    <Input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        
+                        const formData = new FormData();
+                        formData.append("file", file);
+                        
+                        try {
+                          const res = await fetch("/api/v1/upload/image", { method: "POST", body: formData });
+                          const data = await res.json();
+                          if (res.ok && data.data?.url) {
+                            const currentUrls = cert.credentialUrl ? cert.credentialUrl.split(",").filter(Boolean) : [];
+                            const newUrls = [...currentUrls, data.data.url].join(",");
+                            updateArrayItem("certifications", i, "credentialUrl", newUrls);
+                            toast.success("Certificate image uploaded successfully!");
+                          } else {
+                            toast.error(data.error || "Upload failed");
                           }
-                        }}
-                        className="bg-surface/50 border-border-light hover:border-border transition-colors text-xs max-w-sm" 
-                      />
-                    )}
+                        } catch (err) {
+                          toast.error("Upload failed");
+                        } finally {
+                          e.target.value = ''; // Reset input so same file can be uploaded again if needed
+                        }
+                      }}
+                      className="bg-surface/50 border-border-light hover:border-border transition-colors text-xs w-[180px]" 
+                    />
                   </div>
                 </div>
               </div>
