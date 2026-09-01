@@ -34,7 +34,7 @@ export function ContactFooter({ contact, links }: Props) {
         {/* Eyebrow */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="text-[11px] font-black uppercase tracking-[0.3em] text-white/50 mb-6"
         >
@@ -44,7 +44,7 @@ export function ContactFooter({ contact, links }: Props) {
         {/* Headline */}
         <motion.h2
           initial={{ opacity: 0, y: 32 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
           className="font-black tracking-tighter text-white leading-[0.9] mb-8"
           style={{ fontSize: "clamp(2.5rem, 8vw, 6rem)" }}
@@ -58,7 +58,7 @@ export function ContactFooter({ contact, links }: Props) {
         {/* Subtitle */}
         <motion.p
           initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.25 }}
           className="text-base md:text-lg text-white/70 max-w-lg mx-auto mb-12 leading-relaxed"
         >
@@ -70,7 +70,7 @@ export function ContactFooter({ contact, links }: Props) {
         {contact?.email && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.35 }}
             className="mb-10"
           >
@@ -89,7 +89,7 @@ export function ContactFooter({ contact, links }: Props) {
         {contact?.location && (
           <motion.div
             initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
+            whileInView={{ opacity: 1 }} viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, delay: 0.45 }}
             className="flex items-center justify-center gap-2 text-sm text-white/50 mb-10 font-medium"
           >
@@ -102,7 +102,7 @@ export function ContactFooter({ contact, links }: Props) {
         {links && links.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.5 }}
             className="flex flex-wrap items-center justify-center gap-3 mb-16"
           >
@@ -124,7 +124,7 @@ export function ContactFooter({ contact, links }: Props) {
         {/* Footer bar */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
+          whileInView={{ opacity: 1 }} viewport={{ once: true, margin: "-80px" }}
           transition={{ delay: 0.6, duration: 0.8 }}
           className="border-t border-white/[0.06] pt-10 flex flex-col sm:flex-row items-center justify-between gap-3"
         >

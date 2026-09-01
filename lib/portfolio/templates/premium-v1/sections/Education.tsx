@@ -24,7 +24,7 @@ function EducationCard({ edu, index }: { edu: Edu; index: number }) {
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 32 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.7, ease: "easeOut", delay: index * 0.12 }}
       className="group relative overflow-hidden rounded-2xl bg-white/[0.025] border border-white/[0.07] hover:border-violet-500/30 hover:bg-white/[0.04] transition-all duration-400 p-7 md:p-8"
     >

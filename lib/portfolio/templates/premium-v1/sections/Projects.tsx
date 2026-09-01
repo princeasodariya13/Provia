@@ -93,7 +93,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 36 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.7, ease: "easeOut", delay: (index % 3) * 0.1 }}
       className={isWide ? "md:col-span-2" : "md:col-span-1"}
     >

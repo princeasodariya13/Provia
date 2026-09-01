@@ -24,7 +24,7 @@ function SkillGroup({ group, groupIndex }: { group: SkillGroup; groupIndex: numb
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6, ease: "easeOut", delay: groupIndex * 0.08 }}
       className="p-6 md:p-7 rounded-2xl bg-white/[0.025] border border-white/[0.07] hover:border-white/[0.12] transition-colors duration-300"
     >
@@ -47,7 +47,7 @@ function SkillGroup({ group, groupIndex }: { group: SkillGroup; groupIndex: numb
           <motion.span
             key={si}
             initial={{ opacity: 0, scale: 0.85 }}
-            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.35, ease: "easeOut", delay: groupIndex * 0.06 + si * 0.025 }}
             className={`cursor-default px-3.5 py-2 rounded-xl text-xs font-semibold text-white/90 bg-white/[0.04] border border-white/[0.08] transition-all duration-200 ${palette.tag}`}
           >

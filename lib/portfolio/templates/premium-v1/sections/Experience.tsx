@@ -37,7 +37,7 @@ function ExperienceCard({ item, index }: { item: Exp; index: number }) {
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 32 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.7, ease: "easeOut", delay: Math.min(index * 0.06, 0.4) }}
       className="group relative grid grid-cols-1 md:grid-cols-[200px_1fr] gap-0 md:gap-8"
     >

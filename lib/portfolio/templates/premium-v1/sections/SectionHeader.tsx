@@ -16,7 +16,7 @@ export function SectionHeader({ index, label, subtitle }: SectionHeaderProps) {
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.7, ease: "easeOut" }}
       className="mb-16"
     >

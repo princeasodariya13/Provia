@@ -20,7 +20,7 @@ export function AboutSection({ data }: { data: PortfolioDocumentDTO["about"] }) 
           {/* Left: large pull-quote */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
+            whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="lg:col-span-3"
           >
@@ -42,7 +42,7 @@ export function AboutSection({ data }: { data: PortfolioDocumentDTO["about"] }) 
                   <motion.p
                     key={i}
                     initial={{ opacity: 0, y: 16 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
+                    whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
                     transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 + i * 0.08 }}
                     className="text-base md:text-lg text-white/80 leading-relaxed"
                   >
@@ -56,7 +56,7 @@ export function AboutSection({ data }: { data: PortfolioDocumentDTO["about"] }) 
           {/* Right: Career themes + mini stats */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
+            whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
             className="lg:col-span-2 space-y-8"
           >
@@ -71,7 +71,7 @@ export function AboutSection({ data }: { data: PortfolioDocumentDTO["about"] }) 
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, x: 20 }}
-                      animate={inView ? { opacity: 1, x: 0 } : {}}
+                      whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-80px" }}
                       transition={{ duration: 0.5, ease: "easeOut", delay: 0.35 + i * 0.07 }}
                       className="group flex items-center gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/8 hover:border-violet-500/30 hover:bg-violet-500/5 transition-all duration-300"
                     >
@@ -88,7 +88,7 @@ export function AboutSection({ data }: { data: PortfolioDocumentDTO["about"] }) 
             {/* Visual accent card */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.7, ease: "easeOut", delay: 0.5 }}
               className="relative p-6 rounded-2xl overflow-hidden border border-violet-500/15 bg-gradient-to-br from-violet-500/10 via-transparent to-cyan-500/5"
             >

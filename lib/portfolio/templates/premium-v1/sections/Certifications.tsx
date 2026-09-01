@@ -98,7 +98,7 @@ function CertCard({ cert, index, onSelect }: { cert: Cert; index: number; onSele
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6, ease: "easeOut", delay: (index % 3) * 0.09 }}
       className="group relative overflow-hidden rounded-2xl border transition-all duration-400 bg-gradient-to-br from-amber-500/[0.08] via-transparent to-orange-500/[0.05] border-amber-500/15 hover:border-amber-400/35 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/10 flex flex-col h-full"
     >
