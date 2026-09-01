@@ -66,7 +66,7 @@ export default function Projects() {
               </div>
             </div>
 
-            <p className="text-muted text-sm leading-relaxed mb-6">{p.description}</p>
+            <p className="text-muted text-sm leading-relaxed mb-6 whitespace-pre-wrap break-words">{p.description}</p>
 
             <div className="flex flex-wrap gap-2 mb-6">
               {p.tags.map((t) => (

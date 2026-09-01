@@ -61,7 +61,7 @@ export function Certifications({ data }: { data: PortfolioDocumentDTO["certifica
                     {cert.name}
                   </h3>
                   {cert.organization && (
-                    <p className="text-xs font-medium text-[#555] group-hover:text-[#CCC] transition-colors leading-relaxed">
+                    <p className="text-xs font-medium text-[#555] group-hover:text-[#CCC] transition-colors leading-relaxed whitespace-pre-wrap break-words">
                       {cert.organization}
                     </p>
                   )}

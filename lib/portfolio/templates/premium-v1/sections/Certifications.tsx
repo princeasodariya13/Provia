@@ -135,7 +135,7 @@ function CertCard({ cert, index, onSelect }: { cert: Cert; index: number; onSele
           {cert.name}
         </h3>
         {cert.organization && (
-          <p className="text-sm font-medium text-amber-400/70 leading-relaxed flex-1">
+          <p className="text-sm font-medium text-amber-400/70 leading-relaxed flex-1 whitespace-pre-wrap break-words">
             {cert.organization}
           </p>
         )}

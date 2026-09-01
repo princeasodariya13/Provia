@@ -91,7 +91,7 @@ export default function Certifications() {
             <div>
               <p className="font-display font-bold text-lg text-deep">{c.name}</p>
               {c.organization && (
-                <p className="text-muted text-sm mt-2 leading-relaxed">{c.organization}</p>
+                <p className="text-muted text-sm mt-2 leading-relaxed whitespace-pre-wrap break-words">{c.organization}</p>
               )}
             </div>
           </motion.div>
