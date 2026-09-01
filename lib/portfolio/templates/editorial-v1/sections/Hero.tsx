@@ -83,8 +83,6 @@ export function Hero({
               priority
               unoptimized
             />
-            {/* Red overlay on hover */}
-            <div className="absolute inset-0 bg-[#CC2936] opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
           </motion.div>
         )}
       </div>
