@@ -119,7 +119,7 @@ export default function Hero() {
         >
           <div className="relative aspect-[4/5] max-w-sm mx-auto rounded-[2rem] overflow-hidden glass p-2">
             <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden">
-              <Image src={about.image || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070"} alt={profile.name} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" priority />
+              <Image src={about.image || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070"} alt={profile.name} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" priority unoptimized />
             </div>
           </div>
           <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 glass rounded-full px-5 py-2 whitespace-nowrap">
