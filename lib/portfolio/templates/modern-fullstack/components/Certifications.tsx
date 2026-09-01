@@ -4,11 +4,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { EmptyState } from "@/lib/portfolio/templates/shared/EmptyState";
-import { Award, X } from "lucide-react";
+import { Award, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useTemplateData } from "../context";
 
 export default function Certifications() {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedGallery, setSelectedGallery] = useState<{ urls: string[], currentIndex: number } | null>(null);
   const templateData = useTemplateData();
   // @ts-ignore
   const { 
@@ -67,7 +67,7 @@ export default function Certifications() {
                     <div 
                       key={imgIdx}
                       className="w-full h-48 shrink-0 snap-center cursor-pointer relative"
-                      onClick={() => setSelectedImage(url)}
+                      onClick={() => setSelectedGallery({ urls: c.url.split(",").filter(Boolean), currentIndex: imgIdx })}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={url} alt={`${c.name} page ${imgIdx + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" />
@@ -98,29 +98,61 @@ export default function Certifications() {
         ))}
       </div>
 
-      {selectedImage && (
+      {selectedGallery && (
         <div 
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 md:p-8"
-          onClick={() => setSelectedImage(null)}
+          onClick={() => setSelectedGallery(null)}
         >
           <button 
             className="absolute top-4 right-4 md:top-8 md:right-8 text-white/70 hover:text-white bg-black/50 hover:bg-black/70 rounded-full p-2 transition-colors z-[101]"
             onClick={(e) => {
               e.stopPropagation();
-              setSelectedImage(null);
+              setSelectedGallery(null);
             }}
           >
             <X className="w-6 h-6 md:w-8 md:h-8" />
           </button>
           
+          {selectedGallery.urls.length > 1 && (
+            <button
+              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white/70 hover:text-white bg-black/50 hover:bg-black/70 rounded-full p-3 transition-colors z-[101]"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedGallery(prev => prev ? { ...prev, currentIndex: (prev.currentIndex - 1 + prev.urls.length) % prev.urls.length } : null);
+              }}
+            >
+              <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
+            </button>
+          )}
+
           <motion.img 
+            key={selectedGallery.currentIndex}
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            src={selectedImage} 
-            alt="Certificate View" 
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            src={selectedGallery.urls[selectedGallery.currentIndex]} 
+            alt={`Certificate View ${selectedGallery.currentIndex + 1}`} 
             className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           />
+
+          {selectedGallery.urls.length > 1 && (
+            <button
+              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white/70 hover:text-white bg-black/50 hover:bg-black/70 rounded-full p-3 transition-colors z-[101]"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedGallery(prev => prev ? { ...prev, currentIndex: (prev.currentIndex + 1) % prev.urls.length } : null);
+              }}
+            >
+              <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
+            </button>
+          )}
+          
+          {selectedGallery.urls.length > 1 && (
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs font-bold px-3 py-1.5 rounded-full z-[101]">
+              {selectedGallery.currentIndex + 1} / {selectedGallery.urls.length}
+            </div>
+          )}
         </div>
       )}
     </section>

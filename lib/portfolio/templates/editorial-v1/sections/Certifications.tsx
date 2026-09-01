@@ -3,12 +3,12 @@ import { useState } from "react";
 import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
 import { motion, AnimatePresence } from "framer-motion";
 import { SectionLabel } from "./About";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 type Cert = PortfolioDocumentDTO["certifications"][number];
 
 export function Certifications({ data }: { data: PortfolioDocumentDTO["certifications"] }) {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedGallery, setSelectedGallery] = useState<{ urls: string[], currentIndex: number } | null>(null);
 
   if (!data || data.length === 0) return null;
 
@@ -39,7 +39,7 @@ export function Certifications({ data }: { data: PortfolioDocumentDTO["certifica
                         <div 
                           key={imgIdx}
                           className="w-full h-40 shrink-0 snap-center cursor-pointer relative"
-                          onClick={() => setSelectedImage(url)}
+                          onClick={() => setSelectedGallery({ urls: cert.credentialUrl!.split(",").filter(Boolean), currentIndex: imgIdx })}
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={url} alt={`${cert.name} page ${imgIdx + 1}`} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
@@ -73,34 +73,65 @@ export function Certifications({ data }: { data: PortfolioDocumentDTO["certifica
       </motion.section>
 
       <AnimatePresence>
-        {selectedImage && (
+        {selectedGallery && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 md:p-8"
-            onClick={() => setSelectedImage(null)}
+            onClick={() => setSelectedGallery(null)}
           >
             <button 
               className="absolute top-4 right-4 md:top-8 md:right-8 text-white/70 hover:text-white transition-colors z-[10000]"
               onClick={(e) => {
                 e.stopPropagation();
-                setSelectedImage(null);
+                setSelectedGallery(null);
               }}
             >
               <X className="w-8 h-8" />
             </button>
+
+            {selectedGallery.urls.length > 1 && (
+              <button
+                className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white/70 hover:text-white bg-black/50 hover:bg-black/70 rounded-full p-3 transition-colors z-[10000]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedGallery(prev => prev ? { ...prev, currentIndex: (prev.currentIndex - 1 + prev.urls.length) % prev.urls.length } : null);
+                }}
+              >
+                <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
+              </button>
+            )}
             
             <motion.img 
+              key={selectedGallery.currentIndex}
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              src={selectedImage} 
-              alt="Certificate View" 
+              src={selectedGallery.urls[selectedGallery.currentIndex]} 
+              alt={`Certificate View ${selectedGallery.currentIndex + 1}`} 
               className="max-w-full max-h-[90vh] object-contain rounded-sm shadow-2xl border border-white/10"
               onClick={(e) => e.stopPropagation()}
             />
+
+            {selectedGallery.urls.length > 1 && (
+              <button
+                className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white/70 hover:text-white bg-black/50 hover:bg-black/70 rounded-full p-3 transition-colors z-[10000]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedGallery(prev => prev ? { ...prev, currentIndex: (prev.currentIndex + 1) % prev.urls.length } : null);
+                }}
+              >
+                <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
+              </button>
+            )}
+            
+            {selectedGallery.urls.length > 1 && (
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs font-bold px-3 py-1.5 rounded-full z-[10000]">
+                {selectedGallery.currentIndex + 1} / {selectedGallery.urls.length}
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

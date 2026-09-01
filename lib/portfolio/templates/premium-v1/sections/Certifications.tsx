@@ -2,13 +2,13 @@
 import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
 
 type Cert = PortfolioDocumentDTO["certifications"][number];
 
 export function CertificationsSection({ data }: { data: PortfolioDocumentDTO["certifications"] }) {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedGallery, setSelectedGallery] = useState<{ urls: string[], currentIndex: number } | null>(null);
 
   if (!data || data.length === 0) return null;
 
@@ -18,40 +18,71 @@ export function CertificationsSection({ data }: { data: PortfolioDocumentDTO["ce
         <SectionHeader index="06" label="Certifications" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
           {data.map((cert, i) => (
-            <CertCard key={i} cert={cert} index={i} onSelect={(url) => setSelectedImage(url)} />
+            <CertCard key={i} cert={cert} index={i} onSelect={(gallery) => setSelectedGallery(gallery)} />
           ))}
         </div>
       </section>
 
       <AnimatePresence>
-        {selectedImage && (
+        {selectedGallery && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 md:p-8"
-            onClick={() => setSelectedImage(null)}
+            onClick={() => setSelectedGallery(null)}
           >
             <button 
               className="absolute top-4 right-4 md:top-8 md:right-8 text-white/70 hover:text-white transition-colors z-[10000]"
               onClick={(e) => {
                 e.stopPropagation();
-                setSelectedImage(null);
+                setSelectedGallery(null);
               }}
             >
               <X className="w-8 h-8" />
             </button>
             
+            {selectedGallery.urls.length > 1 && (
+              <button
+                className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white/70 hover:text-white bg-black/50 hover:bg-black/70 rounded-full p-3 transition-colors z-[10000]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedGallery(prev => prev ? { ...prev, currentIndex: (prev.currentIndex - 1 + prev.urls.length) % prev.urls.length } : null);
+                }}
+              >
+                <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
+              </button>
+            )}
+
             <motion.img 
+              key={selectedGallery.currentIndex}
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              src={selectedImage} 
-              alt="Certificate View" 
+              src={selectedGallery.urls[selectedGallery.currentIndex]} 
+              alt={`Certificate View ${selectedGallery.currentIndex + 1}`} 
               className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl border border-white/10"
               onClick={(e) => e.stopPropagation()}
             />
+
+            {selectedGallery.urls.length > 1 && (
+              <button
+                className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white/70 hover:text-white bg-black/50 hover:bg-black/70 rounded-full p-3 transition-colors z-[10000]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedGallery(prev => prev ? { ...prev, currentIndex: (prev.currentIndex + 1) % prev.urls.length } : null);
+                }}
+              >
+                <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
+              </button>
+            )}
+            
+            {selectedGallery.urls.length > 1 && (
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-amber-400 text-xs font-bold px-3 py-1.5 rounded-full z-[10000] border border-amber-400/20">
+                {selectedGallery.currentIndex + 1} / {selectedGallery.urls.length}
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -59,7 +90,7 @@ export function CertificationsSection({ data }: { data: PortfolioDocumentDTO["ce
   );
 }
 
-function CertCard({ cert, index, onSelect }: { cert: Cert; index: number; onSelect: (url: string) => void }) {
+function CertCard({ cert, index, onSelect }: { cert: Cert; index: number; onSelect: (gallery: { urls: string[], currentIndex: number }) => void }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
 
@@ -81,7 +112,7 @@ function CertCard({ cert, index, onSelect }: { cert: Cert; index: number; onSele
               <div 
                 key={imgIdx}
                 className="w-full h-48 shrink-0 snap-center cursor-pointer relative"
-                onClick={() => onSelect(url)}
+                onClick={() => onSelect({ urls: cert.credentialUrl!.split(",").filter(Boolean), currentIndex: imgIdx })}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={url} alt={`${cert.name} page ${imgIdx + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
