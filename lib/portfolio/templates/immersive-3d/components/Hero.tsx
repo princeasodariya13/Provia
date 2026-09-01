@@ -45,9 +45,12 @@ export default function Hero() {
   return (
     <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
       <Hero3D />
-      <div className="absolute inset-0 bg-gradient-to-t from-base via-base/60 to-transparent pointer-events-none" />
+      {/* Left vignette so text stays readable without hiding the 3D animation */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#050508]/80 via-[#050508]/30 to-transparent pointer-events-none z-[1]" />
+      {/* Bottom fade into next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#050508] to-transparent pointer-events-none z-[1]" />
 
-      <div className="relative max-w-6xl mx-auto px-6 w-full pointer-events-none">
+      <div className="relative z-[2] max-w-6xl mx-auto px-6 w-full pointer-events-none">
         <motion.div
           variants={container}
           initial="hidden"

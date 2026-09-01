@@ -45,7 +45,7 @@ export default function Nav() {
 
         {/* Nav */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((l) => (
+          {navLinks.map((l, i) => (
             <a
               key={l.href}
               href={l.href}

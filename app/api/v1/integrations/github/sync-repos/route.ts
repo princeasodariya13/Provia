@@ -88,13 +88,10 @@ export const POST = withAPIHandler(async (req) => {
         });
       }
     } else {
-      // Find ANY existing project with the same name, regardless of source (e.g. from RESUME)
-      const nameMatch = await prisma.professionalProject.findFirst({
-        where: {
-          profileId: profile.id,
-          name: { equals: repo.name, mode: "insensitive" },
-        },
-      });
+      // Find ANY existing project with a similar normalized name
+      const allProjects = await prisma.professionalProject.findMany({ where: { profileId: profile.id } });
+      const repoNormalized = repo.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const nameMatch = allProjects.find(p => p.name.toLowerCase().replace(/[^a-z0-9]/g, '') === repoNormalized);
       
       if (nameMatch) {
         // Merge GitHub rich data into the existing project
@@ -110,6 +107,7 @@ export const POST = withAPIHandler(async (req) => {
             : technologies;
           updateData.description = (!nameMatch.description || nameMatch.description.length < 20) && repo.description ? repo.description : nameMatch.description;
           updateData.url = repo.homepage || nameMatch.url || null;
+          updateData.source = "GITHUB"; // Upgrade the source so it gets precedence
         }
 
         await prisma.professionalProject.update({

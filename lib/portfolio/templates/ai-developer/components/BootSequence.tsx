@@ -55,7 +55,7 @@ export default function BootSequence({ onDone }: { onDone?: () => void }) {
           <div className="hud text-left mb-10 h-24 space-y-1">
             {lines.slice(0, lineIndex + 1).map((line, i) => (
               <motion.p
-                key={line}
+                key={i}
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3 }}

@@ -107,6 +107,44 @@ export const PortfolioContentService = {
 
       const displayName = profile.fullName || profile.user?.name || "";
 
+      const deduplicateProjects = (projects: typeof profile.projects) => {
+        const projectMap = new Map<string, typeof profile.projects[0]>();
+        
+        // Sort projects to prioritize GITHUB or manually edited over RESUME
+        const sortedProjects = [...projects].sort((a, b) => {
+          if (a.isManuallyEdited && !b.isManuallyEdited) return -1;
+          if (!a.isManuallyEdited && b.isManuallyEdited) return 1;
+          if (a.source === 'GITHUB' && b.source !== 'GITHUB') return -1;
+          if (a.source !== 'GITHUB' && b.source === 'GITHUB') return 1;
+          return 0;
+        });
+
+        for (const p of sortedProjects) {
+          const normalizedName = p.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+          
+          if (projectMap.has(normalizedName)) {
+            const existing = projectMap.get(normalizedName)!;
+            // Merge fields. existing is priority (GITHUB/MANUAL), pull missing fields from Resume
+            if (!existing.description && p.description) existing.description = p.description;
+            if (!existing.url && p.url) existing.url = p.url;
+            if (!existing.repositoryUrl && p.repositoryUrl) existing.repositoryUrl = p.repositoryUrl;
+            if (!existing.technologies && p.technologies) {
+               existing.technologies = p.technologies;
+            } else if (existing.technologies && p.technologies) {
+               const existingTechs = existing.technologies.split(',').map(t => t.trim());
+               const newTechs = p.technologies.split(',').map(t => t.trim());
+               existing.technologies = Array.from(new Set([...existingTechs, ...newTechs])).filter(Boolean).join(', ');
+            }
+          } else {
+            projectMap.set(normalizedName, { ...p });
+          }
+        }
+        
+        return Array.from(projectMap.values());
+      };
+
+      const mergedProjects = deduplicateProjects(profile.projects);
+
       const rawDocument: PortfolioDocumentDTO = {
         schemaVersion: "1.0.0",
         metadata: {
@@ -143,7 +181,7 @@ export const PortfolioContentService = {
           description: e.description ?? null,
         })),
         skills: skillsGrouped,
-        projects: profile.projects.map(p => ({
+        projects: mergedProjects.map(p => ({
           name: p.name,
           description: p.description ?? null,
           url: p.url ?? null,

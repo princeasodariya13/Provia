@@ -39,7 +39,7 @@ export default function Capabilities() {
       <div className="grid md:grid-cols-2 gap-4">
         {capabilities.map((c, i) => (
           <motion.div
-            key={c.title}
+            key={i}
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

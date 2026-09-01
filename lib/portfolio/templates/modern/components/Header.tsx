@@ -46,7 +46,7 @@ export default function Header() {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-7">
-          {nav.map((l) => (
+          {nav.map((l, i) => (
             <a
               key={l.href}
               href={l.href}
@@ -60,8 +60,8 @@ export default function Header() {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-4">
-          {socials.slice(0, 1).map((s: any) => (
-            <a key={s.url} href={s.url} target="_blank" rel="noreferrer"
+          {socials.slice(0, 1).map((s: any, i: number) => (
+            <a key={i} href={s.url} target="_blank" rel="noreferrer"
               className="section-label text-muted hover:text-accent transition-colors"
             >
               {s.platform?.trim() || s.url?.trim().replace(/^https?:\/\//, '').split('/')[0] || "Link"}
@@ -96,7 +96,7 @@ export default function Header() {
           animate={{ opacity: 1, y: 0 }}
           className="md:hidden bg-base border-t border-border px-6 py-5 flex flex-col gap-4 shadow-lg"
         >
-          {nav.map((l) => (
+          {nav.map((l, i) => (
             <a key={l.href} href={l.href} onClick={() => setOpen(false)}
               className="text-sm font-medium text-muted hover:text-accent transition-colors"
             >

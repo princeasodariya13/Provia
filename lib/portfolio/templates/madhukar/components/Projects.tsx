@@ -49,7 +49,7 @@ export default function Projects() {
 
         <div className="space-y-8">
           {projects.map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.08}>
+            <Reveal key={i} delay={i * 0.08}>
               <div className="glass rounded-3xl overflow-hidden grid md:grid-cols-2">
                 <div className="relative aspect-[16/10] md:aspect-auto">
                   <Image src={p.image} alt={p.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
@@ -62,9 +62,9 @@ export default function Projects() {
                     {p.description}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {(p.tags || []).map((t) => (
+                    {(p.tags || []).map((t, i) => (
                       <span
-                        key={t}
+                        key={i}
                         className="font-mono text-xs text-accent bg-accent/10 rounded-full px-2.5 py-1"
                       >
                         {t}

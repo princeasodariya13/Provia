@@ -6,7 +6,7 @@ import { useInView, animate } from "framer-motion";
 
 export default function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-40px" });
+  const isInView = true;
 
   useEffect(() => {
     if (!isInView || !ref.current) return;

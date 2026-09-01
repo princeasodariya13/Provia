@@ -18,7 +18,7 @@ const fadeUp = (delay = 0) => ({
 export function PremiumHero({ hero, contact, stats }: Props) {
   const initials = hero.name
     .split(" ")
-    .map((w) => w[0] || "")
+    .map((w, i) => w[0] || "")
     .join("")
     .slice(0, 2)
     .toUpperCase();

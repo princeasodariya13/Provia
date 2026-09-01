@@ -26,7 +26,7 @@ export default function Skills() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {groups.map(([group, items]: [string, string[]], i: number) => (
-            <Reveal key={group} delay={i * 0.08}>
+            <Reveal key={i} delay={i * 0.08}>
               <div className="mn-card p-7 h-full group">
                 {/* Category header */}
                 <div className="flex items-center gap-2 mb-5">
@@ -35,8 +35,8 @@ export default function Skills() {
                 </div>
                 {/* Skill chips */}
                 <div className="flex flex-wrap gap-2">
-                  {items.map((s: string) => (
-                    <span key={s} className="mn-tag hover:mn-tag-accent hover:text-accent transition-colors">
+                  {items.map((s: string, si: number) => (
+                    <span key={si} className="mn-tag hover:mn-tag-accent hover:text-accent transition-colors">
                       {s}
                     </span>
                   ))}

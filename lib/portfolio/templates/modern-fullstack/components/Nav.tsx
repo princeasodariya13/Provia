@@ -38,7 +38,7 @@ export default function Nav() {
         </a>
 
         <nav className="hidden md:flex items-center gap-7">
-          {navLinks.map((l) => (
+          {navLinks.map((l, i) => (
             <a key={l.href} href={l.href} className="eyebrow text-ink/70 hover:text-accent transition-colors">
               {l.label}
             </a>

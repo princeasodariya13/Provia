@@ -165,7 +165,7 @@ export default function Skills() {
                     const iconUrl = getSkillIconUrl(s);
                     return (
                       <motion.span 
-                        key={s} 
+                        key={idx} 
                         initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}

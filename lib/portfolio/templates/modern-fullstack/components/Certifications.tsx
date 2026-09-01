@@ -60,14 +60,14 @@ export default function Certifications() {
             transition={{ duration: 0.5, delay: i * 0.08 }}
             className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-6 hover:shadow-lg transition-all group"
           >
-            {c.url && c.url !== "#" ? (
+            {c.credentialUrl && c.credentialUrl !== "#" ? (
               <div className="w-full relative bg-surface2 border-b border-border overflow-hidden rounded-xl">
                 <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar">
-                  {c.url.split(",").filter(Boolean).map((url: string, imgIdx: number) => (
+                  {c.credentialUrl.split(",").filter(Boolean).map((url: string, imgIdx: number) => (
                     <div 
                       key={imgIdx}
                       className="w-full h-48 shrink-0 snap-center cursor-pointer relative"
-                      onClick={() => setSelectedGallery({ urls: c.url.split(",").filter(Boolean), currentIndex: imgIdx })}
+                      onClick={() => setSelectedGallery({ urls: c.credentialUrl.split(",").filter(Boolean), currentIndex: imgIdx })}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={url} alt={`${c.name} page ${imgIdx + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" />
@@ -77,9 +77,9 @@ export default function Certifications() {
                     </div>
                   ))}
                 </div>
-                {c.url.split(",").filter(Boolean).length > 1 && (
+                {c.credentialUrl.split(",").filter(Boolean).length > 1 && (
                   <div className="absolute bottom-2 right-2 bg-black/70 text-white text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm pointer-events-none">
-                    {c.url.split(",").filter(Boolean).length} Pages
+                    {c.credentialUrl.split(",").filter(Boolean).length} Pages
                   </div>
                 )}
               </div>

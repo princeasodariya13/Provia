@@ -58,9 +58,9 @@ export default function Header() {
         </a>
 
         <nav className="hidden lg:flex items-center gap-8">
-          {nav.map((item) => (
+          {nav.map((item, i) => (
             <a
-              key={item}
+              key={i}
               href={`#${item.toLowerCase()}`}
               className="text-sm text-muted hover:text-cyan transition-colors"
             >
@@ -87,9 +87,9 @@ export default function Header() {
 
       {open && (
         <div className="lg:hidden glass px-6 py-4 flex flex-col gap-4">
-          {nav.map((item) => (
+          {nav.map((item, i) => (
             <a
-              key={item}
+              key={i}
               href={`#${item.toLowerCase()}`}
               onClick={() => setOpen(false)}
               className="text-sm text-muted hover:text-cyan transition-colors"

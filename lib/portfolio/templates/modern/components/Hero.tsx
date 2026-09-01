@@ -90,9 +90,9 @@ export default function Hero() {
             >
               Get in touch
             </a>
-            {socials.slice(0, 2).map((s: any) => (
+            {socials.slice(0, 2).map((s: any, i: number) => (
               <a
-                key={s.url}
+                key={i}
                 href={s.url}
                 target="_blank"
                 rel="noreferrer"

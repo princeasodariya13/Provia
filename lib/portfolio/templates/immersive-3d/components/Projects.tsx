@@ -49,7 +49,7 @@ export default function Projects() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {projects.map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.1} className={p.featured ? "md:col-span-2" : ""}>
+            <Reveal key={i} delay={i * 0.1} className={p.featured ? "md:col-span-2" : ""}>
               <motion.div 
                 whileHover={{ y: -5, scale: 1.01, boxShadow: "0 20px 40px -10px rgba(94, 247, 240, 0.15)" }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -75,8 +75,8 @@ export default function Projects() {
                   <p className="text-muted text-sm leading-relaxed mb-4 flex-1">{p.description}</p>
 
                   <div className="flex flex-wrap gap-2 mb-5">
-                    {(p.tags || []).map((t) => (
-                      <span key={t} className="font-mono text-xs text-cyan bg-cyan/10 rounded-full px-2.5 py-1">
+                    {(p.tags || []).map((t, i) => (
+                      <span key={i} className="font-mono text-xs text-cyan bg-cyan/10 rounded-full px-2.5 py-1">
                         {t}
                       </span>
                     ))}

@@ -137,20 +137,43 @@ export const POST = withAPIHandler(async (req) => {
 
   // Projects
   if (selections.projects.length > 0) {
-    transactions.push(prisma.professionalProject.deleteMany({ where: { profileId: profile.id } }));
+    const existingProjects = await prisma.professionalProject.findMany({ where: { profileId: profile.id } });
+    const existingMap = new Map();
+    existingProjects.forEach(ep => {
+      existingMap.set(ep.name.toLowerCase().replace(/[^a-z0-9]/g, ''), ep);
+    });
+
+    transactions.push(prisma.professionalProject.deleteMany({ where: { profileId: profile.id, source: "RESUME" } }));
+    
     for (const idx of selections.projects) {
       const proj = structuredData.projects?.[idx];
       if (proj) {
-        transactions.push(prisma.professionalProject.create({
-          data: {
-            profileId: profile.id,
-            name: proj.name,
-            description: proj.description,
-            technologies: proj.technologies.join(", "),
-            url: proj.url,
-            source: "RESUME",
+        const normalized = proj.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (existingMap.has(normalized)) {
+          const ep = existingMap.get(normalized)!;
+          // Merge Resume data into existing GITHUB/MANUAL project without duplicating
+          if (ep.source !== 'RESUME') {
+            transactions.push(prisma.professionalProject.update({
+              where: { id: ep.id },
+              data: {
+                description: ep.description || proj.description,
+                url: ep.url || proj.url,
+                technologies: ep.technologies || proj.technologies.join(", "),
+              }
+            }));
           }
-        }));
+        } else {
+          transactions.push(prisma.professionalProject.create({
+            data: {
+              profileId: profile.id,
+              name: proj.name,
+              description: proj.description,
+              technologies: proj.technologies.join(", "),
+              url: proj.url,
+              source: "RESUME",
+            }
+          }));
+        }
       }
     }
   }

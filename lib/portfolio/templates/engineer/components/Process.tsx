@@ -41,7 +41,7 @@ export default function Process() {
       <div className="flex flex-col gap-4">
         {processList.map((step: any, i: number) => (
           <motion.div
-            key={step.title}
+            key={i}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
@@ -56,9 +56,9 @@ export default function Process() {
             </div>
             <p className="text-muted leading-relaxed">{step.description}</p>
             <div className="flex flex-wrap gap-2 content-start">
-              {step.tags.map((t) => (
+              {step.tags.map((t, i) => (
                 <span
-                  key={t}
+                  key={i}
                   className="eyebrow rounded-full border border-border px-3 py-1.5"
                 >
                   {t}
