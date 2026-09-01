@@ -254,6 +254,64 @@ export function ProfileForm() {
           ))}
         </div>
       </section>
+
+      {/* Certifications */}
+      <section className="relative bg-surface/60 backdrop-blur-xl border border-border-light rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-brand/5 hover:border-brand/20 transition-all duration-500 group">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+        <div className="border-b border-border-light/50 p-6 sm:p-8 bg-surface-muted/20 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 relative z-10">
+          <div>
+            <h2 className="text-xl font-extrabold text-text-primary tracking-tight">Certifications</h2>
+            <p className="text-sm text-text-secondary mt-1 font-medium">Your licenses and certificates.</p>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => addArrayItem("certifications", { name: "", organization: "" })} className="rounded-full bg-surface shadow-sm hover:border-brand hover:text-brand transition-all">
+            <Plus className="w-4 h-4 mr-1.5" /> Add Certification
+          </Button>
+        </div>
+        
+        <div className="p-6 sm:p-8 space-y-6 relative z-10">
+          {(!data.certifications || data.certifications.length === 0) && (
+            <div className="text-center py-8 text-text-secondary text-sm">No certifications added yet.</div>
+          )}
+
+          {data.certifications?.map((cert: any, i: number) => (
+            <div key={cert.id || i} className="relative group/item border border-border-light rounded-xl p-5 hover:border-border-strong transition-colors bg-surface/50">
+              <SourceBadge source={cert.source} />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Certification Name</label>
+                  <Input value={cert.name || ""} onChange={e => updateArrayItem("certifications", i, "name", e.target.value)} className="bg-surface/50 border-border-light hover:border-border transition-colors" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Issuing Organization</label>
+                  <Input value={cert.organization || ""} onChange={e => updateArrayItem("certifications", i, "organization", e.target.value)} className="bg-surface/50 border-border-light hover:border-border transition-colors" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Issue Date</label>
+                  <Input type="date" value={cert.issueDate ? new Date(cert.issueDate).toISOString().split('T')[0] : ""} onChange={e => updateArrayItem("certifications", i, "issueDate", e.target.value ? new Date(e.target.value).toISOString() : null)} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Expiration Date</label>
+                  <Input type="date" value={cert.expirationDate ? new Date(cert.expirationDate).toISOString().split('T')[0] : ""} onChange={e => updateArrayItem("certifications", i, "expirationDate", e.target.value ? new Date(e.target.value).toISOString() : null)} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Credential ID</label>
+                  <Input value={cert.credentialId || ""} onChange={e => updateArrayItem("certifications", i, "credentialId", e.target.value)} className="bg-surface/50 border-border-light hover:border-border transition-colors" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold tracking-wider uppercase text-text-secondary">Credential URL</label>
+                  <Input value={cert.credentialUrl || ""} onChange={e => updateArrayItem("certifications", i, "credentialUrl", e.target.value)} type="url" placeholder="https://..." className="bg-surface/50 border-border-light hover:border-border transition-colors" />
+                </div>
+              </div>
+              <div className="flex justify-end mt-4 pt-4 border-t border-border-light transition-opacity">
+                <Button variant="ghost" size="sm" onClick={() => removeArrayItem("certifications", i)} className="text-error hover:bg-error-muted hover:text-error">
+                  <Trash2 className="w-4 h-4 mr-2" /> Delete
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
       
       {/* Education & Skills Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

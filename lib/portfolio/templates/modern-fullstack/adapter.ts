@@ -37,10 +37,10 @@ export function mapProviaToTemplate(doc: PortfolioDocumentDTO) {
       duration: `${e.startDate ? new Date(e.startDate).getFullYear() : ""} – ${e.isCurrent ? "Present" : (e.endDate ? new Date(e.endDate).getFullYear() : "")}`,
       description: e.description || ""
     })),
-    skills: (doc.skills || []).flatMap((s: any) => (s.skills || []).map((name: string) => ({
-      name,
-      level: s.category || "Professional"
-    }))),
+    skills: (doc.skills || []).map((s: any) => ({
+      category: s.category || "Skills",
+      skills: s.skills || []
+    })),
     education: (doc.education || []).map(ed => ({
       institution: ed.institution,
       degree: ed.degree || "",
