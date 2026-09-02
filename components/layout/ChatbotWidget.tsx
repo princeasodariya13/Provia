@@ -125,6 +125,7 @@ export function ChatbotWidget() {
         <div
           className={`${chatWidth} ${chatHeight} bg-surface rounded-2xl shadow-2xl border border-border flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-300`}
           style={{ boxShadow: "0 25px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05)" }}
+          onWheel={(e) => e.stopPropagation()}
         >
           {/* Header */}
           <div className="flex items-center gap-3 px-4 py-3.5 bg-gradient-to-r from-brand/10 via-brand/5 to-transparent border-b border-border shrink-0">
@@ -164,7 +165,7 @@ export function ChatbotWidget() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-4 scroll-smooth" style={{ scrollbarWidth: "thin" }}>
+          <div className="flex-1 overflow-y-auto overscroll-none p-4 space-y-4 scroll-smooth" style={{ scrollbarWidth: "thin" }}>
             {messages.map((msg) => (
               <div
                 key={msg.id}
@@ -237,7 +238,7 @@ export function ChatbotWidget() {
 
           {/* Input */}
           <div className="p-3 border-t border-border bg-surface/80 backdrop-blur-sm shrink-0">
-            <div className="flex items-center gap-2 bg-surface-muted rounded-xl px-3.5 py-2 border border-border focus-within:border-brand/40 transition-colors">
+            <div className="flex items-center gap-2 bg-surface-muted rounded-xl px-3.5 py-2 border border-border transition-colors">
               <input
                 ref={inputRef}
                 type="text"
