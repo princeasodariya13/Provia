@@ -157,18 +157,33 @@ export const POST = withAPIHandler(async (request: Request) => {
     model: env.AI_MODEL || "gemini-1.5-flash",
   });
 
-  // Build conversation history for chat context (last 10 exchanges)
-  const chatHistory: Content[] = (history || [])
+  // Sanitize history: Gemini strictly requires history to start with 'user' and alternate
+  const rawHistory = (history || [])
     .filter((m) => m.content?.trim())
-    .slice(-10)
     .map((msg) => ({
       role: msg.role === "assistant" ? "model" : "user",
       parts: [{ text: msg.content }],
     }));
 
+  const chatHistory: Content[] = [];
+  let nextExpectedRole = "user";
+  
+  for (const msg of rawHistory) {
+    if (msg.role === nextExpectedRole) {
+      chatHistory.push(msg);
+      nextExpectedRole = nextExpectedRole === "user" ? "model" : "user";
+    }
+  }
+
+  // Ensure we don't pass too much context, but keep it starting with 'user'
+  let finalHistory = chatHistory.slice(-10);
+  if (finalHistory.length > 0 && finalHistory[0].role !== "user") {
+    finalHistory = finalHistory.slice(1);
+  }
+
   // Use startChat with systemInstruction in the params
   const chat = model.startChat({
-    history: chatHistory,
+    history: finalHistory,
     systemInstruction: {
       role: "system",
       parts: [{ text: SYSTEM_PROMPT }],

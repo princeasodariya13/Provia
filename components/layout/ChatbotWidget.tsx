@@ -164,7 +164,7 @@ export function ChatbotWidget() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth" style={{ scrollbarWidth: "thin" }}>
+          <div className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-4 scroll-smooth" style={{ scrollbarWidth: "thin" }}>
             {messages.map((msg) => (
               <div
                 key={msg.id}
@@ -222,7 +222,7 @@ export function ChatbotWidget() {
 
           {/* Quick Suggestions */}
           {messages.length <= 1 && (
-            <div className="px-4 pb-2 flex gap-2 overflow-x-auto no-scrollbar shrink-0">
+            <div className="px-4 pb-2 flex gap-2 overflow-x-auto overscroll-contain no-scrollbar shrink-0">
               {["How do I publish?", "Connect GitHub", "Change template"].map((s) => (
                 <button
                   key={s}
@@ -246,7 +246,7 @@ export function ChatbotWidget() {
                 onKeyDown={handleKeyDown}
                 placeholder="Ask me anything about Provia..."
                 disabled={isLoading}
-                className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted outline-none disabled:opacity-60"
+                className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted outline-none focus:outline-none focus:ring-0 border-none focus:border-transparent focus:shadow-none p-0 disabled:opacity-60"
               />
               <button
                 onClick={sendMessage}
