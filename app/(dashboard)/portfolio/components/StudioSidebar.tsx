@@ -45,9 +45,10 @@ export function StudioSidebar({
   document, handleGenerateAI, generating
 }: Props) {
   return (
-    <div className="w-56 bg-surface/80 backdrop-blur-xl border-r border-border-light shrink-0 flex flex-col h-full overflow-hidden z-20">
-      <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-1" data-lenis-prevent>
-        <p className="px-3 pt-2 pb-3 text-[10px] font-extrabold uppercase tracking-widest text-text-muted">Studio Options</p>
+    <div className="w-12 sm:w-44 md:w-56 bg-surface/80 backdrop-blur-xl border-r border-border-light shrink-0 flex flex-col h-full overflow-hidden z-20">
+      <div className="flex-1 overflow-y-auto no-scrollbar p-1.5 sm:p-3 space-y-1" data-lenis-prevent>
+        <p className="hidden sm:block px-3 pt-2 pb-3 text-[10px] font-extrabold uppercase tracking-widest text-text-muted">Studio Options</p>
+        <div className="sm:hidden h-2" />
 
         {TABS.map(tab => {
           const Icon = tab.icon;
@@ -56,7 +57,8 @@ export function StudioSidebar({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-semibold transition-all duration-300 rounded-xl relative overflow-hidden group ${
+              title={tab.label}
+              className={`w-full flex items-center justify-center sm:justify-start gap-3 px-2 sm:px-3 py-2.5 text-sm font-semibold transition-all duration-300 rounded-xl relative overflow-hidden group ${
                 isActive
                   ? "bg-brand/10 text-brand shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] border border-brand/20"
                   : "text-text-secondary hover:text-text-primary hover:bg-surface-muted/50 border border-transparent"
@@ -65,10 +67,10 @@ export function StudioSidebar({
               {isActive && (
                 <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-1/2 bg-brand rounded-r-full shadow-[0_0_8px_rgba(204,41,54,0.6)]" />
               )}
-              <Icon className={`w-4 h-4 transition-transform duration-300 ${isActive ? "text-brand scale-110" : "text-text-muted group-hover:text-text-primary"}`} />
-              {tab.label}
+              <Icon className={`w-4 h-4 shrink-0 transition-transform duration-300 ${isActive ? "text-brand scale-110" : "text-text-muted group-hover:text-text-primary"}`} />
+              <span className="hidden sm:block">{tab.label}</span>
               {tab.id === "publish" && (
-                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_4px_rgba(0,255,0,0.5)]" aria-label="Publish" />
+                <span className="sm:ml-auto w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_4px_rgba(0,255,0,0.5)]" aria-label="Publish" />
               )}
             </button>
           );
@@ -118,15 +120,16 @@ export function StudioSidebar({
       </div>
 
       {/* Generate button */}
-      <div className="p-4 border-t border-border-light/50 bg-surface/50 backdrop-blur-md">
+      <div className="p-2 sm:p-4 border-t border-border-light/50 bg-surface/50 backdrop-blur-md">
         <Button
           variant="outline"
           className="w-full text-sm font-bold shadow-sm hover:shadow-brand/10 hover:border-brand/30 transition-all rounded-xl h-10"
           onClick={handleGenerateAI}
           disabled={generating}
+          title="Generate with AI"
         >
-          <Zap className={`w-4 h-4 mr-2 ${generating ? 'text-text-muted animate-pulse' : 'text-brand'}`} />
-          {generating ? "Generating…" : "Generate with AI"}
+          <Zap className={`w-4 h-4 shrink-0 ${generating ? 'text-text-muted animate-pulse' : 'text-brand'}`} />
+          <span className="hidden sm:block ml-2">{generating ? "Generating…" : "Generate with AI"}</span>
         </Button>
       </div>
     </div>

@@ -108,7 +108,7 @@ export const PortfolioContentService = {
       const displayName = profile.fullName || profile.user?.name || "";
 
       const deduplicateProjects = (projects: typeof profile.projects) => {
-        const projectMap = new Map<string, typeof profile.projects[0]>();
+        const merged: typeof profile.projects[0][] = [];
         
         // Sort projects to prioritize GITHUB or manually edited over RESUME
         const sortedProjects = [...projects].sort((a, b) => {
@@ -122,25 +122,38 @@ export const PortfolioContentService = {
         for (const p of sortedProjects) {
           const normalizedName = p.name.toLowerCase().replace(/[^a-z0-9]/g, '');
           
-          if (projectMap.has(normalizedName)) {
-            const existing = projectMap.get(normalizedName)!;
-            // Merge fields. existing is priority (GITHUB/MANUAL), pull missing fields from Resume
-            if (!existing.description && p.description) existing.description = p.description;
-            if (!existing.url && p.url) existing.url = p.url;
-            if (!existing.repositoryUrl && p.repositoryUrl) existing.repositoryUrl = p.repositoryUrl;
-            if (!existing.technologies && p.technologies) {
-               existing.technologies = p.technologies;
-            } else if (existing.technologies && p.technologies) {
-               const existingTechs = existing.technologies.split(',').map(t => t.trim());
+          // Check if this project matches any already merged project (substring match)
+          const existingMatch = merged.find(m => {
+            const mName = m.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+            // Match if one name is fully contained within the other, and length is > 4 to avoid tiny coincidences
+            return (normalizedName.includes(mName) || mName.includes(normalizedName)) && Math.min(normalizedName.length, mName.length) > 4;
+          });
+
+          if (existingMatch) {
+            // Merge fields into the existing match (since existing is higher priority GITHUB)
+            if (!existingMatch.description && p.description) existingMatch.description = p.description;
+            if (!existingMatch.url && p.url) existingMatch.url = p.url;
+            if (!existingMatch.repositoryUrl && p.repositoryUrl) existingMatch.repositoryUrl = p.repositoryUrl;
+            if (!existingMatch.technologies && p.technologies) {
+               existingMatch.technologies = p.technologies;
+            } else if (existingMatch.technologies && p.technologies) {
+               const existingTechs = existingMatch.technologies.split(',').map(t => t.trim());
                const newTechs = p.technologies.split(',').map(t => t.trim());
-               existing.technologies = Array.from(new Set([...existingTechs, ...newTechs])).filter(Boolean).join(', ');
+               existingMatch.technologies = Array.from(new Set([...existingTechs, ...newTechs])).filter(Boolean).join(', ');
+            }
+            
+            // Prefer the longer, more descriptive name
+            if (p.name.length > existingMatch.name.length && p.source !== 'GITHUB') {
+               // Actually, Github names are usually repo slugs (transitops-smart-transport) while resume might be nice (Transit Ops)
+               // Let's keep the existing logic where GITHUB/priority name stays, or maybe take the one with spaces if it looks cleaner?
+               // We will just keep the existingMatch name since it's higher priority.
             }
           } else {
-            projectMap.set(normalizedName, { ...p });
+            merged.push({ ...p });
           }
         }
         
-        return Array.from(projectMap.values());
+        return merged;
       };
 
       const mergedProjects = deduplicateProjects(profile.projects);

@@ -115,12 +115,12 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         <div className="relative z-10 h-full flex flex-col">
           {/* Header */}
           <div className="flex items-start justify-between gap-3 mb-6">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 min-w-0">
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-base font-black text-white bg-white/10 shrink-0`}>
                 {project.name.charAt(0).toUpperCase()}
               </div>
-              <div>
-                <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight leading-tight">
+              <div className="min-w-0 flex-1">
+                <h3 className={`font-bold text-white tracking-tight leading-tight ${project.name.length > 25 ? 'text-lg md:text-xl' : project.name.length > 15 ? 'text-xl md:text-2xl' : 'text-xl md:text-3xl'}`}>
                   {project.name}
                 </h3>
               </div>

@@ -390,16 +390,17 @@ export default function PortfolioStudioPage() {
               size="sm"
               onClick={handleManualSave}
               disabled={saving || saveStatus === "saved"}
-              className="h-8 text-xs font-bold hidden sm:flex"
+              className="h-8 text-xs font-bold flex"
             >
               Save
             </Button>
           )}
 
           {isPublished && publicUrl && (
-            <Button variant="outline" size="sm" asChild className="h-8 text-xs font-bold hidden md:flex">
+            <Button variant="outline" size="sm" asChild className="h-8 text-xs font-bold flex">
               <a href={publicUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> View Live
+                <ExternalLink className="w-3.5 h-3.5 sm:mr-1.5" />
+                <span className="hidden sm:inline">View Live</span>
               </a>
             </Button>
           )}
@@ -411,8 +412,8 @@ export default function PortfolioStudioPage() {
               onClick={handleCopyLink}
               className="h-8 text-xs font-bold"
             >
-              <Copy className="w-3.5 h-3.5 mr-1.5" />
-              <span className="hidden sm:block">Copy Link</span>
+              <Copy className="w-3.5 h-3.5 sm:mr-1.5" />
+              <span className="hidden sm:inline">Copy Link</span>
             </Button>
           ) : null}
 

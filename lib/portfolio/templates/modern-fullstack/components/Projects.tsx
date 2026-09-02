@@ -60,8 +60,8 @@ export default function Projects() {
             className="rounded-2xl border border-border bg-surface p-8 hover:border-accent/60 transition-colors duration-300"
           >
             <div className="flex items-start justify-between mb-4">
-              <div>
-                <h3 className="font-display text-2xl font-semibold text-deep">{p.title?.trim() || "Project"}</h3>
+              <div className="min-w-0 pr-4">
+                <h3 className={`font-display font-semibold text-deep ${(p.title?.length || 0) > 25 ? 'text-lg md:text-xl' : (p.title?.length || 0) > 15 ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>{p.title?.trim() || "Project"}</h3>
                 <p className="eyebrow mt-1 text-accent">Application</p>
               </div>
             </div>

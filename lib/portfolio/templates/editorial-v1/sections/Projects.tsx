@@ -29,11 +29,11 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       <div className="group border-[2px] border-[#111]  p-7 md:p-9 flex flex-col h-full hover:bg-[#111]  hover:text-[#F5F0EA] transition-all duration-400 min-h-[280px]">
         {/* Header */}
         <div className="flex items-start justify-between gap-4 mb-6">
-          <div>
+          <div className="min-w-0">
             <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#888]  group-hover:text-[#C9BEB9] mb-2 transition-colors">
               Project {String(index + 1).padStart(2, "0")}
             </p>
-            <h4 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-[#111]  group-hover:text-white transition-colors leading-tight">
+            <h4 className={`font-black uppercase tracking-tight text-[#111] group-hover:text-white transition-colors leading-tight ${project.name.length > 25 ? 'text-lg md:text-xl' : project.name.length > 15 ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>
               {project.name}
             </h4>
           </div>
