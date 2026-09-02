@@ -20,6 +20,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { Avatar } from "@/components/ui/avatar";
 import { CommandPalette } from "@/components/ui/command-palette";
+import { ChatbotWidget } from "./ChatbotWidget";
 
 interface NavItem {
   title: string;
@@ -413,6 +414,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       )}
 
       <CommandPalette isOpen={commandOpen} onClose={() => setCommandOpen(false)} />
+      <ChatbotWidget />
     </div>
   );
 }
