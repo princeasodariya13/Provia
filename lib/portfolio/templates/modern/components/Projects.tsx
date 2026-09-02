@@ -44,7 +44,7 @@ export default function Projects() {
                   )}
                 </div>
 
-                <h3 className={`font-display font-bold text-ink mb-3 group-hover:text-accent transition-colors tracking-tight ${(p.title?.length || 0) > 25 ? 'text-lg md:text-xl' : (p.title?.length || 0) > 15 ? 'text-xl md:text-2xl' : 'text-xl md:text-3xl'}`}>
+                <h3 className={`font-display font-bold text-ink mb-3 group-hover:text-accent transition-colors tracking-tight break-words ${(p.title?.length || 0) > 40 ? 'text-sm md:text-base' : (p.title?.length || 0) > 30 ? 'text-base md:text-lg' : (p.title?.length || 0) > 20 ? 'text-lg md:text-xl' : 'text-xl md:text-2xl'}`}>
                   {p.title?.trim() || "Project"}
                 </h3>
                 <p className="text-muted text-sm leading-relaxed flex-1 mb-4">

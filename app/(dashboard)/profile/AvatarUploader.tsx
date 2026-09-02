@@ -17,16 +17,21 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
   const [success, setSuccess] = useState(false);
   const [preview, setPreview] = useState<string | null>(currentAvatar || null);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
     if (!currentAvatar) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      apiClient.get<any>("/api/v1/profile").then((res) => {
+      apiClient.get<any>(`/api/v1/profile?t=${Date.now()}`).then((res) => {
         if (res.success && res.data?.avatarUrl) {
           setPreview(res.data.avatarUrl);
+          setImageError(false);
         }
       });
+    } else {
+      setPreview(currentAvatar);
+      setImageError(false);
     }
   }, [currentAvatar]);
 
@@ -35,6 +40,7 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
       const selected = e.target.files[0];
       setFile(selected);
       setPreview(URL.createObjectURL(selected));
+      setImageError(false);
     }
   };
 
@@ -59,6 +65,7 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
 
       setSuccess(true);
       setPreview(data.data.avatarUrl);
+      setImageError(false);
       setFile(null); // Clear file after successful upload
       toast.success("Profile photo uploaded successfully");
     } catch (err: any) {
@@ -103,9 +110,17 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
           <div className="flex flex-col items-center gap-6">
             <div className="relative group">
               <div className="w-28 h-28 rounded-full bg-surface-muted border-2 border-surface flex items-center justify-center overflow-hidden shrink-0 shadow-sm ring-1 ring-border-light">
-                {preview ? (
+                {preview && !imageError ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={preview} alt="Avatar Preview" className="w-full h-full object-cover" />
+                  <img 
+                    src={preview} 
+                    alt="Avatar Preview" 
+                    className="w-full h-full object-cover" 
+                    onError={() => {
+                      setImageError(true);
+                      if (!file) setPreview(null);
+                    }}
+                  />
                 ) : (
                   <Camera className="w-8 h-8 text-text-muted" />
                 )}

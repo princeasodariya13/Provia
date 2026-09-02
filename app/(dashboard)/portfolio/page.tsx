@@ -323,7 +323,7 @@ export default function PortfolioStudioPage() {
   return (
     <div className="flex flex-col h-screen w-full bg-background overflow-hidden">
       {/* ── TOP BAR ── */}
-      <header className="h-16 border-b border-border-light/50 bg-surface/90 backdrop-blur-md shrink-0 flex items-center justify-between px-4 sm:px-6 select-none gap-2 relative z-30">
+      <header className="h-16 border-b border-border-light/50 bg-surface/90 backdrop-blur-md shrink-0 flex items-center justify-between px-3 sm:px-6 select-none gap-3 relative z-30 overflow-x-auto no-scrollbar whitespace-nowrap">
         <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand/20 to-transparent" />
         
         {/* Left: back + title */}
@@ -334,8 +334,8 @@ export default function PortfolioStudioPage() {
           >
             <ChevronLeft className="w-4 h-4 -ml-0.5" />
           </Link>
-          <div className="hidden sm:block w-px h-6 bg-border-light/50" />
-          <div className="hidden sm:flex flex-col min-w-0">
+          <div className="w-px h-6 bg-border-light/50" />
+          <div className="flex flex-col min-w-0">
             <span className="text-sm font-extrabold text-text-primary leading-tight tracking-tight">Portfolio Studio</span>
             <div className="flex items-center gap-1.5 text-[10px] text-text-secondary font-semibold uppercase tracking-widest mt-0.5">
               {version > 0 && <span className="bg-brand/10 text-brand px-1.5 rounded-sm">v{version}</span>}
@@ -383,7 +383,7 @@ export default function PortfolioStudioPage() {
         </div>
 
         {/* Right: action buttons */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0 ml-auto">
           {hasDocument && (
             <Button
               variant="outline"
@@ -398,9 +398,9 @@ export default function PortfolioStudioPage() {
 
           {isPublished && publicUrl && (
             <Button variant="outline" size="sm" asChild className="h-8 text-xs font-bold flex">
-              <a href={publicUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="w-3.5 h-3.5 sm:mr-1.5" />
-                <span className="hidden sm:inline">View Live</span>
+              <a href={publicUrl} target="_blank" rel="noopener noreferrer" className="flex items-center">
+                <ExternalLink className="w-3.5 h-3.5 mr-1.5" />
+                <span>View Live</span>
               </a>
             </Button>
           )}
@@ -412,8 +412,8 @@ export default function PortfolioStudioPage() {
               onClick={handleCopyLink}
               className="h-8 text-xs font-bold"
             >
-              <Copy className="w-3.5 h-3.5 sm:mr-1.5" />
-              <span className="hidden sm:inline">Copy Link</span>
+              <Copy className="w-3.5 h-3.5 mr-1.5" />
+              <span>Copy Link</span>
             </Button>
           ) : null}
 

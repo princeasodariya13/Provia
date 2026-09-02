@@ -33,7 +33,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#888]  group-hover:text-[#C9BEB9] mb-2 transition-colors">
               Project {String(index + 1).padStart(2, "0")}
             </p>
-            <h4 className={`font-black uppercase tracking-tight text-[#111] group-hover:text-white transition-colors leading-tight ${project.name.length > 25 ? 'text-lg md:text-xl' : project.name.length > 15 ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>
+            <h4 className={`font-black uppercase tracking-tight text-[#111] group-hover:text-white transition-colors leading-tight break-words ${project.name.length > 40 ? 'text-sm md:text-base' : project.name.length > 30 ? 'text-base md:text-lg' : project.name.length > 20 ? 'text-lg md:text-xl' : 'text-xl md:text-2xl'}`}>
               {project.name}
             </h4>
           </div>

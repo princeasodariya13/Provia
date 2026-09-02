@@ -120,7 +120,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 {project.name.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className={`font-bold text-white tracking-tight leading-tight ${project.name.length > 25 ? 'text-lg md:text-xl' : project.name.length > 15 ? 'text-xl md:text-2xl' : 'text-xl md:text-3xl'}`}>
+                <h3 className={`font-bold text-white tracking-tight leading-tight break-words ${project.name.length > 40 ? 'text-sm md:text-base' : project.name.length > 30 ? 'text-base md:text-lg' : project.name.length > 20 ? 'text-lg md:text-xl' : 'text-xl md:text-2xl'}`}>
                   {project.name}
                 </h3>
               </div>
