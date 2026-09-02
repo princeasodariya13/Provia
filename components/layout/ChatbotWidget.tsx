@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { Send, X, Minimize2, Maximize2, Trash2, Sparkles, Bot, User } from "lucide-react";
+import { Send, X, Trash2, Sparkles, Bot, User } from "lucide-react";
 import { Lottie } from "lottie-react";
 import chatbotAnimation from "./chatbot.json";
 import ReactMarkdown from "react-markdown";
@@ -24,7 +24,6 @@ const INITIAL_MESSAGE: Message = {
 
 export function ChatbotWidget() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -115,19 +114,17 @@ export function ChatbotWidget() {
     setMessages([INITIAL_MESSAGE]);
   };
 
-  const chatWidth = isExpanded ? "w-[480px]" : "w-[370px]";
-  const chatHeight = isExpanded ? "h-[600px]" : "h-[520px]";
-
   const widget = (
     <div className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-[9999] flex flex-col items-end gap-3">
       {/* Chat Panel */}
       {isOpen && (
         <div
-          className={`${chatWidth} ${chatHeight} bg-surface rounded-2xl shadow-2xl border border-border flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-300`}
-          style={{ boxShadow: "0 25px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05)" }}
+          className="w-[370px] h-[520px] min-w-[300px] min-h-[400px] max-w-[90vw] max-h-[85vh] resize bg-surface rounded-2xl shadow-2xl border border-border overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-300"
+          style={{ direction: "rtl", boxShadow: "0 25px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05)" }}
           onWheel={(e) => e.stopPropagation()}
         >
-          {/* Header */}
+          <div dir="ltr" className="flex flex-col h-full w-full">
+            {/* Header */}
           <div className="flex items-center gap-3 px-4 py-3.5 bg-gradient-to-r from-brand/10 via-brand/5 to-transparent border-b border-border shrink-0">
             <div className="w-9 h-9 rounded-xl bg-brand/10 flex items-center justify-center shrink-0 ring-2 ring-brand/20">
               <Sparkles className="w-4 h-4 text-brand" />
@@ -146,13 +143,6 @@ export function ChatbotWidget() {
                 title="Clear chat"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-              </button>
-              <button
-                onClick={() => setIsExpanded((v) => !v)}
-                className="p-1.5 hover:bg-surface-muted rounded-lg text-text-muted hover:text-text-secondary transition-colors"
-                title={isExpanded ? "Compact" : "Expand"}
-              >
-                {isExpanded ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
               </button>
               <button
                 onClick={() => setIsOpen(false)}
@@ -238,7 +228,7 @@ export function ChatbotWidget() {
 
           {/* Input */}
           <div className="p-3 border-t border-border bg-surface/80 backdrop-blur-sm shrink-0">
-            <div className="flex items-center gap-2 bg-surface-muted rounded-xl px-3.5 py-2 border border-border transition-colors">
+            <div className="flex items-center gap-2 bg-surface-muted focus-within:bg-surface rounded-xl px-3.5 py-2 border border-border focus-within:border-text-muted/30 focus-within:shadow-sm transition-all duration-200">
               <input
                 ref={inputRef}
                 type="text"
@@ -247,7 +237,8 @@ export function ChatbotWidget() {
                 onKeyDown={handleKeyDown}
                 placeholder="Ask me anything about Provia..."
                 disabled={isLoading}
-                className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted outline-none focus:outline-none focus:ring-0 border-none focus:border-transparent focus:shadow-none p-0 disabled:opacity-60"
+                className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted !outline-none focus:!outline-none !ring-0 focus:!ring-0 !border-none focus:!border-none !shadow-none focus:!shadow-none p-0 disabled:opacity-60"
+                style={{ outline: 'none', border: 'none', boxShadow: 'none' }}
               />
               <button
                 onClick={sendMessage}
@@ -258,6 +249,7 @@ export function ChatbotWidget() {
               </button>
             </div>
             <p className="text-center text-[10px] text-text-muted mt-2 font-medium">Powered by Provia AI · Gemini</p>
+          </div>
           </div>
         </div>
       )}
