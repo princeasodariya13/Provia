@@ -2,13 +2,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { apiClient } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CardContent } from "@/components/ui/card";
-import { UploadCloud, CheckCircle, AlertCircle, RefreshCw, Camera, Trash2 } from "lucide-react";
+import { UploadCloud, CheckCircle, AlertCircle, RefreshCw, Camera, Trash2, Edit2, X, Check } from "lucide-react";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
 import { useToast } from "@/components/ui/toast";
+import Cropper, { Area } from "react-easy-crop";
+import getCroppedImg from "./cropUtils";
 
 export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
   const [file, setFile] = useState<File | null>(null);
@@ -18,6 +21,14 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
   const [preview, setPreview] = useState<string | null>(currentAvatar || null);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
+  
+  // Crop states
+  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+
   const toast = useToast();
 
   useEffect(() => {
@@ -38,9 +49,45 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selected = e.target.files[0];
+      const url = URL.createObjectURL(selected);
       setFile(selected);
-      setPreview(URL.createObjectURL(selected));
+      setPreview(url);
       setImageError(false);
+      
+      // Automatically open crop modal when a new file is selected
+      setImageSrc(url);
+      setZoom(1);
+      setCrop({ x: 0, y: 0 });
+      setIsCropModalOpen(true);
+    }
+  };
+
+  const openCropModal = () => {
+    if (file) {
+      setImageSrc(URL.createObjectURL(file));
+      setZoom(1);
+      setIsCropModalOpen(true);
+    } else if (preview) {
+      setImageSrc(preview);
+      setZoom(1);
+      setIsCropModalOpen(true);
+    }
+  };
+
+  const handleCropSave = async () => {
+    if (!imageSrc || !croppedAreaPixels) return;
+    try {
+      const croppedFile = await getCroppedImg(imageSrc, croppedAreaPixels);
+      if (croppedFile) {
+        setFile(croppedFile);
+        setPreview(URL.createObjectURL(croppedFile));
+        setImageError(false);
+        setIsCropModalOpen(false);
+        toast.success("Image cropped successfully! You can now upload it.");
+      }
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to crop image. Please try again.");
     }
   };
 
@@ -125,6 +172,17 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
                   <Camera className="w-8 h-8 text-text-muted" />
                 )}
               </div>
+              
+              {/* Edit Crop Icon */}
+              {(preview || file) && !imageError && (
+                <button
+                  onClick={openCropModal}
+                  className="absolute bottom-0 right-0 w-8 h-8 bg-surface text-text-primary rounded-full flex items-center justify-center shadow-md border border-border-light hover:bg-surface-muted hover:scale-105 transition-all z-20 group"
+                  title="Crop Image"
+                >
+                  <Edit2 className="w-4 h-4 text-text-secondary group-hover:text-brand transition-colors" />
+                </button>
+              )}
             </div>
             
             <div className="w-full space-y-4">
@@ -156,6 +214,60 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
         description="Are you sure you want to permanently remove your profile photo? This action cannot be undone."
         confirmText="Remove Photo"
       />
+
+      {/* Crop Modal */}
+      {isCropModalOpen && imageSrc && typeof document !== "undefined" && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-surface w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border border-border flex flex-col">
+            <div className="p-4 border-b border-border flex items-center justify-between bg-surface-muted/30">
+              <h3 className="font-bold text-text-primary">Crop Image</h3>
+              <button onClick={() => setIsCropModalOpen(false)} className="p-1.5 hover:bg-surface-muted rounded-md text-text-muted hover:text-text-primary transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="relative w-full h-80 bg-black/90">
+              <Cropper
+                image={imageSrc}
+                crop={crop}
+                zoom={zoom}
+                aspect={1}
+                cropShape="round"
+                showGrid={false}
+                onCropChange={setCrop}
+                onCropComplete={(croppedArea, croppedAreaPixels) => {
+                  setCroppedAreaPixels(croppedAreaPixels);
+                }}
+                onZoomChange={setZoom}
+              />
+            </div>
+            
+            <div className="p-5 flex flex-col gap-6 bg-surface">
+              <div className="flex items-center gap-4 px-2">
+                <span className="text-xs text-text-muted font-medium uppercase tracking-wider">Zoom</span>
+                <input
+                  type="range"
+                  value={zoom}
+                  min={1}
+                  max={3}
+                  step={0.05}
+                  onChange={(e) => setZoom(Number(e.target.value))}
+                  className="flex-1 h-1.5 bg-border rounded-lg appearance-none cursor-pointer accent-brand"
+                />
+              </div>
+              <div className="flex gap-3 justify-end">
+                <Button variant="outline" onClick={() => setIsCropModalOpen(false)} className="flex-1 font-semibold shadow-sm h-10">
+                  Cancel
+                </Button>
+                <Button onClick={handleCropSave} className="flex-1 bg-brand hover:bg-brand-hover text-white font-semibold shadow-sm h-10">
+                  <Check className="w-4 h-4 mr-1.5" /> Done
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </>
   );
 }

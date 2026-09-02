@@ -383,7 +383,7 @@ export default function PortfolioStudioPage() {
         </div>
 
         {/* Right: action buttons */}
-        <div className="flex items-center gap-1.5 shrink-0 ml-auto">
+        <div className="flex items-center gap-1.5 shrink-0">
           {hasDocument && (
             <Button
               variant="outline"
