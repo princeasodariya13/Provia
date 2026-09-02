@@ -28,6 +28,7 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [cropJustFinished, setCropJustFinished] = useState(false);
 
   const toast = useToast();
 
@@ -53,6 +54,7 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
       setFile(selected);
       setPreview(url);
       setImageError(false);
+      setCropJustFinished(false);
       
       // Automatically open crop modal when a new file is selected
       setImageSrc(url);
@@ -83,7 +85,8 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
         setPreview(URL.createObjectURL(croppedFile));
         setImageError(false);
         setIsCropModalOpen(false);
-        toast.success("Image cropped successfully! You can now upload it.");
+        setCropJustFinished(true);
+        toast.success("Image cropped successfully! Click Upload to save it.");
       }
     } catch (e) {
       console.error(e);
@@ -97,6 +100,7 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
     setUploading(true);
     setError(null);
     setSuccess(false);
+    setCropJustFinished(false);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -160,6 +164,7 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
                 {preview && !imageError ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img 
+                    key={preview}
                     src={preview} 
                     alt="Avatar Preview" 
                     className="w-full h-full object-cover" 
@@ -188,9 +193,16 @@ export function AvatarUploader({ currentAvatar }: { currentAvatar?: string }) {
             <div className="w-full space-y-4">
               <Input type="file" accept="image/jpeg, image/png" onChange={handleFileChange} className="cursor-pointer text-xs h-9 rounded-lg" />
               <div className="flex items-center gap-3 w-full">
-                <Button onClick={handleUpload} disabled={!file || uploading} size="sm" className="rounded-full w-full shadow-sm font-bold">
+                <Button 
+                  onClick={handleUpload} 
+                  disabled={!file || uploading} 
+                  size="sm" 
+                  className={`rounded-full w-full shadow-sm font-bold transition-all duration-300 ${
+                    cropJustFinished ? "bg-brand text-white ring-4 ring-brand/30 animate-pulse scale-105" : ""
+                  }`}
+                >
                   {uploading && file ? <RefreshCw className="w-3.5 h-3.5 mr-2 animate-spin" /> : <UploadCloud className="w-3.5 h-3.5 mr-2" />}
-                  Upload
+                  {cropJustFinished ? "Confirm & Upload" : "Upload"}
                 </Button>
                 {preview && !file && (
                   <Button onClick={() => setIsRemoveModalOpen(true)} disabled={uploading} variant="outline" size="sm" className="rounded-full w-full shadow-sm font-bold text-error hover:bg-error-muted hover:text-error hover:border-error/50 transition-all">
