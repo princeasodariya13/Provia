@@ -56,6 +56,10 @@ export default function PortfolioStudioPage() {
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Mobile drawer state
+  const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
+  const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
+
   // Readiness State
   const [readinessOpen, setReadinessOpen] = useState(false);
   const [readinessChecks, setReadinessChecks] = useState<any[]>([]);
@@ -430,59 +434,157 @@ export default function PortfolioStudioPage() {
 
       {/* ── MAIN LAYOUT ── */}
       <div className="flex-1 flex overflow-hidden relative">
-        {/* Left Sidebar */}
-        <StudioSidebar
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-          document={document}
-          handleGenerateAI={handleGenerateAI}
-          generating={generating}
-        />
 
-        {/* Center: Preview or Full Width Editors */}
-        {activeTab !== "seo" && (
-          <StudioPreview
+        {/* ── MOBILE DRAWER: Left Sidebar ── */}
+        {/* Backdrop */}
+        {leftDrawerOpen && (
+          <div
+            className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+            onClick={() => setLeftDrawerOpen(false)}
+          />
+        )}
+        {/* Drawer panel */}
+        <div
+          className={`lg:hidden fixed top-0 left-0 h-full z-50 transition-transform duration-300 ease-in-out ${
+            leftDrawerOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+          style={{ paddingTop: "64px" }}
+        >
+          <StudioSidebar
+            activeTab={activeTab}
+            setActiveTab={(tab) => { setActiveTab(tab); }}
+            activeSection={activeSection}
+            setActiveSection={(s) => { setActiveSection(s); setLeftDrawerOpen(false); setRightDrawerOpen(true); }}
             document={document}
-            templateId={templateId}
-            previewDevice={previewDevice}
+            handleGenerateAI={() => { handleGenerateAI(); setLeftDrawerOpen(false); }}
+            generating={generating}
+            isMobileDrawer
+          />
+        </div>
+
+        {/* ── MOBILE DRAWER: Right Inspector ── */}
+        {/* Backdrop */}
+        {rightDrawerOpen && (
+          <div
+            className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+            onClick={() => setRightDrawerOpen(false)}
+          />
+        )}
+        {/* Drawer panel */}
+        {activeTab !== "design" && activeTab !== "seo" && (
+          <div
+            className={`lg:hidden fixed top-0 right-0 h-full z-50 transition-transform duration-300 ease-in-out ${
+              rightDrawerOpen ? "translate-x-0" : "translate-x-full"
+            }`}
+            style={{ paddingTop: "64px" }}
+          >
+            <StudioInspector
+              activeTab={activeTab}
+              activeSection={activeSection}
+              document={document}
+              onChange={handleDocumentChange}
+              templateId={templateId}
+              setTemplateId={handleTemplateChange}
+              publication={publication}
+              versions={versions}
+              onRestore={handleRestoreVersion}
+              onUnpublish={handleUnpublish}
+              onPublish={handlePublish}
+              publishing={publishing}
+              isPublished={isPublished}
+              publicUrl={publicUrl}
+              onCopyLink={handleCopyLink}
+              onRegenerateLink={handleRegenerateLink}
+              regeneratingLink={regeneratingLink}
+              onGenerate={handleGenerateAI}
+              generating={generating}
+              isMobileDrawer
+              onClose={() => setRightDrawerOpen(false)}
+            />
+          </div>
+        )}
+
+        {/* ── DESKTOP: Left Sidebar (always visible) ── */}
+        <div className="hidden lg:flex">
+          <StudioSidebar
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            onSelectTemplate={handleTemplateChange}
-          />
-        )}
-        {activeTab === "seo" && (
-          <StudioSeoEditor
-            document={document}
-            onChange={handleDocumentChange}
-            publicUrl={publicUrl || undefined}
-          />
-        )}
-
-        {/* Right: Inspector */}
-        {activeTab !== "design" && activeTab !== "seo" && (
-          <StudioInspector
-            activeTab={activeTab}
             activeSection={activeSection}
+            setActiveSection={setActiveSection}
             document={document}
-            onChange={handleDocumentChange}
-            templateId={templateId}
-            setTemplateId={handleTemplateChange}
-            publication={publication}
-            versions={versions}
-            onRestore={handleRestoreVersion}
-            onUnpublish={handleUnpublish}
-            onPublish={handlePublish}
-            publishing={publishing}
-            isPublished={isPublished}
-            publicUrl={publicUrl}
-            onCopyLink={handleCopyLink}
-            onRegenerateLink={handleRegenerateLink}
-            regeneratingLink={regeneratingLink}
-            onGenerate={handleGenerateAI}
+            handleGenerateAI={handleGenerateAI}
             generating={generating}
           />
+        </div>
+
+        {/* ── CENTER: Preview / SEO Editor (fills remaining space) ── */}
+        <div className="flex-1 relative overflow-hidden">
+          {/* Mobile Floating Trigger Buttons */}
+          <div className="lg:hidden absolute bottom-6 left-0 right-0 z-30 flex items-center justify-between px-4 pointer-events-none">
+            {/* Left trigger */}
+            <button
+              onClick={() => { setLeftDrawerOpen(true); setRightDrawerOpen(false); }}
+              className="pointer-events-auto flex items-center gap-2 h-10 px-4 bg-surface/95 backdrop-blur-md border border-border-light rounded-full shadow-lg text-xs font-bold text-text-primary hover:bg-surface-muted transition-all"
+            >
+              <Layout className="w-3.5 h-3.5 text-brand" />
+              Menu
+            </button>
+            {/* Right trigger — only when inspector is relevant */}
+            {activeTab !== "design" && activeTab !== "seo" && (
+              <button
+                onClick={() => { setRightDrawerOpen(true); setLeftDrawerOpen(false); }}
+                className="pointer-events-auto flex items-center gap-2 h-10 px-4 bg-brand text-white rounded-full shadow-lg text-xs font-bold hover:bg-brand-hover transition-all"
+              >
+                Edit
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
+          {activeTab !== "seo" && (
+            <StudioPreview
+              document={document}
+              templateId={templateId}
+              previewDevice={previewDevice}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              onSelectTemplate={handleTemplateChange}
+            />
+          )}
+          {activeTab === "seo" && (
+            <StudioSeoEditor
+              document={document}
+              onChange={handleDocumentChange}
+              publicUrl={publicUrl || undefined}
+            />
+          )}
+        </div>
+
+        {/* ── DESKTOP: Right Inspector (always visible) ── */}
+        {activeTab !== "design" && activeTab !== "seo" && (
+          <div className="hidden lg:flex">
+            <StudioInspector
+              activeTab={activeTab}
+              activeSection={activeSection}
+              document={document}
+              onChange={handleDocumentChange}
+              templateId={templateId}
+              setTemplateId={handleTemplateChange}
+              publication={publication}
+              versions={versions}
+              onRestore={handleRestoreVersion}
+              onUnpublish={handleUnpublish}
+              onPublish={handlePublish}
+              publishing={publishing}
+              isPublished={isPublished}
+              publicUrl={publicUrl}
+              onCopyLink={handleCopyLink}
+              onRegenerateLink={handleRegenerateLink}
+              regeneratingLink={regeneratingLink}
+              onGenerate={handleGenerateAI}
+              generating={generating}
+            />
+          </div>
         )}
       </div>
 

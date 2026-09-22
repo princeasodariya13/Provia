@@ -142,7 +142,7 @@ export default function DashboardPage() {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-success/10 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/3 pointer-events-none" />
         
-        <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-muted/80 backdrop-blur-sm border border-border-light text-xs font-bold text-text-secondary mb-4">
               <Sparkles className="w-3.5 h-3.5 text-brand" />
@@ -274,7 +274,7 @@ export default function DashboardPage() {
             <Card className="rounded-2xl overflow-hidden border-border-light shadow-md hover:shadow-lg transition-shadow duration-300 bg-surface/50 backdrop-blur-sm">
               <CardContent className="p-0">
                 {resumeData ? (
-                  <div className="flex flex-col sm:flex-row md:items-center justify-between p-6 sm:p-8 gap-6">
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between p-6 sm:p-8 gap-6">
                     <div className="flex items-start gap-4">
                       <div className="p-4 bg-brand/10 text-brand rounded-xl shrink-0 border border-brand/20 shadow-inner">
                         <FileText className="w-7 h-7" />

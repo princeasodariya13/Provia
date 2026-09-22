@@ -116,7 +116,7 @@ export function StudioPreview({ document, templateId, previewDevice, activeTab, 
   const deviceWidth = DEVICE_STYLES[previewDevice];
 
   return (
-    <div className="flex-1 bg-surface-muted flex justify-center relative overflow-hidden">
+    <div className="w-full h-full flex-1 bg-surface-muted flex justify-center relative overflow-hidden">
       {/* Device frame indicator */}
       <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10 bg-surface border border-border-light rounded-full px-3 py-1 text-[10px] font-bold text-text-muted uppercase tracking-wider shadow-sm">
         {templateDef.metadata.name} · {previewDevice}

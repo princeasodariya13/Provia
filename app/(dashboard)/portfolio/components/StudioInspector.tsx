@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
   Globe, Copy, ExternalLink, RefreshCw, Clock,
-  CheckCircle2, AlertTriangle, Zap, Eye
+  CheckCircle2, AlertTriangle, Zap, Eye, X
 } from "lucide-react";
 
 interface Props {
@@ -33,6 +33,8 @@ interface Props {
   regeneratingLink: boolean;
   onGenerate: () => void;
   generating: boolean;
+  isMobileDrawer?: boolean;
+  onClose?: () => void;
 }
 
 export function StudioInspector({
@@ -41,7 +43,9 @@ export function StudioInspector({
   publication, versions, onRestore, onUnpublish,
   onPublish, publishing, isPublished, publicUrl,
   onCopyLink, onRegenerateLink, regeneratingLink,
-  onGenerate, generating
+  onGenerate, generating,
+  isMobileDrawer = false,
+  onClose,
 }: Props) {
 
   const panelTitle = () => {
@@ -671,10 +675,20 @@ export function StudioInspector({
   };
 
   return (
-    <div className="w-80 border-l border-border-light bg-surface/80 backdrop-blur-xl shrink-0 flex flex-col h-full overflow-hidden shadow-[-8px_0_24px_rgba(0,0,0,0.05)] z-20">
+    <div className={`bg-surface/95 backdrop-blur-xl border-border-light shrink-0 flex flex-col overflow-hidden shadow-[-8px_0_24px_rgba(0,0,0,0.05)] z-20 ${
+      isMobileDrawer ? "w-80 h-full border-l shadow-2xl" : "w-80 h-full border-l"
+    }`}>
       {/* Panel header */}
-      <div className="h-16 border-b border-border-light/50 flex items-center px-5 shrink-0 bg-surface/50 relative">
+      <div className="h-16 border-b border-border-light/50 flex items-center justify-between px-5 shrink-0 bg-surface/50 relative">
         <h3 className="font-extrabold text-sm tracking-tight text-text-primary capitalize">{panelTitle()}</h3>
+        {isMobileDrawer && onClose && (
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-muted hover:bg-border-light transition-colors text-text-secondary ml-auto"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
         <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-border-light/20 via-border-light to-border-light/20" />
       </div>
 

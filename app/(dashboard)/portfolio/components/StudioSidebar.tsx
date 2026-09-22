@@ -4,7 +4,7 @@ import React from "react";
 import { StudioTab, ContentSection } from "../page";
 import { PortfolioDocumentDTO } from "@/lib/schemas/portfolio";
 import {
-  Type, Palette, Settings, History, Layers, Share2, Zap, Globe
+  Type, Palette, Settings, History, Layers, Share2, Zap, Globe, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -16,6 +16,8 @@ interface Props {
   document: PortfolioDocumentDTO | null;
   handleGenerateAI: () => void;
   generating: boolean;
+  isMobileDrawer?: boolean;
+  onClose?: () => void;
 }
 
 const TABS = [
@@ -42,13 +44,38 @@ const CONTENT_SECTIONS: { id: ContentSection; label: string }[] = [
 export function StudioSidebar({
   activeTab, setActiveTab,
   activeSection, setActiveSection,
-  document, handleGenerateAI, generating
+  document, handleGenerateAI, generating,
+  isMobileDrawer = false,
+  onClose,
 }: Props) {
   return (
-    <div className="w-12 sm:w-44 md:w-56 bg-surface/80 backdrop-blur-xl border-r border-border-light shrink-0 flex flex-col h-full overflow-hidden z-20">
-      <div className="flex-1 overflow-y-auto no-scrollbar p-1.5 sm:p-3 space-y-1" data-lenis-prevent>
-        <p className="hidden sm:block px-3 pt-2 pb-3 text-[10px] font-extrabold uppercase tracking-widest text-text-muted">Studio Options</p>
-        <div className="sm:hidden h-2" />
+    <div className={`
+      bg-surface/95 backdrop-blur-xl border-border-light shrink-0 flex flex-col overflow-hidden z-20
+      ${isMobileDrawer
+        ? "w-72 h-full border-r shadow-2xl"
+        : "w-56 h-full border-r"
+      }
+    `}>
+      {/* Mobile drawer header */}
+      {isMobileDrawer && (
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border-light/50 bg-surface/50 shrink-0">
+          <p className="text-[10px] font-extrabold uppercase tracking-widest text-text-muted">Studio Menu</p>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="w-7 h-7 flex items-center justify-center rounded-full bg-surface-muted hover:bg-border-light transition-colors text-text-secondary"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Scrollable tab list */}
+      <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-1" data-lenis-prevent>
+        {!isMobileDrawer && (
+          <p className="px-3 pt-2 pb-3 text-[10px] font-extrabold uppercase tracking-widest text-text-muted">Studio Options</p>
+        )}
 
         {TABS.map(tab => {
           const Icon = tab.icon;
@@ -58,7 +85,7 @@ export function StudioSidebar({
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               title={tab.label}
-              className={`w-full flex items-center justify-center sm:justify-start gap-3 px-2 sm:px-3 py-2.5 text-sm font-semibold transition-all duration-300 rounded-xl relative overflow-hidden group ${
+              className={`w-full flex items-center justify-start gap-3 px-3 py-2.5 text-sm font-semibold transition-all duration-300 rounded-xl relative overflow-hidden group ${
                 isActive
                   ? "bg-brand/10 text-brand shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] border border-brand/20"
                   : "text-text-secondary hover:text-text-primary hover:bg-surface-muted/50 border border-transparent"
@@ -68,9 +95,9 @@ export function StudioSidebar({
                 <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-1/2 bg-brand rounded-r-full shadow-[0_0_8px_rgba(204,41,54,0.6)]" />
               )}
               <Icon className={`w-4 h-4 shrink-0 transition-transform duration-300 ${isActive ? "text-brand scale-110" : "text-text-muted group-hover:text-text-primary"}`} />
-              <span className="hidden sm:block">{tab.label}</span>
+              <span>{tab.label}</span>
               {tab.id === "publish" && (
-                <span className="sm:ml-auto w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_4px_rgba(0,255,0,0.5)]" aria-label="Publish" />
+                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_4px_rgba(0,255,0,0.5)]" aria-label="Publish" />
               )}
             </button>
           );
@@ -120,7 +147,7 @@ export function StudioSidebar({
       </div>
 
       {/* Generate button */}
-      <div className="p-2 sm:p-4 border-t border-border-light/50 bg-surface/50 backdrop-blur-md">
+      <div className="p-3 border-t border-border-light/50 bg-surface/50 backdrop-blur-md shrink-0">
         <Button
           variant="outline"
           className="w-full text-sm font-bold shadow-sm hover:shadow-brand/10 hover:border-brand/30 transition-all rounded-xl h-10"
@@ -129,7 +156,7 @@ export function StudioSidebar({
           title="Generate with AI"
         >
           <Zap className={`w-4 h-4 shrink-0 ${generating ? 'text-text-muted animate-pulse' : 'text-brand'}`} />
-          <span className="hidden sm:block ml-2">{generating ? "Generating…" : "Generate with AI"}</span>
+          <span className="ml-2">{generating ? "Generating…" : "Generate with AI"}</span>
         </Button>
       </div>
     </div>
