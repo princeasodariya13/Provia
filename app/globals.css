@@ -115,8 +115,6 @@
     text-rendering: optimizeLegibility;
     font-size: 80%;
     scroll-behavior: smooth;
-    /* Prevent overscroll bounce lag */
-    overscroll-behavior: none;
   }
 
   body {
@@ -124,9 +122,7 @@
     color: var(--text-primary);
     font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     line-height: 1.6;
-    /* GPU compositing layer for smoother scroll */
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: none;
   }
 
   h1, h2, h3, h4, h5, h6 {

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
+import "lenis/dist/lenis.css";
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -12,24 +13,29 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 2,
+      touchMultiplier: 1.5,
+      autoResize: true,
     });
 
+    let rafId: number;
     function raf(time: number) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    rafId = requestAnimationFrame(raf);
 
     // Setup ResizeObserver to force Lenis to recalculate bounds when content loads dynamically
     const resizeObserver = new ResizeObserver(() => {
       lenis.resize();
     });
-    
-    resizeObserver.observe(document.body);
+
+    if (document.body) {
+      resizeObserver.observe(document.body);
+    }
 
     return () => {
+      cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
       lenis.destroy();
     };

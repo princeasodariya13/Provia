@@ -237,10 +237,13 @@ export function ResponsiveIframe({
     // Copy parent document themes (e.g. dark mode classes)
     doc.documentElement.className = "";
     doc.documentElement.style.cssText = document.documentElement.style.cssText;
+    doc.documentElement.style.height = "100%";
+    doc.documentElement.style.overflowY = "auto";
     doc.body.className = "";
     doc.body.style.cssText = document.body.style.cssText;
-    doc.body.style.overflow = "auto";
-    doc.body.style.height = "100%";
+    doc.body.style.height = "auto";
+    doc.body.style.minHeight = "100%";
+    doc.body.style.overflowY = "visible";
 
     let container = doc.getElementById("preview-root");
     if (!container) {
