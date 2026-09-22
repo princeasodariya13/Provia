@@ -518,7 +518,7 @@ export default function PortfolioStudioPage() {
         </div>
 
         {/* ── CENTER: Preview / SEO Editor (fills remaining space) ── */}
-        <div className="flex-1 relative overflow-hidden">
+        <div className="flex-1 relative overflow-hidden h-full min-h-0 flex flex-col">
           {/* Mobile Floating Trigger Buttons */}
           <div className="lg:hidden absolute bottom-6 left-0 right-0 z-30 flex items-center justify-between px-4 pointer-events-none">
             {/* Left trigger */}

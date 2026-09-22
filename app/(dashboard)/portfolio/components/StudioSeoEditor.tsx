@@ -71,7 +71,7 @@ export function StudioSeoEditor({ document, onChange, publicUrl }: Props) {
 
   return (
     <div
-      className="flex-1 bg-[#FAFAFA] overflow-y-auto p-6 md:p-10 lg:p-12 font-sans text-text-primary"
+      className="w-full h-full min-h-0 flex-1 bg-[#FAFAFA] overflow-y-auto p-6 md:p-10 lg:p-12 font-sans text-text-primary"
       data-lenis-prevent
     >
       <div className="max-w-6xl mx-auto space-y-8">

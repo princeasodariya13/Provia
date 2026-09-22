@@ -176,7 +176,7 @@ export function TemplateGallery({ document, currentTemplateId, previewDevice, on
   }
 
   return (
-    <div className="flex flex-col h-full bg-surface">
+    <div className="flex flex-col w-full h-full min-h-0 bg-surface">
       {/* Header */}
       <div className="shrink-0 p-8 border-b border-border-light bg-surface">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -200,7 +200,7 @@ export function TemplateGallery({ document, currentTemplateId, previewDevice, on
       </div>
 
       {/* Grid */}
-      <div className="flex-1 overflow-y-auto p-8 bg-surface-muted/30" data-lenis-prevent>
+      <div className="flex-1 min-h-0 overflow-y-auto p-8 bg-surface-muted/30" data-lenis-prevent>
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {filtered.map(t => {
             const def = TemplateRegistry.getTemplate(t.id);

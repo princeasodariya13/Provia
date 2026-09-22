@@ -72,7 +72,7 @@ export function StudioSidebar({
       )}
 
       {/* Scrollable tab list */}
-      <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-1" data-lenis-prevent>
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar p-3 space-y-1" data-lenis-prevent>
         {!isMobileDrawer && (
           <p className="px-3 pt-2 pb-3 text-[10px] font-extrabold uppercase tracking-widest text-text-muted">Studio Options</p>
         )}

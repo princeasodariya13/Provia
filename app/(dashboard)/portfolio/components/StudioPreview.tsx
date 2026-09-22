@@ -68,7 +68,7 @@ export function StudioPreview({ document, templateId, previewDevice, activeTab, 
   // Design tab: show full-screen template gallery
   if (activeTab === "design") {
     return (
-      <div className="flex-1 overflow-hidden">
+      <div className="w-full h-full min-h-0 flex-1 flex flex-col overflow-hidden">
         <TemplateGallery
           document={document || mockPortfolioDocument}
           currentTemplateId={templateId}
