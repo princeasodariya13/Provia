@@ -6,8 +6,19 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "AI Narrative Extraction | Provia",
-  description: "Our proprietary AI analyzes your resume and code to construct a compelling professional narrative automatically.",
+  title: "AI Resume & Code Extraction — Automated Portfolio Narrative",
+  description:
+    "Provia's AI engine analyzes your resume PDF, LinkedIn data, and GitHub repositories to construct a structured, compelling professional narrative automatically.",
+  keywords: [
+    "AI resume extraction",
+    "GitHub portfolio parser",
+    "LLM career narrative",
+    "resume to website AI",
+    "automated profile synchronization",
+  ],
+  alternates: {
+    canonical: "/features/ai-extraction",
+  },
 };
 
 export default function AIExtractionPage() {
@@ -106,7 +117,7 @@ export default function AIExtractionPage() {
                   <Database className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-bold text-text-primary mb-1">Contextual Tech Stacks</h4>
+                  <h3 className="text-lg font-bold text-text-primary mb-1">Contextual Tech Stacks</h3>
                   <p className="text-sm text-text-secondary">We automatically categorize your raw skills into logical groupings (Frontend, Backend, DevOps, etc.) and fetch their official SVG icons.</p>
                 </div>
               </div>
@@ -116,7 +127,7 @@ export default function AIExtractionPage() {
                   <Sparkles className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-bold text-text-primary mb-1">Narrative Generation</h4>
+                  <h3 className="text-lg font-bold text-text-primary mb-1">Narrative Generation</h3>
                   <p className="text-sm text-text-secondary">We generate highly professional, multi-length bios (short, medium, long) tailored for your hero section and about page.</p>
                 </div>
               </div>
@@ -126,7 +137,7 @@ export default function AIExtractionPage() {
                   <Code2 className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-bold text-text-primary mb-1">Repository Enrichment</h4>
+                  <h3 className="text-lg font-bold text-text-primary mb-1">Repository Enrichment</h3>
                   <p className="text-sm text-text-secondary">Your GitHub projects are automatically enhanced with short descriptions, star counts, and dominant languages.</p>
                 </div>
               </div>

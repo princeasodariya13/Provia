@@ -16,10 +16,67 @@ const geistMono = Geist_Mono({
   preload: false,
 });
 
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://provia-developer.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Provia — Professional Portfolio Generation Platform",
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: "Provia — Professional Portfolio Generation Platform",
+    template: "%s | Provia",
+  },
   description:
     "Create stunning professional portfolios from your existing online profiles and resume. AI-powered identity platform for ambitious professionals.",
+  keywords: [
+    "portfolio generator",
+    "professional portfolio",
+    "AI portfolio builder",
+    "resume to website",
+    "developer portfolio",
+    "executive identity",
+    "digital footprint",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Provia — Professional Portfolio Generation Platform",
+    description:
+      "Create stunning professional portfolios from your existing online profiles and resume. AI-powered identity platform for ambitious professionals.",
+    url: "/",
+    siteName: "Provia",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/dashboard-mockup.png",
+        width: 1200,
+        height: 630,
+        alt: "Provia Professional Portfolio Generation Platform",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Provia — Professional Portfolio Generation Platform",
+    description:
+      "Create stunning professional portfolios from your existing online profiles and resume. AI-powered identity platform for ambitious professionals.",
+    images: ["/dashboard-mockup.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({

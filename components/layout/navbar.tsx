@@ -24,7 +24,12 @@ export function Navbar() {
   const navItems = [
     { name: "Home", link: "/" },
     { name: "How it Works", link: "/how-it-works" },
-    { name: "Examples", link: "/#examples" },
+    { name: "Portfolio Generation", link: "/features/portfolio-generation" },
+    { name: "AI Extraction", link: "/features/ai-extraction" },
+    { name: "Premium Designs", link: "/features/premium-designs" },
+    { name: "About", link: "/about" },
+    { name: "Blog", link: "/blog" },
+    { name: "Contact", link: "/contact" },
   ];
 
   return (

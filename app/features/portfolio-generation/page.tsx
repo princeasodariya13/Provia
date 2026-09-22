@@ -8,8 +8,19 @@ import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Instant Portfolio Generation | Provia",
-  description: "Generate a fully responsive, premium portfolio website instantly using your existing professional footprint.",
+  title: "Instant Portfolio Generation — From Profile to Web Presence",
+  description:
+    "Generate a fully responsive, editorial portfolio website instantly from your GitHub, LinkedIn, and resume with zero configuration required.",
+  keywords: [
+    "instant portfolio generation",
+    "automated portfolio builder",
+    "zero code portfolio website",
+    "developer profile deployment",
+    "edge hosted portfolios",
+  ],
+  alternates: {
+    canonical: "/features/portfolio-generation",
+  },
 };
 
 export default function PortfolioGenerationPage() {
@@ -156,7 +167,13 @@ export default function PortfolioGenerationPage() {
               </div>
               <div className="flex-1 w-full">
                 <div className="aspect-video w-full rounded-2xl bg-surface border border-border-strong overflow-hidden relative shadow-2xl">
-                  <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2672&auto=format&fit=crop" className="w-full h-full object-cover filter contrast-125 saturate-50 brightness-75" alt="Global Network" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2672&auto=format&fit=crop" 
+                    className="w-full h-full object-cover filter contrast-125 saturate-50 brightness-75" 
+                    alt="Global Network" 
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-8 text-white">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />

@@ -3,6 +3,22 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import Link from "next/link";
 import { IconArrowLeft } from "@tabler/icons-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "The Editorial — Insights on Design, Engineering & Career",
+  description:
+    "Read The Editorial by Provia for insights, product updates, and thoughts on career development, editorial typography, and web engineering.",
+  keywords: [
+    "Provia blog",
+    "career development insights",
+    "portfolio design thinking",
+    "web development editorial",
+  ],
+  alternates: {
+    canonical: "/blog",
+  },
+};
 
 export default function BlogPage() {
   return (

@@ -21,7 +21,10 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
   const { username, publicCode } = resolvedParams;
 
   if (!USERNAME_REGEX.test(username) || !PUBLIC_CODE_REGEX.test(publicCode)) {
-    return { title: "Portfolio Not Found" };
+    return { 
+      title: "Portfolio Not Found",
+      robots: { index: false, follow: false, googleBot: { index: false, follow: false } }
+    };
   }
 
   const publication = await prisma.portfolioPublication.findFirst({
@@ -38,7 +41,10 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
     publication.user.username.toLowerCase() !== username.toLowerCase() ||
     publication.portfolioDocument.status !== "PUBLISHED"
   ) {
-    return { title: "Portfolio Not Found" };
+    return { 
+      title: "Portfolio Not Found",
+      robots: { index: false, follow: false, googleBot: { index: false, follow: false } }
+    };
   }
 
   const document = JSON.parse(publication.portfolioDocument.content) as PortfolioDocumentDTO;
@@ -46,14 +52,27 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
   if (!publication.isActive || document.seo?.noIndex) {
     return { 
       title: "Private Portfolio",
-      robots: { index: false, follow: false }
+      robots: { index: false, follow: false, googleBot: { index: false, follow: false } }
     };
   }
 
   const canonicalUrl = `${env.NEXT_PUBLIC_APP_URL}/${username}/${publicCode}`;
-  const title = document.seo?.title || `${document.hero?.name || "Professional"} | Portfolio`;
-  const description = document.seo?.description || document.about?.summary?.substring(0, 160) || "Professional Portfolio";
-  const keywords = document.seo?.keywords ? document.seo.keywords.split(",").map(k => k.trim()) : undefined;
+  
+  const rawTitle = document.seo?.title || 
+    (document.hero?.name 
+      ? `${document.hero.name}${document.hero.headline ? ` — ${document.hero.headline}` : " | Portfolio"}` 
+      : "Professional Portfolio");
+  const title = rawTitle.trim().slice(0, 90);
+
+  const rawDescription = document.seo?.description || 
+    document.hero?.shortIntroduction || 
+    document.about?.summary || 
+    `${document.hero?.name || "Professional"}'s official portfolio on Provia.`;
+  const description = rawDescription.trim().slice(0, 160);
+
+  const keywords = document.seo?.keywords 
+    ? document.seo.keywords.split(",").map(k => k.trim()).filter(Boolean) 
+    : undefined;
 
   const imageUrl = `${env.NEXT_PUBLIC_APP_URL}/api/og?title=${encodeURIComponent(title)}`;
 
@@ -62,7 +81,17 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
     description,
     keywords,
     alternates: { canonical: canonicalUrl },
-    robots: { index: true, follow: true },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
     openGraph: {
       title,
       description,

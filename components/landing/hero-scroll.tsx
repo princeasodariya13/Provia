@@ -9,7 +9,7 @@ export function HeroScroll() {
       <ContainerScroll
         titleComponent={
           <>
-            <motion.h1
+            <motion.h2
               initial={{ opacity: 0.5, y: 100 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
@@ -23,7 +23,7 @@ export function HeroScroll() {
               <span className="text-[3.5rem] sm:text-[5rem] md:text-[8rem] font-black mt-0 leading-none text-brand inline-block">
                 Career
               </span>
-            </motion.h1>
+            </motion.h2>
           </>
         }
       >
@@ -32,6 +32,7 @@ export function HeroScroll() {
           alt="Provia Dashboard Interface"
           className="mx-auto rounded-2xl object-cover h-full object-left-top"
           draggable={false}
+          decoding="async"
         />
       </ContainerScroll>
     </div>

@@ -1,5 +1,5 @@
+import { Metadata } from "next"
 import { Button } from "@/components/ui/button"
-
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { Navbar } from "@/components/layout/navbar"
@@ -12,11 +12,30 @@ import { TextGenerateEffect } from "@/components/ui/text-generate-effect"
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient"
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card"
 import { LandingPreloader } from "@/components/landing/preloader"
+import { JsonLd } from "@/components/seo/json-ld"
+
+export const metadata: Metadata = {
+  title: "Provia — AI-Powered Professional Portfolio Generator",
+  description:
+    "Transform your GitHub, LinkedIn, and resume into a stunning, responsive portfolio website automatically. High-impact identity platform for ambitious professionals.",
+  keywords: [
+    "portfolio generator",
+    "AI portfolio builder",
+    "developer portfolio",
+    "resume to portfolio website",
+    "GitHub portfolio generator",
+    "professional identity platform",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+}
 
 
 export default function Home() {
   return (
     <>
+      <JsonLd />
       <LandingPreloader />
       <Navbar />
       <div className="flex flex-col w-full overflow-hidden bg-background relative min-h-screen">

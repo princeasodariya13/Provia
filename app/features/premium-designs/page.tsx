@@ -7,8 +7,19 @@ import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export const metadata: Metadata = {
-  title: "Premium Portfolio Designs | Provia",
-  description: "Breathtaking, typography-first, 3D-integrated templates that make you stand out from the crowd.",
+  title: "Premium Portfolio Designs & 3D Templates",
+  description:
+    "Explore Provia's exclusive collection of typography-first, 3D WebGL integrated portfolio templates designed for ambitious software engineers.",
+  keywords: [
+    "premium portfolio designs",
+    "3D WebGL portfolio templates",
+    "typography first portfolio",
+    "editorial portfolio layouts",
+    "developer website templates",
+  ],
+  alternates: {
+    canonical: "/features/premium-designs",
+  },
 };
 
 const templates = [
@@ -133,7 +144,9 @@ export default function PremiumDesignsPage() {
                   <div className="aspect-[4/3] w-full relative overflow-hidden bg-black">
                     <img 
                       src={template.image} 
-                      alt={template.name} 
+                      alt={`${template.name} Provia Template Preview`} 
+                      loading="lazy"
+                      decoding="async"
                       className={`w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out ${template.filterClass || ""}`}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />

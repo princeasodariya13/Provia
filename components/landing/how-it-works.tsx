@@ -59,9 +59,9 @@ export function HowItWorks() {
     <section className="w-full relative z-10 py-24 px-4 bg-background">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-text-primary">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-text-primary">
             How it works
-          </h2>
+          </h1>
           <p className="text-lg text-text-secondary mt-4 max-w-xl">
             From fragmented profiles to a cohesive professional identity in four seamless steps.
           </p>

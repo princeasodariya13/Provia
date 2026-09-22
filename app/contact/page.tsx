@@ -4,6 +4,22 @@ import { Footer } from "@/components/layout/footer";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import Link from "next/link";
 import { IconArrowLeft } from "@tabler/icons-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact Provia — Inquiries & Support",
+  description:
+    "Get in touch with the Provia team. Have questions about our portfolio platform or enterprise plans? Send us a message and we'll reply shortly.",
+  keywords: [
+    "contact Provia",
+    "portfolio generator support",
+    "Provia inquiries",
+    "enterprise portfolio plans",
+  ],
+  alternates: {
+    canonical: "/contact",
+  },
+};
 
 export default function ContactPage() {
   return (

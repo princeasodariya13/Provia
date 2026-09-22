@@ -3,6 +3,22 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import Link from "next/link";
 import { IconArrowLeft } from "@tabler/icons-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Provia — Our Story & Platform Mission",
+  description:
+    "Discover the story behind Provia. Learn how we bridge world-class design and automated data synchronization to help professionals articulate their career story.",
+  keywords: [
+    "about Provia",
+    "portfolio platform mission",
+    "career narrative builder",
+    "automated portfolio creation",
+  ],
+  alternates: {
+    canonical: "/about",
+  },
+};
 
 export default function AboutPage() {
   return (

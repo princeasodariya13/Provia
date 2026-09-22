@@ -18,9 +18,10 @@ export function Footer() {
         <div className="grid grid-cols-3 gap-8 sm:gap-16">
           <div className="flex flex-col gap-3 md:gap-4">
             <h4 className="font-bold tracking-widest text-xs uppercase text-text-primary mb-1 md:mb-2 border-b border-border-light pb-2">Product</h4>
-            <Link href="#" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Features</Link>
-            <Link href="#" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Pricing</Link>
-            <Link href="#" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Templates</Link>
+            <Link href="/features/portfolio-generation" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Portfolio Generation</Link>
+            <Link href="/features/ai-extraction" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">AI Extraction</Link>
+            <Link href="/features/premium-designs" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Premium Designs</Link>
+            <Link href="/how-it-works" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">How it Works</Link>
           </div>
           <div className="flex flex-col gap-3 md:gap-4">
             <h4 className="font-bold tracking-widest text-xs uppercase text-text-primary mb-1 md:mb-2 border-b border-border-light pb-2">Company</h4>
@@ -29,9 +30,9 @@ export function Footer() {
             <Link href="/contact" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Contact</Link>
           </div>
           <div className="flex flex-col gap-3 md:gap-4">
-            <h4 className="font-bold tracking-widest text-xs uppercase text-text-primary mb-1 md:mb-2 border-b border-border-light pb-2">Legal</h4>
-            <Link href="#" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Privacy</Link>
-            <Link href="#" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Terms</Link>
+            <h4 className="font-bold tracking-widest text-xs uppercase text-text-primary mb-1 md:mb-2 border-b border-border-light pb-2">Platform</h4>
+            <Link href="/register" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Get Started</Link>
+            <Link href="/login" className="text-sm font-medium text-text-secondary hover:text-brand transition-colors">Sign In</Link>
           </div>
         </div>
       </div>
