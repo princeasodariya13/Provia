@@ -15,16 +15,20 @@ import { LandingPreloader } from "@/components/landing/preloader"
 import { JsonLd } from "@/components/seo/json-ld"
 
 export const metadata: Metadata = {
-  title: "Provia — AI-Powered Professional Portfolio Generator",
+  title: "Provia — AI Portfolio Builder & Professional Portfolio Generator",
   description:
-    "Transform your GitHub, LinkedIn, and resume into a stunning, responsive portfolio website automatically. High-impact identity platform for ambitious professionals.",
+    "Build a professional portfolio website in seconds. Provia is the automated AI portfolio generator and portfolio maker for developers and ambitious professionals.",
   keywords: [
     "portfolio generator",
+    "portfolio builder",
+    "portfolio maker",
+    "AI portfolio generator",
     "AI portfolio builder",
-    "developer portfolio",
-    "resume to portfolio website",
-    "GitHub portfolio generator",
-    "professional identity platform",
+    "AI portfolio maker",
+    "professional portfolio generator",
+    "portfolio website builder",
+    "personal portfolio generator",
+    "career portfolio generator",
   ],
   alternates: {
     canonical: "/",
@@ -59,7 +63,7 @@ export default function Home() {
 
             <div className="flex flex-col items-start w-full md:max-w-2xl">
               <div className="mb-6 md:mb-8 border border-border-strong px-3 md:px-4 py-1.5 text-[10px] md:text-xs font-semibold uppercase tracking-widest text-text-primary bg-surface inline-block">
-                Professional Portfolio Generator
+                AI Portfolio Generator & Builder
               </div>
 
               <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter text-text-primary leading-[1.05] mb-6 md:mb-8">
@@ -69,7 +73,7 @@ export default function Home() {
 
               <div className="text-base sm:text-xl md:text-2xl text-text-secondary mb-8 md:mb-12 font-medium leading-relaxed max-w-lg border-l-2 border-brand pl-4 md:pl-6">
                 <TextGenerateEffect
-                  words="Connect your GitHub and LinkedIn. We normalize the data into a sophisticated, premium portfolio ready for top-tier recruiters."
+                  words="Connect your GitHub and LinkedIn. Our automated portfolio maker normalizes your data into a sophisticated, professional portfolio website builder experience ready for top-tier recruiters."
                   className="font-medium"
                 />
               </div>

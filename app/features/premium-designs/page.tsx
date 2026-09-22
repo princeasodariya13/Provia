@@ -7,15 +7,16 @@ import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export const metadata: Metadata = {
-  title: "Premium Portfolio Designs & 3D Templates",
+  title: "Developer Portfolio Maker & Premium WebGL Templates",
   description:
-    "Explore Provia's exclusive collection of typography-first, 3D WebGL integrated portfolio templates designed for ambitious software engineers.",
+    "Explore Provia's exclusive collection of typography-first templates built for software engineer portfolio generator needs. The ultimate developer portfolio maker.",
   keywords: [
-    "premium portfolio designs",
-    "3D WebGL portfolio templates",
-    "typography first portfolio",
-    "editorial portfolio layouts",
-    "developer website templates",
+    "portfolio website maker",
+    "developer portfolio maker",
+    "software engineer portfolio generator",
+    "personal website generator",
+    "digital portfolio generator",
+    "professional portfolio builder",
   ],
   alternates: {
     canonical: "/features/premium-designs",
@@ -80,7 +81,7 @@ export default function PremiumDesignsPage() {
           
           <div className="flex-1 text-left">
             <div className="mb-8 border border-border-strong px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand bg-brand/5 inline-block rounded-full">
-              Editorial Aesthetics
+              Developer Portfolio Maker
             </div>
             
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter text-text-primary leading-[1.05] mb-8">
@@ -90,7 +91,7 @@ export default function PremiumDesignsPage() {
             
             <div className="text-base sm:text-xl text-text-secondary mb-12 font-medium max-w-xl leading-relaxed">
               <TextGenerateEffect 
-                words="We don't use generic templates. Every Provia design is handcrafted with modern typography, smooth animations, and interactive integrations to make you look like a top 1% professional." 
+                words="We don't use generic templates. Every Provia design is handcrafted for a digital portfolio generator experience with modern typography, 3D animations, and personal website generator capabilities." 
               />
             </div>
             

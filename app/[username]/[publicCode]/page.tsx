@@ -60,19 +60,19 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
   
   const rawTitle = document.seo?.title || 
     (document.hero?.name 
-      ? `${document.hero.name}${document.hero.headline ? ` — ${document.hero.headline}` : " | Portfolio"}` 
-      : "Professional Portfolio");
+      ? `${document.hero.name}${document.hero.headline ? ` — ${document.hero.headline}` : " | Developer Portfolio"}` 
+      : "Professional Developer Portfolio Website");
   const title = rawTitle.trim().slice(0, 90);
 
   const rawDescription = document.seo?.description || 
     document.hero?.shortIntroduction || 
     document.about?.summary || 
-    `${document.hero?.name || "Professional"}'s official portfolio on Provia.`;
+    `${document.hero?.name || "Professional"}'s official developer portfolio website powered by Provia.`;
   const description = rawDescription.trim().slice(0, 160);
 
   const keywords = document.seo?.keywords 
     ? document.seo.keywords.split(",").map(k => k.trim()).filter(Boolean) 
-    : undefined;
+    : ["developer portfolio", "software engineer portfolio", "professional portfolio website"];
 
   const imageUrl = `${env.NEXT_PUBLIC_APP_URL}/api/og?title=${encodeURIComponent(title)}`;
 

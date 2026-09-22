@@ -6,15 +6,16 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "AI Resume & Code Extraction — Automated Portfolio Narrative",
+  title: "AI Resume to Portfolio Generator & Code Extraction",
   description:
-    "Provia's AI engine analyzes your resume PDF, LinkedIn data, and GitHub repositories to construct a structured, compelling professional narrative automatically.",
+    "Transform your PDF resume, LinkedIn, and GitHub code into an AI developer portfolio. Provia's AI resume portfolio generator builds a compelling career story automatically.",
   keywords: [
-    "AI resume extraction",
-    "GitHub portfolio parser",
-    "LLM career narrative",
-    "resume to website AI",
-    "automated profile synchronization",
+    "AI resume to portfolio",
+    "resume portfolio generator",
+    "resume website generator",
+    "GitHub portfolio generator",
+    "coding portfolio generator",
+    "AI developer portfolio",
   ],
   alternates: {
     canonical: "/features/ai-extraction",
@@ -32,7 +33,7 @@ export default function AIExtractionPage() {
         <div className="max-w-5xl mx-auto flex flex-col items-center text-center">
           <div className="mb-8 border border-border-strong px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand bg-brand/5 inline-flex items-center justify-center gap-2 rounded-full">
             <BrainCircuit className="w-4 h-4 shrink-0" />
-            <span>Proprietary Intelligence</span>
+            <span>AI Resume to Portfolio Engine</span>
           </div>
           
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter text-text-primary leading-[1.05] mb-8">
@@ -42,7 +43,7 @@ export default function AIExtractionPage() {
           
           <div className="text-base sm:text-xl md:text-2xl text-text-secondary mb-12 font-medium max-w-3xl mx-auto">
             <TextGenerateEffect 
-              words="Don't struggle to write about yourself. Connect your accounts and upload your resume. Our LLM pipeline extracts your skills, experience, and achievements into a structured, highly persuasive narrative." 
+              words="Don't struggle to write about yourself. Connect your accounts and upload your resume. Our AI resume portfolio generator extracts your skills, experience, and repositories into a structured coding portfolio generator." 
             />
           </div>
           

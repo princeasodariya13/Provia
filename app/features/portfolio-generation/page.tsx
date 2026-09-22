@@ -8,15 +8,16 @@ import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Instant Portfolio Generation — From Profile to Web Presence",
+  title: "Automated Portfolio Website Generator & Instant Builder",
   description:
-    "Generate a fully responsive, editorial portfolio website instantly from your GitHub, LinkedIn, and resume with zero configuration required.",
+    "Generate a live portfolio website from your GitHub and LinkedIn in 60 seconds. The premier GitHub to portfolio website builder for software developers.",
   keywords: [
-    "instant portfolio generation",
-    "automated portfolio builder",
-    "zero code portfolio website",
-    "developer profile deployment",
-    "edge hosted portfolios",
+    "automated portfolio generator",
+    "portfolio website generator",
+    "GitHub to portfolio website",
+    "software developer portfolio generator",
+    "developer portfolio builder",
+    "GitHub portfolio builder",
   ],
   alternates: {
     canonical: "/features/portfolio-generation",
@@ -34,14 +35,14 @@ export default function PortfolioGenerationPage() {
       <section className="pt-20 pb-12 px-4 md:px-12 xl:px-24">
         <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
           <div className="mb-8 border border-border-strong px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand bg-brand/5 inline-block rounded-full">
-            Instant Deployment
+            Automated Portfolio Generator
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter text-text-primary leading-[1.05] mb-8 max-w-4xl">
             From Zero to <span className="text-brand">Live Portfolio</span> in 60 Seconds.
           </h1>
           <div className="text-base sm:text-xl md:text-2xl text-text-secondary mb-12 font-medium max-w-3xl">
             <TextGenerateEffect 
-              words="No coding required. Connect your profiles, and we instantly generate a production-ready, beautifully crafted portfolio tailored to your career." 
+              words="No coding required. Connect your profiles, and our portfolio website generator instantly transforms your GitHub to portfolio website seamlessly." 
             />
           </div>
           

@@ -4,14 +4,16 @@ import { HowItWorks } from "@/components/landing/how-it-works";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "How It Works — Step-by-Step Portfolio Generation",
+  title: "How It Works — Online Portfolio Generator & Creation Steps",
   description:
-    "Learn how Provia transforms your digital footprint into a cohesive professional identity in four seamless steps.",
+    "Learn how Provia works as your personal portfolio maker and career portfolio generator in 4 seamless steps, from resume to portfolio website.",
   keywords: [
-    "how Provia works",
-    "portfolio creation process",
-    "automated portfolio steps",
-    "resume to portfolio workflow",
+    "online portfolio generator",
+    "personal portfolio maker",
+    "career portfolio generator",
+    "professional website generator",
+    "GitHub to portfolio",
+    "resume to portfolio",
   ],
   alternates: {
     canonical: "/how-it-works",
