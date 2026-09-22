@@ -27,6 +27,7 @@
     "@tabler/icons-react": "^3.46.0",
     "@types/nodemailer": "^8.0.1",
     "@upstash/redis": "^1.38.2",
+    "@vercel/analytics": "^2.0.1",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.1",
     "clsx": "^2.1.1",

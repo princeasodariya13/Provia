@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ToastProvider } from "@/components/ui/toast";
 import { SmoothScroll } from "@/components/layout/smooth-scroll";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -101,6 +102,7 @@ export default function RootLayout({
             </ToastProvider>
           </AuthProvider>
         </SmoothScroll>
+        <Analytics />
       </body>
     </html>
   );
