@@ -41,8 +41,8 @@ export function ChatbotWidget() {
     }
   }, [isOpen, messages, scrollToBottom]);
 
-  const sendMessage = async () => {
-    const trimmed = inputValue.trim();
+  const sendMessage = async (retryMessage?: string) => {
+    const trimmed = retryMessage || inputValue.trim();
     if (!trimmed || isLoading) return;
 
     const userMessage: Message = {
@@ -60,13 +60,19 @@ export function ChatbotWidget() {
       isLoading: true,
     };
 
-    setMessages((prev) => [...prev, userMessage, loadingMessage]);
-    setInputValue("");
+    setMessages((prev) => {
+      // If retrying, remove the last error message before adding new ones
+      const filtered = retryMessage
+        ? prev.filter((m) => !m.id.startsWith("err-") && !m.id.startsWith("user-retry-"))
+        : prev;
+      return [...filtered, userMessage, loadingMessage];
+    });
+    if (!retryMessage) setInputValue("");
     setIsLoading(true);
 
     try {
       const history = messages
-        .filter((m) => !m.isLoading)
+        .filter((m) => !m.isLoading && !m.id.startsWith("err-"))
         .map((m) => ({ role: m.role, content: m.content }));
 
       const res = await fetch("/api/v1/ai/chat", {
@@ -77,16 +83,27 @@ export function ChatbotWidget() {
 
       const data = await res.json();
 
-      const aiResponse: Message = {
-        id: `ai-${Date.now()}`,
-        role: "assistant",
-        content: data.success
-          ? data.data.message
-          : `⚠️ ${data.error || "I couldn't get a response. Please try again!"}`,
-        timestamp: new Date(),
-      };
-
-      setMessages((prev) => [...prev.filter((m) => !m.isLoading), aiResponse]);
+      if (data.success) {
+        const aiResponse: Message = {
+          id: `ai-${Date.now()}`,
+          role: "assistant",
+          content: data.data.message,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev.filter((m) => !m.isLoading), aiResponse]);
+      } else {
+        // Server returned a structured error — show it with a retry option
+        const isRetryable = res.status === 503 || res.status === 429;
+        const aiError: Message = {
+          id: `err-${Date.now()}`,
+          role: "assistant",
+          content: isRetryable
+            ? `⏳ ${data.error || "Provia AI is busy right now."} Tap **Retry** to try again.`
+            : `⚠️ ${data.error || "I couldn't get a response. Please try again!"}`,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev.filter((m) => !m.isLoading), aiError]);
+      }
     } catch (err) {
       console.error("[ChatbotWidget] Fetch error:", err);
       setMessages((prev) => [
@@ -94,7 +111,7 @@ export function ChatbotWidget() {
         {
           id: `err-${Date.now()}`,
           role: "assistant",
-          content: "Oops! Something went wrong connecting to Provia AI. Please check your connection and try again.",
+          content: "⚠️ Connection issue. Please check your internet and try again.",
           timestamp: new Date(),
         },
       ]);
@@ -241,7 +258,7 @@ export function ChatbotWidget() {
                 style={{ outline: 'none', border: 'none', boxShadow: 'none' }}
               />
               <button
-                onClick={sendMessage}
+                onClick={() => sendMessage()}
                 disabled={!inputValue.trim() || isLoading}
                 className="w-7 h-7 rounded-lg bg-brand text-white flex items-center justify-center shrink-0 hover:bg-brand-hover transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
               >

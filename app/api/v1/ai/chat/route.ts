@@ -3,6 +3,7 @@ import { withAPIHandler } from "@/lib/api-handler";
 import { requireAuth } from "@/lib/auth";
 import { GoogleGenerativeAI, Content } from "@google/generative-ai";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/logger";
 
 const SYSTEM_PROMPT = `You are the official AI Assistant for Provia — a premium AI-powered portfolio studio. You are deeply trained on every feature of the platform. Give users clear, step-by-step, actionable answers.
 
@@ -128,6 +129,22 @@ Three icons in top bar: Desktop, Tablet, Mobile — click to preview how portfol
 - Keep answers scannable: use bold for key terms, numbered steps, short paragraphs
 `;
 
+/** Returns true for transient Gemini API errors that are safe to retry */
+function isTransientGeminiError(error: unknown): boolean {
+  const msg = (error instanceof Error ? error.message : String(error)).toLowerCase();
+  return (
+    msg.includes("503") ||
+    msg.includes("overloaded") ||
+    msg.includes("rate") ||
+    msg.includes("quota") ||
+    msg.includes("429") ||
+    msg.includes("unavailable") ||
+    msg.includes("deadline") ||
+    msg.includes("timeout") ||
+    msg.includes("internal")
+  );
+}
+
 export const POST = withAPIHandler(async (request: Request) => {
   const user = await requireAuth();
 
@@ -154,7 +171,7 @@ export const POST = withAPIHandler(async (request: Request) => {
 
   const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
   const model = genAI.getGenerativeModel({
-    model: env.AI_MODEL || "gemini-1.5-flash",
+    model: env.AI_MODEL || "gemini-3.6-flash",
   });
 
   // Sanitize history: Gemini strictly requires history to start with 'user' and alternate
@@ -194,8 +211,31 @@ export const POST = withAPIHandler(async (request: Request) => {
     },
   });
 
-  const result = await chat.sendMessage(message);
-  const responseText = result.response.text();
+  // Retry up to 3 times for transient Gemini API errors
+  let responseText = "";
+  let lastError: unknown = null;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const result = await chat.sendMessage(message);
+      responseText = result.response.text();
+      lastError = null;
+      break;
+    } catch (err) {
+      lastError = err;
+      if (!isTransientGeminiError(err) || attempt === 3) break;
+      const delayMs = Math.pow(2, attempt) * 1000; // 2s, 4s
+      logger.warn({ attempt, delayMs, userId: user.id }, "Gemini chat transient error, retrying...");
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+
+  if (lastError) {
+    logger.error({ err: lastError, userId: user.id }, "Gemini chat failed after retries");
+    return NextResponse.json({ 
+      success: false, 
+      error: "AI service is temporarily unavailable. Please try again in a moment." 
+    }, { status: 503 });
+  }
 
   if (!responseText) {
     return NextResponse.json({ 
@@ -209,3 +249,4 @@ export const POST = withAPIHandler(async (request: Request) => {
     data: { message: responseText },
   });
 });
+

@@ -4,7 +4,7 @@ import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { ResumeExtractionHandler } from "@/lib/jobs/handlers/resume-extraction";
 
-export const maxDuration = 60;
+export const maxDuration = 120;
 export const dynamic = "force-dynamic";
 
 export const POST = withAPIHandler(async () => {
@@ -24,15 +24,21 @@ export const POST = withAPIHandler(async () => {
     return NextResponse.json({ success: true, data: { status: "COMPLETED" } });
   }
 
-  // Forcefully un-stick the resume in case it was stuck in a previous failed background job
-  await prisma.resume.update({
-    where: { id: resume.id },
-    data: { status: "PROCESSING" }
+  // Atomic: only claim the job if it is not already being processed by another serverless invocation.
+  // This prevents a race between the upload handler and the on-mount auto-recovery.
+  const claimed = await prisma.resume.updateMany({
+    where: { id: resume.id, status: { not: "PROCESSING" } },
+    data: { status: "PROCESSING", extractionError: null },
   });
 
+  // If another invocation already claimed it, just return a 202 so the UI keeps polling
+  if (claimed.count === 0 && resume.status === "PROCESSING") {
+    return NextResponse.json({ success: true, data: { status: "PROCESSING" } }, { status: 202 });
+  }
+
   try {
-    // Run the extraction directly, bypassing the brittle background job queue lock
-    // This guarantees it executes immediately for the user within this exact serverless function
+    // Run the extraction directly, bypassing the brittle background job queue lock.
+    // This guarantees it executes immediately for the user within this exact serverless function.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await ResumeExtractionHandler.handler({
       id: "direct-execution",
@@ -41,7 +47,7 @@ export const POST = withAPIHandler(async () => {
       status: "PROCESSING",
       payload: { userId: user.id, resumeId: resume.id },
       attempts: 1,
-      maxAttempts: 1,
+      maxAttempts: 3,
       createdAt: new Date(),
       updatedAt: new Date(),
     } as any);
@@ -51,17 +57,18 @@ export const POST = withAPIHandler(async () => {
       data: { status: "COMPLETED" }
     });
   } catch (error) {
-    // Handle error gracefully so the frontend can display it instead of loading forever
+    const errorMessage = error instanceof Error ? error.message : "Unknown error during extraction";
+    // Mark as FAILED so the UI can surface the real error and offer a retry
     await prisma.resume.update({
       where: { id: resume.id },
-      data: { 
-        status: "FAILED", 
-        extractionError: error instanceof Error ? error.message : "Unknown error during direct extraction" 
+      data: {
+        status: "FAILED",
+        extractionError: errorMessage,
       }
     });
 
     return NextResponse.json(
-      { success: false, error: "Failed to extract resume data" },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }

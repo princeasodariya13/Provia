@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { apiClient } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,10 @@ export function ResumeIntelligence() {
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [processingTime, setProcessingTime] = useState(0);
+  const [retrying, setRetrying] = useState(false);
   const toast = useToast();
+  // Prevent double extraction: upload handler and on-mount auto-recovery must not run simultaneously
+  const isExtractingRef = useRef(false);
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [resumeData, setResumeData] = useState<any>(null);
@@ -104,9 +107,13 @@ export function ResumeIntelligence() {
         setStatus(res.data.status);
         
         // Auto-recover: If the resume is stuck in QUEUED or PROCESSING on Vercel,
-        // force direct extraction so it doesn't stay stuck forever.
-        if (res.data.status === "QUEUED" || res.data.status === "PROCESSING") {
-          fetch("/api/v1/profile/resume/extract", { method: "POST" }).then(() => fetchResumeStatus()).catch(() => {});
+        // trigger direct extraction — but only if the upload handler isn't already running one.
+        if ((res.data.status === "QUEUED" || res.data.status === "PROCESSING") && !isExtractingRef.current) {
+          isExtractingRef.current = true;
+          fetch("/api/v1/profile/resume/extract", { method: "POST" })
+            .then(() => fetchResumeStatus())
+            .catch(() => {})
+            .finally(() => { isExtractingRef.current = false; });
         }
       } else {
         setStatus("NONE");
@@ -165,11 +172,16 @@ export function ResumeIntelligence() {
         setStatus(data.data.status); // Will set to QUEUED/PROCESSING, starting timer
 
         // Directly invoke the extraction endpoint to completely bypass the brittle background job queue on Vercel.
-        // We await this so Vercel keeps the function alive until the AI finishes processing (usually ~10s).
-        try {
-          await fetch("/api/v1/profile/resume/extract", { method: "POST" });
-        } catch (e) {
-          console.error("Direct extraction failed", e);
+        // Guard with the ref so the on-mount auto-recovery doesn't race against this.
+        if (!isExtractingRef.current) {
+          isExtractingRef.current = true;
+          try {
+            await fetch("/api/v1/profile/resume/extract", { method: "POST" });
+          } catch (e) {
+            console.error("Direct extraction failed", e);
+          } finally {
+            isExtractingRef.current = false;
+          }
         }
         
         await fetchResumeStatus();
@@ -298,6 +310,28 @@ export function ResumeIntelligence() {
     setApplying(false);
   };
 
+  const handleRetryExtraction = async () => {
+    setRetrying(true);
+    setProcessingTime(0);
+    try {
+      setStatus("PROCESSING");
+      const res = await fetch("/api/v1/profile/resume/extract", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok && !data.success) {
+        toast.error(data.error || "Retry failed. Please try again.");
+        await fetchResumeStatus();
+      } else {
+        await fetchResumeStatus();
+        toast.success("Resume extracted successfully!");
+      }
+    } catch {
+      toast.error("Retry failed. Please check your connection.");
+      setStatus("FAILED");
+    } finally {
+      setRetrying(false);
+    }
+  };
+
   const handleRemove = async () => {
     setRemoving(true);
     try {
@@ -327,7 +361,7 @@ export function ResumeIntelligence() {
           <Sparkles className="w-4 h-4 text-brand" /> Resume Intelligence
         </h2>
         {status !== "NONE" && (
-          <Badge variant={status === "COMPLETED" ? "success" : "warning"} className="text-[10px] px-2 py-0 uppercase">
+          <Badge variant={status === "COMPLETED" ? "success" : status === "FAILED" ? "error" : "warning"} className="text-[10px] px-2 py-0 uppercase">
             {status}
           </Badge>
         )}
@@ -365,7 +399,7 @@ export function ResumeIntelligence() {
               </div>
             </div>
           </div>
-        ) : status === "NONE" || status === "FAILED" ? (
+        ) : status === "NONE" ? (
           <div className="flex flex-col items-center gap-4 animate-in fade-in duration-300">
             <div className="w-16 h-16 rounded-full bg-surface-muted flex items-center justify-center">
               <FileText className="w-8 h-8 text-text-muted" />
@@ -382,6 +416,43 @@ export function ResumeIntelligence() {
                 Process Resume
               </Button>
               {error && <div className="text-error text-xs font-semibold text-center">{error}</div>}
+            </div>
+          </div>
+        ) : status === "FAILED" ? (
+          <div className="flex flex-col items-center gap-4 animate-in fade-in duration-300">
+            <div className="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center">
+              <AlertCircle className="w-8 h-8 text-error" />
+            </div>
+            <div className="text-center space-y-1">
+              <h3 className="text-sm font-bold text-text-primary">Extraction Failed</h3>
+              <p className="text-xs text-text-secondary max-w-[220px] mx-auto">
+                {resumeData?.extractionError
+                  ? resumeData.extractionError.length > 120
+                    ? resumeData.extractionError.substring(0, 120) + "..."
+                    : resumeData.extractionError
+                  : "AI could not process your PDF. Please retry or upload a different file."}
+              </p>
+            </div>
+            <div className="w-full space-y-2 mt-1">
+              <Button
+                onClick={handleRetryExtraction}
+                disabled={retrying}
+                size="sm"
+                className="w-full rounded-full shadow-sm font-bold bg-brand hover:bg-brand-hover hover:-translate-y-0.5 transition-all"
+              >
+                {retrying ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+                {retrying ? "Retrying..." : "Retry Extraction"}
+              </Button>
+              <div className="text-center">
+                <span className="text-[10px] text-text-secondary">Or upload a different PDF</span>
+              </div>
+              <Input type="file" accept="application/pdf" onChange={handleFileChange} className="cursor-pointer text-xs h-9 rounded-lg bg-surface/50 border-border-light hover:border-border transition-colors" />
+              {file && (
+                <Button onClick={handleUpload} disabled={!file || uploading} size="sm" className="w-full rounded-full shadow-sm font-bold bg-text-primary text-background hover:bg-text-primary/90 transition-all">
+                  <UploadCloud className="w-4 h-4 mr-2" />
+                  Upload New Resume
+                </Button>
+              )}
             </div>
           </div>
         ) : (

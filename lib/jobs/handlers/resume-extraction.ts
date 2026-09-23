@@ -139,17 +139,41 @@ EXPECTED JSON SCHEMA:
         }
       });
 
-      const geminiResponse = await model.generateContent([
-        prompt,
-        {
-          inlineData: {
-            data: buffer.toString("base64"),
-            mimeType: "application/pdf"
+      // Retry up to 3 times for transient Gemini API errors (503, rate limits, etc.)
+      let lastError: Error | null = null;
+      let text = "";
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          const geminiResponse = await model.generateContent([
+            prompt,
+            {
+              inlineData: {
+                data: buffer.toString("base64"),
+                mimeType: "application/pdf"
+              }
+            }
+          ]);
+          text = geminiResponse.response.text();
+          lastError = null;
+          break; // Success
+        } catch (geminiError) {
+          lastError = geminiError instanceof Error ? geminiError : new Error(String(geminiError));
+          const errMsg = lastError.message.toLowerCase();
+          // Only retry on transient errors
+          const isTransient = errMsg.includes("503") || errMsg.includes("overloaded") ||
+            errMsg.includes("rate") || errMsg.includes("quota") || errMsg.includes("429") ||
+            errMsg.includes("unavailable") || errMsg.includes("deadline") || errMsg.includes("timeout");
+          if (!isTransient || attempt === 3) {
+            throw lastError;
           }
+          // Exponential backoff: 2s, 6s
+          const delayMs = Math.pow(3, attempt) * 1000;
+          logger.warn({ attempt, delayMs, err: lastError.message }, "Gemini transient error, retrying...");
+          await new Promise(resolve => setTimeout(resolve, delayMs));
         }
-      ]);
+      }
+      if (lastError) throw lastError;
 
-      const text = geminiResponse.response.text();
       let parsedJson;
       try {
         parsedJson = JSON.parse(text.trim());
